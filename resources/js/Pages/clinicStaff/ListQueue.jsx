@@ -4,7 +4,7 @@ import RegisterQueue from '../../components/modal/RegisterQueue';
 import QueueTable from '../../components/QueueTable';
 
 const ListQueue = () => {
-  let [showPopup, setShowPopup] = useState(true);
+  let [showPopup, setShowPopup] = useState(false);
 
   return (
       <MainLayout>

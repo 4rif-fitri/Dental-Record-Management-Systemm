@@ -47,16 +47,16 @@ Route::middleware('guest')->group(function () {
     })->name("listQueue");
 
     // Dentist Page Raute
-
     Route::get('/dentist-list-appointment', function () {
         return Inertia::render('dentist/ListAppointment');
     })->name("dentistListAppointment");
 
     Route::get('/dentist-list-patient', function () {
-        return Inertia::render('dentist/ListAppointment');
-    })->name("dentistListAppointment");
+        return Inertia::render('dentist/ListPatient');
+    })->name("dentistListPatient");
 
     Route::get('/dentist-examination/{id}', function () {
-        return Inertia::render('dentist/ListAppointment');
+        return Inertia::render('dentist/Examination');
     })->name("dentistExamination");
+
 // });

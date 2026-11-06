@@ -61,7 +61,7 @@ const QueueTable = ({role}) => {
                               )}
                               {role !== "Clinic Staff" && (
                                   <Link
-                                      to="/patient-examination"
+                                      to="/patient-examination/1"
                                       className="btn btn-primary font-semibold h-7"
                                   >
                                       View
