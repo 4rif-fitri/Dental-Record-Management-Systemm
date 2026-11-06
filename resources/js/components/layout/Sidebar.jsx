@@ -27,14 +27,15 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             items: [
                 {
                     label: "Appointment List",
-                    link: "/patient-appointment" },
+                    link: "/patient-appointment",
+                },
                 {
                     label: "Appointment Form",
                     link: "/patient-book-appointment",
                 },
                 {
                     label: "My Profile",
-                    link: "/patient-profile"
+                    link: "/user-profile",
                 },
             ],
         },
@@ -47,7 +48,8 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 },
                 {
                     label: "My Profile",
-                    link: "/clinic-staff-profile" },
+                    link: "/user-profile",
+                },
             ],
         },
         {
@@ -56,7 +58,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 { label: "Appointments", link: "/dentist-list-appointment" },
                 { label: "Patients", link: "/dentist-list-patient" },
                 { label: "Examination", link: "/dentist-examination/1" },
-                { label: "My Profile", link: "/dentist-profile" },
+                { label: "My Profile", link: "/user-profile" },
             ],
         },
     ];

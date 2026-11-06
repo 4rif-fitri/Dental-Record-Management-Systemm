@@ -27,6 +27,10 @@ Route::middleware('guest')->group(function () {
         return Inertia::render('Auth/Login');
     })->name("logout");
 
+    Route::get('/user-profile', function () {
+        return Inertia::render('Profile');
+    })->name("userProfile");
+
     // Patient Page Raute
     Route::get('/patient-appointment', function () {
         return Inertia::render('patient/ListAppointment');
@@ -36,23 +40,13 @@ Route::middleware('guest')->group(function () {
         return Inertia::render('patient/BookAppointment');
     })->name("patientBookAppointment");
 
-    Route::get('/patient-profile', function () {
-        return Inertia::render('patient/Profile');
-    })->name("patientProfile");
 
     // Clinic Staff Page Raute
-    Route::get('/clinic-staff-profile', function () {
-        return Inertia::render('clinicStaff/Profile');
-    })->name("clinicStaffProfile");
-
     Route::get('/list-queue', function () {
         return Inertia::render('clinicStaff/ListQueue');
     })->name("listQueue");
 
     // Dentist Page Raute
-    Route::get('/dentist-profile', function () {
-        return Inertia::render('dentist/Profile');
-    })->name("dentistProfile");
 
     Route::get('/dentist-list-appointment', function () {
         return Inertia::render('dentist/ListAppointment');

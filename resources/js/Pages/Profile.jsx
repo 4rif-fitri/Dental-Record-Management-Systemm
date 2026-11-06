@@ -1,7 +1,7 @@
 import React from 'react'
-import MainLayout from '../../layout/mainLayout'
+import MainLayout from '../layout/mainLayout'
 import { useState } from 'react';
-import UpdateProfile from '../../components/modal/UpdateProfile';
+import UpdateProfile from '../components/modal/UpdateProfile';
 
 function InfoRow({label, value}){
     return (
@@ -33,7 +33,7 @@ const Profile = () => {
 
     return (
         <MainLayout>
-            {showPopup && <UpdateProfile />}
+            {showPopup && <UpdateProfile setShowPopup={setShowPopup} />}
             <div className="min-h-screen  text-gray-900">
                 <div className="min-h-screen w-full">
                     <main className="mx-auto w-full px-4 py-6">

@@ -2,35 +2,35 @@ import React from 'react'
 import { useState } from 'react';
 import Swal from "sweetalert2";
 
-function Showinput({ label, data, setData, className, errorText }) {
-    return (
-        <div className="flex flex-col">
-            <label className="label">{label}</label>
-
-            <input
-                className={`input w-full border border-gray-400 ${className ?? ""}`}
-                value={data ?? ""}
-                onChange={(e) => setData(e.target.value)}
-            />
-
-            <p className="text-red-600">{errorText}</p>
-        </div>
-    );
-}
-
-function handleUpdateProfile() {
-    Swal.fire({
-        title: "Success!",
-        text: "New profile data has been saved successfully",
-        icon: "success",
-        confirmButtonText: "OK",
-    });
-
-    setShowPopup(false);
-}
-
-const UpdateProfile = () => {
+const UpdateProfile = ({ setShowPopup }) => {
     const [Name, setName] = useState("");
+
+    function Showinput({ label, data, setData, className, errorText }) {
+        return (
+            <div className="flex flex-col">
+                <label className="label">{label}</label>
+
+                <input
+                    className={`input w-full border border-gray-400 ${className ?? ""}`}
+                    value={data ?? ""}
+                    onChange={(e) => setData(e.target.value)}
+                />
+
+                <p className="text-red-600">{errorText}</p>
+            </div>
+        );
+    }
+
+    function handleUpdateProfile() {
+        Swal.fire({
+            title: "Success!",
+            text: "New profile data has been saved successfully",
+            icon: "success",
+            confirmButtonText: "OK",
+        });
+
+        setShowPopup(false);
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-base-100">
