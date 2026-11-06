@@ -21,7 +21,11 @@ Route::middleware('guest')->group(function () {
     })->name("forgotPassword");
 });
 
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
+
+    Route::get('/logout', function () {
+        return Inertia::render('Auth/Login');
+    })->name("logout");
 
     // Patient Page Raute
     Route::get('/patient-appointment', function () {
@@ -41,8 +45,24 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('clinicStaff/Profile');
     })->name("clinicStaffProfile");
 
+    Route::get('/list-queue', function () {
+        return Inertia::render('clinicStaff/ListQueue');
+    })->name("listQueue");
+
     // Dentist Page Raute
-    Route::get('/patient-dentist', function () {
+    Route::get('/dentist-profile', function () {
         return Inertia::render('dentist/Profile');
     })->name("dentistProfile");
-});
+
+    Route::get('/dentist-list-appointment', function () {
+        return Inertia::render('dentist/ListAppointment');
+    })->name("dentistListAppointment");
+
+    Route::get('/dentist-list-patient', function () {
+        return Inertia::render('dentist/ListAppointment');
+    })->name("dentistListAppointment");
+
+    Route::get('/dentist-examination/{id}', function () {
+        return Inertia::render('dentist/ListAppointment');
+    })->name("dentistExamination");
+// });

@@ -63,7 +63,12 @@ const Login = () => {
                     />
                 </fieldset>
 
-                <a href=""></a>
+                <a
+                    className="btn w-full bg-gray-950 text-white border-gray-950 hover:bg-gray-800 hover:border-gray-800 rounded-lg mt-2"
+                    href={route("patientAppointment")}
+                >
+                    Sign In
+                </a>
 
                 {/* <button type="button" className="btn w-full bg-gray-950 text-white border-gray-950 hover:bg-gray-800 hover:border-gray-800 rounded-lg mt-2">
                     Sign In

@@ -1,5 +1,3 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
 import logo from "../assets/UTeM Health Center Logo.png";
 
 const back = {
