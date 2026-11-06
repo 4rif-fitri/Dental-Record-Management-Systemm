@@ -17,9 +17,7 @@ const Login = () => {
                 </p>
             </div>
 
-            {/* Form */}
             <form className="grid gap-5">
-                {/* Email */}
                 <fieldset className="fieldset">
                     <label
                         htmlFor="email"
@@ -38,7 +36,6 @@ const Login = () => {
                     />
                 </fieldset>
 
-                {/* Password */}
                 <fieldset className="fieldset">
                     <div className="flex items-center justify-between gap-2">
                         <label
@@ -49,7 +46,7 @@ const Login = () => {
                         </label>
 
                         <a
-                            href=""
+                            href={route("forgotPassword")}
                             className="text-sm text-gray-700 hover:underline"
                         >
                             Forgot password?
@@ -71,7 +68,6 @@ const Login = () => {
                 </button>
             </form>
 
-            {/* Register Link */}
             <div className="text-center mt-6">
                 <p className="text-sm text-gray-500">
                     New to our platform?
