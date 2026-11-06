@@ -7,6 +7,9 @@ import MedicineTab from '../../components/tabs/medicineTab';
 import PhotosTab from '../../components/tabs/photosTab';
 import FourSurface from '../../components/tooth/FourSurface';
 import FiveSurface from '../../components/tooth/FiveSurface';
+import DentalChart2D from '../../components/tabs/DentalChart2D';
+import PenandaWarna from '../../components/PenandaWarna';
+import DentalChart3D from '../../components/tabs/DentalChart3D';
 
 
 
@@ -277,9 +280,14 @@ const Examination = () => {
                         </button>
                     </div>
                     <div className="w-full h-auto bg-white rounded mt-2">
-                        {activeTab === "patient" &&
-                            <PatientDetails />
-                        }
+                        {activeTab === "patient" && <PatientDetails />}
+                        {activeTab === "chart" && (
+                            <DentalChart2D onSelect={onSelect} />
+                        )}
+                        {activeTab === "3d" && (
+                            <DentalChart3D onSelect={onSelect} />
+                        )}
+
                         {activeTab === "photos" && (
                             <PhotosTab
                                 activeTab="photos"
@@ -307,10 +315,13 @@ const Examination = () => {
                                 onSaveNotes={handleSaveNotes}
                             />
                         )}
-                        {activeTab === "patientConsent" &&
-                            <ConsentTab />
-                        }
+                        {activeTab === "patientConsent" && <ConsentTab />}
                     </div>
+                    {activeTab === "chart" || activeTab === "3d" ? (
+                        <PenandaWarna />
+                    ) : (
+                        <></>
+                    )}
                 </div>
 
                 {activeTab === "chart" || activeTab === "3d" ? (
