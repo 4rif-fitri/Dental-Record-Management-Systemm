@@ -25,19 +25,29 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         {
             title: "Patient",
             items: [
-                { label: "Appointment List", link: "/patient-appointment" },
+                {
+                    label: "Appointment List",
+                    link: "/patient-appointment" },
                 {
                     label: "Appointment Form",
                     link: "/patient-book-appointment",
                 },
-                { label: "My Profile", link: "/patient-profile" },
+                {
+                    label: "My Profile",
+                    link: "/patient-profile"
+                },
             ],
         },
         {
             title: "Clinic Staff",
             items: [
-                { label: "Queues List", link: "/clinic-staff-profile" },
-                { label: "My Profile", link: "/list-queue" },
+                {
+                    label: "Queues List",
+                    link: "/list-queue",
+                },
+                {
+                    label: "My Profile",
+                    link: "/clinic-staff-profile" },
             ],
         },
         {
