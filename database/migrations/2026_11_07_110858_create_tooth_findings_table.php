@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('condition_id')->constrained('condition')->onDelete('restrict');
             $table->foreignId('procedure_id')->constrained('procedure')->onDelete('restrict');
             $table->string('finding_description', 255);
+            $table->string('status', 100);
             $table->timestamps();
         });
     }
