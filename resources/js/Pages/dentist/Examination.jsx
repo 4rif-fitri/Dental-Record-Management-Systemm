@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
-import MainLayout from '../../layout/mainLayout'
-import PatientDetails from '../../components/tabs/PatientDetailsTab';
-import ConsentTab from '../../components/tabs/ConsentTab';
-import NotesTab from '../../components/tabs/notesTab';
-import MedicineTab from '../../components/tabs/medicineTab';
-import PhotosTab from '../../components/tabs/photosTab';
-import FourSurface from '../../components/tooth/FourSurface';
-import FiveSurface from '../../components/tooth/FiveSurface';
-import DentalChart2D from '../../components/tabs/DentalChart2D';
-import PenandaWarna from '../../components/PenandaWarna';
-import DentalChart3D from '../../components/tabs/DentalChart3D';
-
-
+import React, { useState } from "react";
+import MainLayout from "../../layout/mainLayout";
+import PatientDetails from "../../components/tabs/PatientDetailsTab";
+import ConsentTab from "../../components/tabs/ConsentTab";
+import NotesTab from "../../components/tabs/notesTab";
+import MedicineTab from "../../components/tabs/medicineTab";
+import PhotosTab from "../../components/tabs/photosTab";
+import DentalChart2D from "../../components/tabs/DentalChart2D";
+import PenandaWarna from "../../components/PenandaWarna";
+import DentalChart3D from "../../components/tabs/DentalChart3D";
+import Tretment from "../../components/tabs/Tretment";
+import Medicine from "../../components/modal/Medicine";
+import Photo from "../../components/modal/Photo";
+import PreviewPhoto from "../../components/modal/previewPhoto";
+import ToothProcedure from "../../components/modal/ToothProcedure";
 
 const Examination = () => {
     let [activeTab, setActiveTab] = useState("patient");
     let [notes, setNotes] = useState("");
     let [savedNotes, setSavedNotes] = useState("");
-    let [medicines, setMedicines] = useState([])
+    let [medicines, setMedicines] = useState([]);
     let [showAddMedicine, setAddMedicine] = useState(false);
     let [photos, setPhotos] = useState([]);
     let [showAddPhoto, setAddPhoto] = useState(false);
     let [selectedPhoto, setSelectedPhoto] = useState(null);
     let [showPreviewPhoto, setShowPreviewPhoto] = useState(false);
+    let [showToothProcedure, setShowToothProcedure] = useState(false);
+    let [selectedTooth, setSelectedTooth] = useState(null);
 
     const [procedures, setProcedures] = useState([
         {
@@ -51,6 +54,14 @@ const Examination = () => {
         },
     ]);
 
+    function updateProcedureStatus(id, newStatus) {
+        setProcedures((previous) =>
+            previous.map((item) =>
+                item.id === id ? { ...item, status: newStatus } : item,
+            ),
+        );
+    }
+
     function deleteMedicine(id) {
         setMedicines((previous) => previous.filter((item) => item.id !== id));
     }
@@ -60,155 +71,14 @@ const Examination = () => {
         alert("Note saved successfully!");
     }
 
-    function TretmentComponent() {
-        return (
-            <div className="mt-10 mb-2 grid grid-cols-3 gap-3 border-gray-300 overflow-x-scroll p-2">
-                <div className="border-1 border-gray-300 p-5 flex flex-col gap-2 h-150 overflow-y-scroll">
-                    <h1 className="text-2xl pb-3 font-semibold">Planing</h1>
-                    {procedures
-                        .filter((item) => item.status === "Planning")
-                        .map((item) => (
-                            <BoxCondition key={item.id} procedure={item} />
-                        ))}
-                </div>
+    function onSelect(tooth) {
+        const toothNumber =
+            typeof tooth === "object"
+                ? (tooth?.toothNumber ?? tooth?.tooth ?? tooth?.name ?? "")
+                : tooth;
 
-                <div className="border-1 border-gray-300 p-5 flex flex-col gap-2 h-150 overflow-y-scroll">
-                    <h1 className="text-2xl pb-3 font-semibold">In Progress</h1>
-                    {procedures
-                        .filter((item) => item.status === "In Progress")
-                        .map((item) => (
-                            <BoxCondition key={item.id} procedure={item} />
-                        ))}
-                </div>
-
-                <div className="border-1 border-gray-300 p-5 flex flex-col gap-2 h-150 overflow-y-scroll">
-                    <h1 className="text-2xl pb-3 font-semibold">Completed</h1>
-                    {procedures
-                        .filter((item) => item.status === "Completed")
-                        .map((item) => (
-                            <BoxCondition key={item.id} procedure={item} />
-                        ))}
-                </div>
-            </div>
-        );
-    }
-
-  function onSelect(tooth) {
-      const toothNumber =
-          typeof tooth === "object"
-              ? (tooth?.toothNumber ?? tooth?.tooth ?? tooth?.name ?? "")
-              : tooth;
-
-      setSelectedTooth(toothNumber);
-      setShowToothProcedure(true);
-  }
-
-    function BoxCondition({ procedure }) {
-        return (
-            <div className="border-1 border-gray-300 p-2">
-                <div className="grid grid-cols-2 grid-rows-1">
-                    <div className="p-2 flex justify-center items-center">
-                        {procedure.typeTooth === "Molar" ? (
-                            <FiveSurface />
-                        ) : (
-                            <FourSurface />
-                        )}
-                    </div>
-
-                    <div className="p-2">
-                        <div className=" mb-2">
-                            <h1>Tooth:</h1>
-                            <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                                {procedure.tooth}
-                            </p>
-                        </div>
-
-                        <div className=" mb-2">
-                            <h1>Condition:</h1>
-                            <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                                {procedure.condition}
-                            </p>
-                        </div>
-                        <div className="mb-2">
-                            <h1>Treatment:</h1>
-                            <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                                {procedure.treatment}
-                            </p>
-                        </div>
-                        <div className="">
-                            <button
-                                className="w-full btn-soft btn-primary border p-1.5 rounded cursor-pointer"
-                                onClick={onSelect}
-                            >
-                                View
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {procedure.status === "Planning" && (
-                    <div className=" grid grid-cols-2 gap-2 p-1">
-                        <div></div>
-
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() =>
-                                updateProcedureStatus(
-                                    procedure.id,
-                                    "In Progress",
-                                )
-                            }
-                        >
-                            In Progress
-                        </button>
-                    </div>
-                )}
-
-                {procedure.status === "In Progress" && (
-                    <div className=" grid grid-cols-2 gap-2 p-1">
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() =>
-                                updateProcedureStatus(procedure.id, "Planning")
-                            }
-                        >
-                            Planning
-                        </button>
-
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() =>
-                                updateProcedureStatus(procedure.id, "Completed")
-                            }
-                        >
-                            Completed
-                        </button>
-                    </div>
-                )}
-
-                {procedure.status === "Completed" && (
-                    <div className=" grid grid-cols-2 gap-2 p-1">
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() =>
-                                updateProcedureStatus(
-                                    procedure.id,
-                                    "In Progress",
-                                )
-                            }
-                        >
-                            In Progress
-                        </button>
-
-                        <div></div>
-                    </div>
-                )}
-            </div>
-        );
+        setSelectedTooth(toothNumber);
+        setShowToothProcedure(true);
     }
 
     function deletePhoto(id) {
@@ -225,8 +95,75 @@ const Examination = () => {
         setShowPreviewPhoto(true);
     }
 
+    function handleAddPhoto(files) {
+        if (!files) return;
+
+        const fileList = Array.from(files);
+        fileList.forEach((file) => {
+            if (!file.type.startsWith("image/")) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPhotos((previous) => [
+                    ...previous,
+                    {
+                        id: Date.now() + Math.random(),
+                        name: file.name,
+                        image: reader.result,
+                    },
+                ]);
+            };
+            reader.readAsDataURL(file);
+        });
+        setAddPhoto(false);
+    }
+
+    function handleAddMedicine(medicine) {
+        if (!medicine?.name?.trim()) return;
+
+        const newMedicine = {
+            id: Date.now(),
+            name: medicine.name,
+            notes: medicine.notes,
+        };
+
+        setMedicines((previous) => [...previous, newMedicine]);
+        setAddMedicine(false);
+    }
+
+    let linkTabs = [
+        { text: "patient", label: "Patient Details" },
+        { text: "chart", label: "Dental Chart" },
+        { text: "3d", label: "3D" },
+        { text: "notes", label: "Notes" },
+        { text: "medicine", label: "Medicine" },
+        { text: "photos", label: "Photos" },
+        { text: "patientConsent", label: "Patient Consent" },
+    ];
+
     return (
         <MainLayout>
+            <Medicine
+                showAddMedicine={showAddMedicine}
+                setAddMedicine={setAddMedicine}
+                onSave={handleAddMedicine}
+            />
+            <Photo
+                showAddPhoto={showAddPhoto}
+                setAddPhoto={setAddPhoto}
+                onSave={handleAddPhoto}
+            />
+            <PreviewPhoto
+                showPreviewPhoto={showPreviewPhoto}
+                setShowPreviewPhoto={setShowPreviewPhoto}
+                photo={selectedPhoto}
+            />
+            <ToothProcedure
+                showToothProcedure={showToothProcedure}
+                setShowToothProcedure={setShowToothProcedure}
+                selectedTooth={selectedTooth}
+            />
+
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <div className="mb-4 flex gap-2 border-gray-300 justify-between">
                     <h1 className="font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -236,49 +173,17 @@ const Examination = () => {
 
                 <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
                     <div className="flex gap-2 flex-wrap items-center">
-                        <button
-                            onClick={() => setActiveTab("patient")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "patient" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Patient Details
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("chart")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "chart" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Dental Chart
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("3d")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "3d" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            3D
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("notes")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "notes" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Notes
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("medicine")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "medicine" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Medicine
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("photos")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "photos" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Photos
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("patientConsent")}
-                            className={`btn sm:w-50 w-[48%] ${activeTab === "patientConsent" ? "btn-primary" : "bg-white text-black border"}`}
-                        >
-                            Patient Consent
-                        </button>
+                        {linkTabs.map((tab) => (
+                            <button
+                                key={tab.text}
+                                onClick={() => setActiveTab(tab.text)}
+                                className={`btn sm:w-50 w-[48%] ${activeTab === tab.text ? "btn-primary" : "bg-white text-black border"}`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
+
                     <div className="w-full h-auto bg-white rounded mt-2">
                         {activeTab === "patient" && <PatientDetails />}
                         {activeTab === "chart" && (
@@ -325,13 +230,16 @@ const Examination = () => {
                 </div>
 
                 {activeTab === "chart" || activeTab === "3d" ? (
-                    <TretmentComponent />
+                    <Tretment
+                        procedures={procedures}
+                        updateProcedureStatus={updateProcedureStatus}
+                    />
                 ) : (
                     <></>
                 )}
             </div>
         </MainLayout>
     );
-}
+};
 
-export default Examination
+export default Examination;
