@@ -24,10 +24,7 @@ const Profile = () => {
     const getProfileData = async () => {
         try {
             const response = await api.get(route('getProfileData'));
-
             setUserProfile(response.data);
-
-            console.log('Profile:', response.data);
 
         } catch (error) {
             console.log(error);
@@ -42,7 +39,6 @@ const Profile = () => {
 
     return (
         <MainLayout>
-            {console.log(userProfile)}
             {showPopup && <UpdateProfile setShowPopup={setShowPopup} />}
             <div className="min-h-screen  text-gray-900">
                 <div className="min-h-screen w-full">
@@ -136,32 +132,18 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div>
-                                        {/*<InfoRow*/}
-                                        {/*    label="Student/Staff ID"*/}
-                                        {/*    value={userProfile.Student_Staff_iD}*/}
-                                        {/*/>*/}
-                                        {/*<InfoRow*/}
-                                        {/*    label="Email Address"*/}
-                                        {/*    value={userProfile.email}*/}
-                                        {/*/>*/}
+                                        <InfoRow
+                                            label="Student/Staff ID"
+                                            value={userProfile?.student_staff_id}
+                                        />
+                                        <InfoRow
+                                            label="Email Address"
+                                            value={userProfile?.email}
+                                        />
                                     </div>
                                 </div>
                             </section>
                         </div>
-
-                        {/* <footer className="flex flex-col items-center justify-between gap-2 py-7 text-xs text-gray-400 sm:flex-row">
-                <p>© 2026 DentalCare. Dental Treatment Management System.</p>
-
-                <div className="flex items-center gap-4">
-                    <a href="/privacy" className="hover:text-gray-700">
-                    Privacy
-                    </a>
-
-                    <a href="/help" className="hover:text-gray-700">
-                    Help & Support
-                    </a>
-                </div>
-                </footer> */}
                     </main>
                 </div>
             </div>

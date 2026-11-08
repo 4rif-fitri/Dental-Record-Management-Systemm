@@ -4,9 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Services\AppointmentService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AppointmentController extends Controller
 {
+    public function patientAppointment(){
+        return Inertia::render('patient/ListAppointment');
+    }
+
+    public function patientBookAppointment()
+    {
+        return Inertia::render('patient/BookAppointment');
+
+    }
+
+    public function dentistListAppointment()
+    {
+        return Inertia::render('dentist/ListAppointment');
+    }
     protected $appointmentService;
 
     public function __construct(AppointmentService $appointmentService)

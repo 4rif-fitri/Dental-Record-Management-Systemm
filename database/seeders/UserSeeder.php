@@ -24,8 +24,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'student/staff_id' => 'DNT002',
-                'ic/passport' => '020202-02-1234',
+                'student_staff_id' => 'DNT002',
+                'ic_passport' => '020202-02-1234',
                 'name' => 'Dr. Siti',
                 'gender' => 'Female',
                 'phone_number' => '0134567890',
@@ -36,8 +36,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'student/staff_id' => 'P001',
-                'ic/passport' => '030303-03-1234',
+                'student_staff_id' => 'P001',
+                'ic_passport' => '030303-03-1234',
                 'name' => 'Lorem',
                 'gender' => 'Male',
                 'phone_number' => '0145678901',
@@ -48,8 +48,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'student/staff_id' => 'P002',
-                'ic/passport' => '040404-04-1234',
+                'student_staff_id' => 'P002',
+                'ic_passport' => '040404-04-1234',
                 'name' => 'Dopy',
                 'gender' => 'Female',
                 'phone_number' => '0156789012',
