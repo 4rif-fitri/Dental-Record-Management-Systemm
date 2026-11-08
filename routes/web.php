@@ -3,13 +3,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\UserController;
 
-// GUEST ROUTES
+
 Route::middleware('guest')->group(function () {
 
-    Route::get('/', function () {
+    Route::get('/login', function () {
         return Inertia::render('Auth/Login');
     })->name('login');
+
+    Route::post('/', [UserController::class, 'login'])->name('userLogin');
 
     Route::get('/register', function () {
         return Inertia::render('Auth/Register');
@@ -25,8 +28,11 @@ Route::middleware('guest')->group(function () {
 });
 
 
-// AUTHENTICATED ROUTES
 Route::middleware('auth')->group(function () {
+
+    Route::get('/',[UserController::class,'index'])->name('dashboard');
+
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
 
     Route::get('/logout', function () {
         return Inertia::render('Auth/Login');

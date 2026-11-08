@@ -1,4 +1,5 @@
-import { Link } from "@inertiajs/react";
+
+import { usePage, Link } from '@inertiajs/react';
 import logo from "../../assets/UTeM Health Center Crescent Logo.png";
 
 const back = {
@@ -10,58 +11,55 @@ const back = {
 
 function LinkItem({ label, link, setSidebarOpen }) {
     return (
-        <Link
-            href={link}
-            onClick={() => setSidebarOpen(false)}
-            className="flex items-center rounded-lg px-3 py-2.5 text-sm font-semibold text-[#262626] transition-colors hover:bg-[#EEEEEE]"
-        >
+        <Link href={link}  onClick={() => setSidebarOpen(false)}
+            className="flex items-center rounded-lg px-3 py-2.5 text-sm font-semibold text-[#262626] transition-colors hover:bg-[#EEEEEE]">
             {label}
         </Link>
     );
 }
 
-export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-    const menuGroups = [
-        {
-            title: "Patient",
-            items: [
-                {
-                    label: "Appointment List",
-                    link: "/patient-appointment",
-                },
-                {
-                    label: "Appointment Form",
-                    link: "/patient-book-appointment",
-                },
-                {
-                    label: "My Profile",
-                    link: "/user-profile",
-                },
-            ],
-        },
-        {
-            title: "Clinic Staff",
-            items: [
-                {
-                    label: "Queues List",
-                    link: "/list-queue",
-                },
-                {
-                    label: "My Profile",
-                    link: "/user-profile",
-                },
-            ],
-        },
-        {
-            title: "Dentist",
-            items: [
-                { label: "Appointments", link: "/dentist-list-appointment" },
-                { label: "Patients", link: "/dentist-list-patient" },
-                { label: "Examination", link: "/dentist-examination/1" },
-                { label: "My Profile", link: "/user-profile" },
-            ],
-        },
-    ];
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+
+    const { auth } = usePage().props;
+
+    const role = auth?.user?.role;
+
+    const menuGroups = {
+        patient: [
+            {
+                title: "Patient",
+                items: [
+                    { label: "Appointment List", link: "/patient-appointment" },
+                    { label: "Appointment Form", link: "/patient-book-appointment" },
+                    { label: "My Profile", link: "/user-profile" },
+                ],
+            },
+        ],
+
+        clinic_staff: [
+            {
+                title: "Clinic Staff",
+                items: [
+                    { label: "Queues List", link: "/list-queue" },
+                    { label: "My Profile", link: "/user-profile" },
+                ],
+            },
+        ],
+
+        dentist: [
+            {
+                title: "Dentist",
+                items: [
+                    { label: "Appointments", link: "/dentist-list-appointment" },
+                    { label: "Patients", link: "/dentist-list-patient" },
+                    { label: "Examination", link: "/dentist-examination/1" },
+                    { label: "My Profile", link: "/user-profile" },
+                ],
+            },
+        ],
+    };
+
+    const menus = menuGroups[role] || [];
 
     return (
         <aside
@@ -84,7 +82,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
 
             <nav className="flex-1 overflow-y-auto px-3 pb-8">
-                {menuGroups.map((group) => (
+                {menus.map((group) => (
                     <div key={group.title}>
                         <p className="border-b border-[#E5E5E5] px-3 pb-3 pt-6 text-xs font-semibold uppercase tracking-wider text-[#737373]">
                             {group.title}
@@ -106,3 +104,4 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </aside>
     );
 };
+export default Sidebar

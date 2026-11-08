@@ -1,3 +1,5 @@
+import { router } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 export const Header = ({ setSidebarOpen }) => {
     const Icon = ({ name, className = "h-5 w-5" }) => {
         const paths = {
@@ -30,12 +32,11 @@ export const Header = ({ setSidebarOpen }) => {
             </div>
 
             <div className="flex shrink-0 items-center gap-3">
-                <a
-                    href={route("logout")}
-                    className="rounded-md border border-red-600 bg-red-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
-                >
+                <button  type="button"
+                    onClick={() => router.post(route('logout'))}
+                    className="rounded-md border border-red-600 bg-red-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700">
                     Logout
-                </a>
+                </button>
             </div>
         </header>
     );

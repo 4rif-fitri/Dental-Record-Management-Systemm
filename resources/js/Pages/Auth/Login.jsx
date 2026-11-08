@@ -1,9 +1,19 @@
 import React from "react";
 import AuthLayout from "../../layout/AuthLayout";
 import { route } from "ziggy-js";
-import { Link } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 
 const Login = () => {
+    const { data, setData, post, processing, errors } = useForm({
+        username: "",
+        password: "",
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        post(route("userLogin"));
+    };
 
     return (
         <AuthLayout>
@@ -17,23 +27,31 @@ const Login = () => {
                 </p>
             </div>
 
-            <form className="grid gap-5">
+            <form className="grid gap-5" onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
                     <label
-                        htmlFor="email"
+                        htmlFor="username"
                         className="fieldset-legend text-sm font-medium text-gray-900"
                     >
-                        Email Address
+                        Email Address / IC / Passport Number
                     </label>
 
                     <input
-                        type="email"
-                        id="email"
-                        name="email"
+                        type="text"
+                        id="username"
+                        name="username"
+                        autoComplete="username"
+                        value={data.username}
+                        onChange={(e) => setData("username", e.target.value)}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
-                        placeholder="Enter your email address"
-                        autoComplete="email"
+                        placeholder="Enter your email / IC / Passport"
                     />
+
+                    {errors.username && (
+                        <span className="text-error text-sm">
+                            {errors.username}
+                        </span>
+                    )}
                 </fieldset>
 
                 <fieldset className="fieldset">
@@ -57,35 +75,28 @@ const Login = () => {
                         type="password"
                         id="password"
                         name="password"
+                        autoComplete="current-password"
+                        value={data.password}
+                        onChange={(e) => setData("password", e.target.value)}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Enter your password"
-                        autoComplete="current-password"
                     />
+
+                    {errors.password && (
+                        <span className="text-error text-sm">
+                            {errors.password}
+                        </span>
+                    )}
                 </fieldset>
 
-                <a
+                <button
+                    type="submit"
+                    disabled={processing}
                     className="btn w-full bg-gray-950 text-white border-gray-950 hover:bg-gray-800 hover:border-gray-800 rounded-lg mt-2"
-                    href={route("patientAppointment")}
                 >
-                    Sign In
-                </a>
-
-                {/* <button type="button" className="btn w-full bg-gray-950 text-white border-gray-950 hover:bg-gray-800 hover:border-gray-800 rounded-lg mt-2">
-                    Sign In
-                </button> */}
+                    {processing ? "Signing In..." : "Sign In"}
+                </button>
             </form>
-
-            <div className="text-center mt-6">
-                <p className="text-sm text-gray-500">
-                    New to our platform?
-                    <a
-                        href={route("register")}
-                        className="text-gray-900 font-medium hover:underline text-blue-600"
-                    >
-                        Create an account
-                    </a>
-                </p>
-            </div>
         </AuthLayout>
     );
 };
