@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
 
+    Route::get('/getProfileData', [UserController::class, 'getProfileData'])->name('getProfileData');
+
     Route::get('/logout', function () {
         return Inertia::render('Auth/Login');
     })->name('logout');

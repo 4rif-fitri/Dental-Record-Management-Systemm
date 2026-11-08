@@ -12,8 +12,8 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'student/staff_id' => 'DNT001',
-                'ic/passport' => '010101-01-1234',
+                'student_staff_id' => 'DNT001',
+                'ic_passport' => '010101-01-1234',
                 'name' => 'Dr. Ahmad',
                 'gender' => 'Male',
                 'phone_number' => '0123456789',

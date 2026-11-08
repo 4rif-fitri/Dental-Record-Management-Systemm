@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class UserController extends Controller
 
         $request->session()->regenerate();
         $request->session()->put('role', $user->role);
+        $request->session()->put('id', $user->id);
 
         return redirect()->route('dashboard');
     }
@@ -52,5 +54,14 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    public function getProfileData()
+    {
+        $userProfileId = session('id');
+
+        $profile = User::where('id', $userProfileId)->first();
+
+        return ApiResponse::success('Success', $profile)->toJsonResponse();
     }
 }

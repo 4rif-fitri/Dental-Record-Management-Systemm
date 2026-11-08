@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import MainLayout from '../layout/mainLayout'
 import { useState } from 'react';
 import UpdateProfile from '../components/modal/UpdateProfile';
+import { route } from 'ziggy-js';
+import api from '@/lib/axios';
 
 function InfoRow({label, value}){
     return (
@@ -17,22 +19,30 @@ function InfoRow({label, value}){
 }
 
 const Profile = () => {
-    const user = {
-        name: "John Doe",
-        gender: "Male",
-        ic_passport: "06100501897",
-        phone: "+60 12-345 6789",
-        Student_Staff_iD: "DC-2026-001",
-        email: "john.doe@example.com",
-        userRole: "Dentist",
-        status: "Active",
-        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80",
+    const [userProfile,setUserProfile] = useState(null)
+
+    const getProfileData = async () => {
+        try {
+            const response = await api.get(route('getProfileData'));
+
+            setUserProfile(response.data);
+
+            console.log('Profile:', response.data);
+
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    useEffect(() => {
+        getProfileData()
+    },[])
 
     const [showPopup, setShowPopup] = useState(false);
 
     return (
         <MainLayout>
+            {console.log(userProfile)}
             {showPopup && <UpdateProfile setShowPopup={setShowPopup} />}
             <div className="min-h-screen  text-gray-900">
                 <div className="min-h-screen w-full">
@@ -55,9 +65,9 @@ const Profile = () => {
                                 <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
                                     <div
                                         className="relative mt-10 h-24 w-24 rounded-xl border-4 border-white bg-cover bg-center shadow-sm sm:-mt-12 sm:h-28 sm:w-28"
-                                        style={{
-                                            backgroundImage: `url("${user.image}")`,
-                                        }}
+                                        // style={{
+                                        //     backgroundImage: `url("${user.image}")`,
+                                        // }}
                                     >
                                         <button
                                             type="button"
@@ -73,8 +83,8 @@ const Profile = () => {
                                     </div>
                                     <div className="pb-1">
                                         <div className="flex flex-wrap items-center gap-3">
-                                            <h2 className="text-2xl font-semibold tracking-tight">
-                                                {user.name}
+                                            <h2 className="text-2xl font-semibold tracking-tight text-black">
+                                                {userProfile ? userProfile.name : 'Loading...'}
                                             </h2>
                                         </div>
                                     </div>
@@ -106,34 +116,34 @@ const Profile = () => {
                                     <div>
                                         <InfoRow
                                             label="Full Name"
-                                            value={user.name}
+                                            value={userProfile?.name}
                                         />
                                         <InfoRow
                                             label="Ic/Passport"
-                                            value={user.ic_passport}
+                                            value={userProfile?.ic_passport}
                                         />
                                         <InfoRow
                                             label="Gender"
-                                            value={user.gender}
+                                            value={userProfile?.gender}
                                         />
                                         <InfoRow
                                             label="Phone Number"
-                                            value={user.phone}
+                                            value={userProfile?.phone_number}
                                         />
                                         <InfoRow
                                             label="Role"
-                                            value={user.userRole}
+                                            value={userProfile?.role}
                                         />
                                     </div>
                                     <div>
-                                        <InfoRow
-                                            label="Student/Staff ID"
-                                            value={user.Student_Staff_iD}
-                                        />
-                                        <InfoRow
-                                            label="Email Address"
-                                            value={user.email}
-                                        />
+                                        {/*<InfoRow*/}
+                                        {/*    label="Student/Staff ID"*/}
+                                        {/*    value={userProfile.Student_Staff_iD}*/}
+                                        {/*/>*/}
+                                        {/*<InfoRow*/}
+                                        {/*    label="Email Address"*/}
+                                        {/*    value={userProfile.email}*/}
+                                        {/*/>*/}
                                     </div>
                                 </div>
                             </section>

@@ -46,10 +46,11 @@ class ApiResponse
 
     public function toJsonResponse()
     {
-        return response()->json(
-            $this->toArray(),
-            $this->status
-        );
+        return response()->json([
+            'status' => $this->status,
+            'message' => $this->message,
+            'data' => $this->data,
+        ], $this->status);
     }
 
     public static function getValidatedStatusCode(Exception $e): int
