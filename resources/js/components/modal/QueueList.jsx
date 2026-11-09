@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import QueueTable from '../QueueTable';
 
 const QueueList = ({ setShowPopup }) => {
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-base-100">
             <div className="rounded-xl bg-white p-6 shadow-xl">

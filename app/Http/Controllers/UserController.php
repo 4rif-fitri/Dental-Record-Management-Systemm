@@ -80,10 +80,20 @@ class UserController extends Controller
     {
         $keyword = $request->query('keyword');
 
-        $patients = User::where('name', 'LIKE', "%{$keyword}%")
-            ->orWhere('ic_passport', 'LIKE', "%{$keyword}%")
-            ->orWhere('student_staff_id', 'LIKE', "%{$keyword}%")
-            ->orWhere('email', 'LIKE', "%{$keyword}%")
+        $icKeyword = str_replace('-', '', $keyword);
+
+        $patients = User::where('role', 'patient')
+            ->where(function ($query) use ($keyword, $icKeyword) {
+
+                $query->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhereRaw(
+                        "REPLACE(ic_passport, '-', '') LIKE ?",
+                        ["%{$icKeyword}%"]
+                    )
+                    ->orWhere('student_staff_id', 'LIKE', "%{$keyword}%")
+                    ->orWhere('email', 'LIKE', "%{$keyword}%");
+
+            })
             ->get();
 
         return ApiResponse::success('Success', $patients)->toJsonResponse();
@@ -93,4 +103,27 @@ class UserController extends Controller
     {
         return Inertia::render('dentist/ListPatient');
     }
+
+    public function updateProfile(Request $request)
+    {
+        $id = session('id');
+        $user = User::findOrFail($id);
+    }
+
+    public function showLoginPage(){
+        return Inertia::render('Auth/Login');
+    }
+
+    public function showRegisterPage(){
+        return Inertia::render('Auth/Register');
+    }
+
+    public function showNewPasswordPage(){
+        return Inertia::render('Auth/NewPassword');
+    }
+
+    public function showForgotPasswordPage(){
+        return Inertia::render('Auth/ForgotPassword');
+    }
+
 }
