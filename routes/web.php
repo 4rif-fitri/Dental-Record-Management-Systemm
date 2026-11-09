@@ -95,5 +95,9 @@ Route::middleware('auth')->group(function () {
 
     });
 
+    Route::prefix('patient')->group(function () {
+        Route::get('/patientDetails/{id}', [UserController::class, 'patientDetails'])->name('patientDetails');
+    });
+
  });
 

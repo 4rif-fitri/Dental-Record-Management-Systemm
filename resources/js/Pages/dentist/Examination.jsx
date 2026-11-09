@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
 import PatientDetails from "../../components/tabs/PatientDetailsTab";
 import ConsentTab from "../../components/tabs/ConsentTab";
@@ -13,6 +13,9 @@ import Medicine from "../../components/modal/Medicine";
 import Photo from "../../components/modal/Photo";
 import PreviewPhoto from "../../components/modal/previewPhoto";
 import ToothProcedure from "../../components/modal/ToothProcedure";
+import {useParams} from "react-router-dom";
+import {route} from "ziggy-js";
+import api from "@/lib/axios.js";
 
 const Examination = () => {
     let [activeTab, setActiveTab] = useState("patient");
@@ -26,6 +29,8 @@ const Examination = () => {
     let [showPreviewPhoto, setShowPreviewPhoto] = useState(false);
     let [showToothProcedure, setShowToothProcedure] = useState(false);
     let [selectedTooth, setSelectedTooth] = useState(null);
+
+    const [patientDetails, setPatientDetails] = useState([])
 
     const [procedures, setProcedures] = useState([
         {
@@ -141,28 +146,30 @@ const Examination = () => {
         { text: "patientConsent", label: "Patient Consent" },
     ];
 
+    const getPatientDetails = async (id) => {
+        try {
+            const response = await api.get(
+                route('patientDetails', { id })
+            );
+            setPatientDetails(response.data)
+            console.log(response)
+
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        const id = window.location.pathname.split('/').pop();
+        getPatientDetails(id)
+    },[])
+
     return (
         <MainLayout>
-            <Medicine
-                showAddMedicine={showAddMedicine}
-                setAddMedicine={setAddMedicine}
-                onSave={handleAddMedicine}
-            />
-            <Photo
-                showAddPhoto={showAddPhoto}
-                setAddPhoto={setAddPhoto}
-                onSave={handleAddPhoto}
-            />
-            <PreviewPhoto
-                showPreviewPhoto={showPreviewPhoto}
-                setShowPreviewPhoto={setShowPreviewPhoto}
-                photo={selectedPhoto}
-            />
-            <ToothProcedure
-                showToothProcedure={showToothProcedure}
-                setShowToothProcedure={setShowToothProcedure}
-                selectedTooth={selectedTooth}
-            />
+            <Medicine showAddMedicine={showAddMedicine} setAddMedicine={setAddMedicine} onSave={handleAddMedicine}/>
+            <Photo showAddPhoto={showAddPhoto} setAddPhoto={setAddPhoto} onSave={handleAddPhoto}/>
+            <PreviewPhoto showPreviewPhoto={showPreviewPhoto} setShowPreviewPhoto={setShowPreviewPhoto} photo={selectedPhoto}/>
+            <ToothProcedure showToothProcedure={showToothProcedure} setShowToothProcedure={setShowToothProcedure} selectedTooth={selectedTooth}/>
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <div className="mb-4 flex gap-2 border-gray-300 justify-between">
@@ -185,7 +192,7 @@ const Examination = () => {
                     </div>
 
                     <div className="w-full h-auto bg-white rounded mt-2">
-                        {activeTab === "patient" && <PatientDetails />}
+                        {activeTab === "patient" && <PatientDetails patientDetails={patientDetails} />}
                         {activeTab === "chart" && (
                             <DentalChart2D onSelect={onSelect} />
                         )}

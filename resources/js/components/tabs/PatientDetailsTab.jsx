@@ -1,22 +1,6 @@
 import React from 'react'
 
-const PatientDetails = () => {
-    let datas = [
-        { label: "Name", value: "Lorem" },
-        { label: "Ic/Passport", value: "1032654789" },
-        { label: "Phone No", value: "1032654789" },
-        { label: "Gender", value: "Male" },
-        { label: "Email", value: "email@gmail.com" },
-        { label: "Student/Staff id", value: "D032410335" },
-    ];
-    function PatientInfoLabel({ label, value }) {
-        return (
-            <tr>
-                <td>{label}</td>
-                <td>{value}</td>
-            </tr>
-        );
-    }
+const PatientDetails = ({patientDetails}) => {
 
     return (
         <div className="mb-2 p-4 flex flex-col flex-wrap gap-2">
@@ -27,13 +11,12 @@ const PatientDetails = () => {
             <div className="overflow-x-auto rounded-box border border-base-content/5 bg-white text-black">
                 <table className="table">
                     <tbody>
-                        {datas.map((data, idx) => (
-                            <PatientInfoLabel
-                                key={idx}
-                                label={data.label}
-                                value={data.value}
-                            />
-                        ))}
+                        <tr><td>Name</td><td className="font-semibold">{patientDetails.name}</td></tr>
+                        <tr><td>Phone Number</td><td className="font-semibold">{patientDetails.phone_number}</td></tr>
+                        <tr><td>Email</td><td className="font-semibold">{patientDetails.email}</td></tr>
+                        <tr><td>Gender</td><td className="font-semibold">{patientDetails.gender}</td></tr>
+                        <tr><td>Ic Passport</td><td className="font-semibold">{patientDetails.ic_passport}</td></tr>
+                        <tr><td>student staff id</td><td className="font-semibold">{patientDetails.student_staff_id}</td></tr>
                     </tbody>
                 </table>
             </div>
