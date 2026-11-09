@@ -14,6 +14,7 @@ class ToothFinding extends Model
         'condition_id',
         'procedure_id',
         'finding_description',
+        'status',
     ];
 
     public function examination()

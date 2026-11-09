@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MainLayout from '../../layout/mainLayout'
 import Swal from "sweetalert2";
+import PageTitle from "@/components/layout/PageTitle.jsx";
 
 const ListAppointment = () => {
     let [currentStatus, setCurrentStatus] = useState("None");
@@ -254,9 +255,7 @@ const ListAppointment = () => {
   return (
       <MainLayout>
           <div className="w-full rounded-2xl border border-gray-200 text-black bg-white p-6">
-              <h1 className="mb-8 text-4xl font-normal text-black">
-                  Appointment List
-              </h1>
+              <PageTitle title={"Appointment List"} />
 
               <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,3fr)_400px]">
                   <div className="min-w-0 rounded-lg">

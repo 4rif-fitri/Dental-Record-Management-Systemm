@@ -126,7 +126,7 @@ class UserController extends Controller
         return Inertia::render('Auth/ForgotPassword');
     }
 
-    public function patientDetails($id){
+    public function getPatientById($id){
         $patientDetails = User::where('id', $id)->first();
         return ApiResponse::success('Success', $patientDetails)->toJsonResponse();
     }

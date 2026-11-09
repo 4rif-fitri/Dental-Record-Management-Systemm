@@ -16,6 +16,7 @@ import ToothProcedure from "../../components/modal/ToothProcedure";
 import {useParams} from "react-router-dom";
 import {route} from "ziggy-js";
 import api from "@/lib/axios.js";
+import PageTitle from "@/components/layout/PageTitle.jsx";
 
 const Examination = () => {
     let [activeTab, setActiveTab] = useState("patient");
@@ -146,6 +147,19 @@ const Examination = () => {
         { text: "patientConsent", label: "Patient Consent" },
     ];
 
+    const TabsHeader = () => {
+        return (
+            <div className="flex gap-2 flex-wrap items-center">
+                {linkTabs.map((tab) => (
+                    <button key={tab.text} onClick={() => setActiveTab(tab.text)}
+                            className={`btn sm:w-50 w-[48%] ${activeTab === tab.text ? "btn-primary" : "bg-white text-black border"}`}>
+                        {tab.label}
+                    </button>
+                ))}
+            </div>
+        )
+    }
+
     const getPatientDetails = async (id) => {
         try {
             const response = await api.get(
@@ -172,24 +186,10 @@ const Examination = () => {
             <ToothProcedure showToothProcedure={showToothProcedure} setShowToothProcedure={setShowToothProcedure} selectedTooth={selectedTooth}/>
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
-                <div className="mb-4 flex gap-2 border-gray-300 justify-between">
-                    <h1 className="font-bold tracking-tight text-gray-900 sm:text-3xl">
-                        Patients Examination
-                    </h1>
-                </div>
+                <PageTitle title={"Patients Examination"}/>
 
                 <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
-                    <div className="flex gap-2 flex-wrap items-center">
-                        {linkTabs.map((tab) => (
-                            <button
-                                key={tab.text}
-                                onClick={() => setActiveTab(tab.text)}
-                                className={`btn sm:w-50 w-[48%] ${activeTab === tab.text ? "btn-primary" : "bg-white text-black border"}`}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
-                    </div>
+                   <TabsHeader />
 
                     <div className="w-full h-auto bg-white rounded mt-2">
                         {activeTab === "patient" && <PatientDetails patientDetails={patientDetails} />}

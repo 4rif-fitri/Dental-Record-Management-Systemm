@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tooth extends Model
 {
     protected $table = 'tooth';
-
     protected $fillable = [
         'tooth_number',
         'tooth_name',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
+use App\Models\Appointment;
 use App\Services\AppointmentService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,63 +24,59 @@ class AppointmentController extends Controller
     {
         return Inertia::render('dentist/ListAppointment');
     }
-    protected $appointmentService;
 
-    public function __construct(AppointmentService $appointmentService)
-    {
-        $this->appointmentService = $appointmentService;
+    public function getAllAppointment(){
+        $appointment = Appointment::all();
+
+        return ApiResponse::success(200, $appointment)->toJsonResponse();
     }
 
-    public function index()
-    {
-        return response()->json(
-            $this->appointmentService->getAll()
-        );
+    public function getAppointmentById($id){
+        $appointment = Appointment::where('id', $id)->first();
+
+        return ApiResponse::success(200, $appointment)->toJsonResponse();
     }
 
-    public function show($id)
-    {
-        return response()->json(
-            $this->appointmentService->getById($id)
-        );
-    }
+    public function createAppointment(Request $request){
 
-    public function store(Request $request)
-    {
         $validated = $request->validate([
-            'dentist_id' => 'required|exists:users,id',
-            'appointment_date' => 'required|date',
-            'status' => 'required|string|max:20',
-            'time_slot' => 'required|string|max:100',
+            'dentist_id' => 'required',
+            'appointment_date' => 'required',
+            'time_slot' => 'required',
+            'status' => 'required',
         ]);
 
-        $appointment = $this->appointmentService->create($validated);
+        $appointment = new Appointment();
+        $appointment->dentist_id = $request->dentist_id;
+        $appointment->appointment_date = $request->appointment_date;
+        $appointment->status = $request->status;
+        $appointment->time_slot = $request->time_slot;
+        $appointment->save();
 
-        return response()->json([
-            'message' => 'Appointment created successfully',
-            'data' => $appointment
-        ], 201);
+        return ApiResponse::success(200, $appointment)->toJsonResponse();
     }
 
-    public function update(Request $request, $id)
-    {
+    public function updateAppointment(Request $request, $id){
         $validated = $request->validate([
-            'appointment_date' => 'sometimes|date',
-            'status' => 'sometimes|string|max:20',
-            'time_slot' => 'sometimes|string|max:100',
+            'dentist_id' => 'required',
+            'appointment_date' => 'required',
+            'time_slot' => 'required',
+            'status' => 'required',
         ]);
 
-        return response()->json(
-            $this->appointmentService->update($id, $validated)
-        );
+        $appointment = Appointment::where('id', $id)->first();
+        $appointment->dentist_id = $request->dentist_id;
+        $appointment->appointment_date = $request->appointment_date;
+        $appointment->status = $request->status;
+        $appointment->time_slot = $request->time_slot;
+        $appointment->save();
+
+        return ApiResponse::success(200, $appointment)->toJsonResponse();
     }
 
-    public function destroy($id)
-    {
-        $this->appointmentService->delete($id);
+    public function deleteAppointment($id){
+        $response = Appointment::where('id', $id)->delete();
 
-        return response()->json([
-            'message' => 'Appointment deleted successfully'
-        ]);
+        return ApiResponse::success(200, $response)->toJsonResponse();
     }
 }

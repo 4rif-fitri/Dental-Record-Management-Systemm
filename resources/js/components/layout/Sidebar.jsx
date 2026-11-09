@@ -52,7 +52,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 items: [
                     { label: "Appointments", link: "/dentist-list-appointment" },
                     { label: "Patients", link: "/dentist-list-patient" },
-                    { label: "Examination", link: "/dentist-examination/1" },
                     { label: "My Profile", link: "/user-profile" },
                 ],
             },
