@@ -29,7 +29,7 @@ class SurfaceController extends Controller
         $surface = new Surface();
         $surface->surface_name = $request->surface_name;
         $surface->surface_type = $request->surface_type;
-        $surface_code = $request->surface_code;
+        $surface->surface_code = $request->surface_code;
         $surface->save();
 
         return ApiResponse::success(200, $surface)->toJsonResponse();
@@ -45,7 +45,7 @@ class SurfaceController extends Controller
         $surface = Surface::where('id', $id)->first();
         $surface->surface_name = $request->surface_name;
         $surface->surface_type = $request->surface_type;
-        $surface_code = $request->surface_code;
+        $surface->surface_code = $request->surface_code;
         $surface->save();
 
         return ApiResponse::success(200, $surface)->toJsonResponse();

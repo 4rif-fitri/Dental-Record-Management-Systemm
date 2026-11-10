@@ -29,6 +29,7 @@ class ExaminationMedicineController extends Controller
             'frequency' => 'required',
             'duration' => 'required',
             'quantity' => 'required',
+            'instructions' => 'required',
         ]);
 
         $examinationMedicine = new ExaminationMedicine();

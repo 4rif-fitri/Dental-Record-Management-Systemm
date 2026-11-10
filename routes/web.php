@@ -24,20 +24,20 @@ use App\Http\Controllers\ToothSurfaceController;
 | such as login, registration, password resets, and session management.
 |
 */
-Route::middleware('guest')->group(function () {
+Route::get('/bruno/csrf', function () {
+    return response()->json([
+        'csrf_token' => csrf_token()
+    ]);
+});
 
-    Route::get('/bruno/csrf', function () {
-        return response()->json([
-            'csrf_token' => csrf_token()
-        ]);
-    });
+Route::middleware('guest')->group(function () {
 
     Route::get('/login', [UserController::class, 'showLoginPage'])->name('login');
     Route::get('/register', [UserController::class, 'showRegisterPage'])->name('register');
     Route::get('/new-password', [UserController::class, 'showForgotPasswordPage'])->name('newPassword');
     Route::get('/forgot-password', [UserController::class, 'showForgotPasswordPage'])->name('forgotPassword');
 
-    Route::post('/', [UserController::class, 'login'])->name('userLogin');
+    Route::post('/login', [UserController::class, 'login'])->name('userLogin');
 });
 
 /*
@@ -83,11 +83,12 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
 
     Route::prefix('profile')->group(function () {
-        Route::get('/{id}', [UserController::class, 'getProfileData'])->name('getProfileData');
+        Route::get('/', [UserController::class, 'getProfileData'])->name('getProfileData');
         Route::PUT('/updateProfile', [UserController::class, 'updateProfile'])->name('updateProfile');
     });
 
     Route::prefix('examination')->group(function () {
+        Route::get('/', [ExaminationController::class, "getAllExaminations"])->name("getAllExaminations");
         Route::get('/{id}', [ExaminationController::class, 'getExaminationById'])->name('getExaminationById');
         Route::post('/store', [ExaminationController::class, 'createExamination'])->name('createExamination');
         Route::put('update/{id}', [ExaminationController::class, 'updateExamination'])->name('updateExamination');
@@ -95,8 +96,9 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('patient')->group(function () {
         Route::get('/', [UserController::class, 'getAllPatient'])->name('getAllPatient');
+        Route::post('/store', [UserController::class, 'createPatient'])->name('createPatient');
         Route::get('/{id}', [UserController::class, 'getPatientById'])->name('getPatientById');
-        Route::get('/search', [UserController::class, 'getPatientSearch'])->name('getPatientSearch');
+        Route::post('/search', [UserController::class, 'getPatientSearch'])->name('getPatientSearch');
     });
 
     Route::prefix("procedure")->group(function () {
@@ -150,6 +152,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('booking')->group(function () {
         Route::get('/', [AppointmentBookingController::class, 'getAllBooking'])->name('getAllBooking');
         Route::get('/{id}', [AppointmentBookingController::class, 'getBookingById'])->name('getBookingById');
+        Route::post('/weekly-schedule', [AppointmentBookingController::class, 'getWeeklySchedule']);
         Route::post('/store', [AppointmentBookingController::class, 'createBooking'])->name('createBooking');
         Route::put('update/{id}', [AppointmentBookingController::class, 'updateBooking'])->name('updateBooking');
         Route::delete('delete/{id}', [AppointmentBookingController::class, 'deleteBooking'])->name('deleteBooking');
@@ -172,8 +175,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('toothSurface')->group(function () {
+        Route::get('/', [ToothSurfaceController::class, 'getAllToothSurfaces'])->name('getAllToothSurvey');
         Route::get('/{id}', [ToothSurfaceController::class, 'getToothSurfacesById'])->name('getToothSurfaceById');
         Route::post('/store', [ToothSurfaceController::class, 'createToothSurface'])->name('createToothSurface');
+        Route::put('update/{id}', [ToothSurfaceController::class, 'updateToothSurface'])->name('updateToothSurface');
         Route::delete('delete/{id}', [ToothSurfaceController::class, 'deletetoothSurface'])->name('deleteTooth');
     });
 

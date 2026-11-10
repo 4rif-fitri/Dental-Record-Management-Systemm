@@ -60,7 +60,7 @@ class ToothController extends Controller
     }
 
     public function deleteTooth($id){
-        $response = Tooth::where('id', $id)->delete();
+        $response = Tooth::destroy('id', $id);
 
         return ApiResponse::success(200, $response)->toJsonResponse();
     }

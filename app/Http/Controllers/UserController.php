@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
-
+use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     public function login(Request $request)
@@ -66,6 +66,28 @@ class UserController extends Controller
         return ApiResponse::success('Success', $profile)->toJsonResponse();
     }
 
+    public function createPatient(Request $request)
+    {
+        $validated = $request->validate([
+            'student_staff_id' => 'required|string|unique:users,student_staff_id',
+            'ic_passport' => 'required|string|unique:users,ic_passport',
+            'name' => 'required|string',
+            'gender' => 'required|string',
+            'phone_number' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['role'] = 'patient';
+
+        $user = new User($validated);
+        $user->save();
+
+        return ApiResponse::success('Success', $user)->toJsonResponse();
+
+    }
+
     public function userProfile()
     {
         return Inertia::render('Profile');
@@ -78,21 +100,20 @@ class UserController extends Controller
 
     public function getPatientSearch(Request $request)
     {
-        $keyword = $request->query('keyword');
+        $keyword = $request->query('keyword', '');
 
         $icKeyword = str_replace('-', '', $keyword);
 
         $patients = User::where('role', 'patient')
             ->where(function ($query) use ($keyword, $icKeyword) {
-
                 $query->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('student_staff_id', 'LIKE', "%{$keyword}%")
+                    ->orWhere('ic_passport', 'LIKE', "%{$keyword}%")
+                    ->orWhere('email', 'LIKE', "%{$keyword}%")
                     ->orWhereRaw(
                         "REPLACE(ic_passport, '-', '') LIKE ?",
                         ["%{$icKeyword}%"]
-                    )
-                    ->orWhere('student_staff_id', 'LIKE', "%{$keyword}%")
-                    ->orWhere('email', 'LIKE', "%{$keyword}%");
-
+                    );
             })
             ->get();
 
@@ -108,6 +129,35 @@ class UserController extends Controller
     {
         $id = session('id');
         $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'gender' => 'required|string',
+
+            'student_staff_id' => [
+                'required',
+                'string',
+                Rule::unique('users', 'student_staff_id')->ignore($user->id),
+            ],
+
+            'ic_passport' => [
+                'required',
+                'string',
+                Rule::unique('users', 'ic_passport')->ignore($user->id),
+            ],
+
+            'phone_number' => 'required|string',
+
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+        ]);
+
+        $user->update($validated);
+
+        return ApiResponse::success('Success', $user)->toJsonResponse();
     }
 
     public function showLoginPage(){

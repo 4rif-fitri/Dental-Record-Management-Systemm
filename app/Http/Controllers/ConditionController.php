@@ -15,7 +15,7 @@ class ConditionController extends Controller
     }
 
     public function getConditionById($id){
-        $conditions = Condition::where('condition_id', $id)->get();
+        $conditions = Condition::where('id', $id)->get();
 
         return ApiResponse::success(200,$conditions)->toJsonResponse();
     }
@@ -46,7 +46,7 @@ class ConditionController extends Controller
             'condition_code' => ['required'],
         ]);
 
-        $condition = Condition::where('condition_id', $id)->first();
+        $condition = Condition::where('id', $id)->first();
         $condition->condition_name = $validate['name'];
         $condition->condition_description = $validate['description'];
         $condition->condition_type = $validate['condition_type'];
@@ -57,6 +57,7 @@ class ConditionController extends Controller
     }
 
     public function deleteCondition(Request $request, $id){
+
         $response = Condition::destroy($id);
 
         return ApiResponse::success(200, $response)->toJsonResponse();

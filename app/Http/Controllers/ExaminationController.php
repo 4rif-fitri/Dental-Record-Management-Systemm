@@ -21,7 +21,14 @@ class ExaminationController extends Controller
         }
     }
 
-    public function examination($id)
+    public function getAllExaminations()
+    {
+        $examinations = Examination::all();
+
+        return ApiResponse::success(200, $examinations)->toJsonResponse();
+    }
+
+    public function getExaminationById($id)
     {
         $examination = Examination::where('patient_id', $id)
             ->with([
@@ -34,7 +41,12 @@ class ExaminationController extends Controller
             ])
             ->first();
 
-        return ApiResponse::success(200, $examination)->toJsonResponse();
+        if($examination == null){
+            return ApiResponse::error("Data not found!", 400)->toJsonResponse();
+        }else{
+            return ApiResponse::success(200, $examination)->toJsonResponse();
+        }
+
     }
 
     public function createExamination(Request $request){

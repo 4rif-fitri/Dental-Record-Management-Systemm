@@ -14,16 +14,37 @@ class ToothSurfaceController extends Controller
         return ApiResponse::success(200, $toothSurface)->toJsonResponse();
     }
 
+    public function getAllToothSurfaces()
+    {
+        $toothSurfaces = ToothSurface::all();
+
+        return ApiResponse::success(200, $toothSurfaces)->toJsonResponse();
+    }
+
     public function createToothSurface(Request $request){
 
         $validated = $request->validate([
             'tooth_findings_id' => 'required',
-            'tooth_surfaces_id' => 'required',
+            'surface_id' => 'required',
 //            'tooth_findings_id' => 'nullable|exists:tooth_findings,id',
 //            'tooth_surfaces_id' => 'nullable|exists:tooth_surfaces,id',
         ]);
 
         $toothSurface = new ToothSurface();
+        $toothSurface->tooth_findings_id = $request->tooth_findings_id;
+        $toothSurface->surface_id = $request->surface_id;
+        $toothSurface->save();
+
+        return ApiResponse::success(200, $toothSurface)->toJsonResponse();
+    }
+
+    public function updateToothSurface(Request $request, $id){
+        $validated = $request->validate([
+            'tooth_findings_id' => 'required',
+            'surface_id' => 'required',
+        ]);
+
+        $toothSurface = ToothSurface::where('id', $id)->first();
         $toothSurface->tooth_findings_id = $request->tooth_findings_id;
         $toothSurface->surface_id = $request->surface_id;
         $toothSurface->save();

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Models\Procedure;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-
+use Exception;
 class ProcedureController extends Controller
 {
     public function getAllProcedure(){
         $procedures = Procedure::all();
+
         return ApiResponse::success(200, $procedures)->toJsonResponse();
     }
 
@@ -51,9 +53,22 @@ class ProcedureController extends Controller
         return ApiResponse::success(200, $procedure)->toJsonResponse();
     }
 
-    public function deleteProcedure($id){
-        Procedure::where('id', $id)->delete();
+    public function deleteProcedure($id)
+    {
+        try {
+            $procedure = Procedure::findOrFail($id);
+            $procedure->delete();
 
-        return ApiResponse::success(200)->toJsonResponse();
+            return ApiResponse::success(
+                'Procedure deleted successfully',
+                $procedure
+            )->toJsonResponse();
+
+        } catch (QueryException $e) {
+            return ApiResponse::error('Cannot delete procedure because it is being used in other records.')->toJsonResponse();
+
+        } catch (Exception $e) {
+            return ApiResponse::error("Something went wrong.")->toJsonResponse();
+        }
     }
 }
