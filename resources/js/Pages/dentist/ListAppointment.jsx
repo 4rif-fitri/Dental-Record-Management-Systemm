@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import MainLayout from '../../layout/mainLayout'
 import Swal from "sweetalert2";
 import PageTitle from "@/components/layout/PageTitle.jsx";
+import AppointmenStatusNone from "@/components/molecules/Appointmen/AppointmenStatusNone.jsx";
+import AppointmenStatusBooked from "@/components/molecules/Appointmen/AppointmenStatusBooked.jsx";
 
 const ListAppointment = () => {
     let [currentStatus, setCurrentStatus] = useState("None");
@@ -17,105 +19,6 @@ const ListAppointment = () => {
         email: "lorem@gamil.com",
         approval: "None",
     });
-
-    function AppointmenStatusBooked() {
-        return (
-            <>
-                <div className="grid grid-cols-[90px_minmax(0,1fr)] items-center gap-2 text-sm">
-                    <span>Status</span>
-
-                    <div className="bg-blue-100 px-2 py-2 text-center text-xs text-blue-700">
-                        {selectedAppointment.status}
-                    </div>
-                </div>
-
-                {[
-                    ["Patient Name", selectedAppointment.patientName],
-                    ["Ic/Passport", selectedAppointment.ic],
-                    ["Phone Number", selectedAppointment.phone],
-                    ["Student/Staff ID", selectedAppointment.staffId],
-                    ["Patient Category", selectedAppointment.category],
-                    ["Gender", selectedAppointment.gender],
-                    ["Email Address", selectedAppointment.email],
-                    ["Is Approved", selectedAppointment.approval],
-                ].map(([label, value]) => (
-                    <div
-                        key={label}
-                        className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 text-xs"
-                    >
-                        <span>{label}</span>
-                        <span className="break-words">{value}</span>
-                    </div>
-                ))}
-
-                <div className="flex flex-wrap justify-end gap-3 pt-12">
-                    <button
-                        type="button"
-                        onClick={() => handleStatusChange("Reject")}
-                        className="min-w-[100px] flex-1 rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-                    >
-                        Reject
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => handleStatusChange("Accept")}
-                        className="min-w-[100px] flex-1 rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
-                    >
-                        Accept
-                    </button>
-                </div>
-            </>
-        );
-    }
-
-    function AppointmenStatusNone() {
-        return (
-            <>
-                <div className="grid grid-cols-[90px_minmax(0,1fr)] items-center gap-2 text-sm">
-                    <span>Status</span>
-                    <div className="px-2 py-2 text-center text-xs bg-gray-200 text-gray-700 font-semibold">
-                        None
-                    </div>
-
-                    <span>Day</span>
-                    <div className="px-2 py-2 text-xs text-gray-700 font-semibold">
-                        8:00 AM
-                    </div>
-
-                    <span>Time</span>
-                    <div className="px-2 py-2 text-xs text-gray-700 font-semibold">
-                        Monday
-                    </div>
-
-                    <span>Date</span>
-                    <div className="px-2 py-2 text-xs text-gray-700 font-semibold">
-                        10/12/2026
-                    </div>
-
-                    <span>Change Status</span>
-                    <select
-                        defaultValue="Pick a color"
-                        className="select bg-white"
-                    >
-                        <option>None</option>
-                        <option>Available</option>
-                        <option>Unavailable</option>
-                    </select>
-                </div>
-
-                <div className="flex">
-                    <button
-                        type="button"
-                        onClick={() => handleStatusChange("Save")}
-                        className="min-w-[100px] flex-1 rounded-md bg-primary px-4 py-2 text-sm text-white"
-                    >
-                        Save
-                    </button>
-                </div>
-            </>
-        );
-    }
 
     function handleClickDetail(e) {
         let status = e.target.textContent;
@@ -156,15 +59,9 @@ const ListAppointment = () => {
     };
 
     const times = [
-        "8:00 AM",
-        "9:00 AM",
-        "10:00 AM",
-        "11:00 AM",
-        "12:00 PM",
-        "1:00 PM",
-        "2:00 PM",
-        "3:00 PM",
-        "4:00 PM",
+        "8:00 AM","9:00 AM","10:00 AM",
+        "11:00 AM","12:00 PM","1:00 PM",
+        "2:00 PM","3:00 PM","4:00 PM",
     ];
 
     const days = [
@@ -178,69 +75,13 @@ const ListAppointment = () => {
     ];
 
     const appointmentData = [
-        [
-            "Available",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Available",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Available",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Available",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Booked",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-            "Unavailable",
-        ],
-        [
-            "Available",
-            "Booked",
-            "Available",
-            "Booked",
-            "Booked",
-            "Unavailable",
-            "Unavailable",
-        ],
+        ["Available","Booked","Booked","Booked","Booked","Unavailable","Unavailable",],
+        ["Available","Booked","Booked","Booked","Booked","Unavailable","Unavailable",],
+        ["Available","Booked","Booked","Booked","Booked","Unavailable","Unavailable",],
+        ["Available","Booked","Booked","Booked","Booked","Unavailable","Unavailable",],
+        ["Unavailable","Unavailable","Unavailable","Unavailable","Unavailable","Unavailable","Unavailable",],
+        ["Unavailable","Unavailable","Unavailable","Unavailable","Unavailable","Unavailable","Unavailable",],
+        ["Available","Booked","Available","Booked","Booked","Unavailable","Unavailable",],
         ["None", "None", "None", "None", "None", "Unavailable", "Unavailable"],
         ["None", "None", "None", "None", "None", "Unavailable", "Unavailable"],
     ];
@@ -341,16 +182,10 @@ const ListAppointment = () => {
                       </h2>
 
                       <div className="space-y-4 p-3">
-                          {currentStatus === "Booked" && (
-                              <AppointmenStatusBooked />
-                          )}
-                          {currentStatus === "None" && <AppointmenStatusNone />}
-                          {currentStatus === "Available" && (
-                              <AppointmenStatusNone />
-                          )}
-                          {currentStatus === "Unavailable" && (
-                              <AppointmenStatusNone />
-                          )}
+                          {currentStatus === "Booked" && <AppointmenStatusBooked selectedAppointment={selectedAppointment} handleStatusChange={handleStatusChange} /> }
+                          {currentStatus === "None" && <AppointmenStatusNone /> }
+                          {currentStatus === "Available" && <AppointmenStatusNone /> }
+                          {currentStatus === "Unavailable" && <AppointmenStatusNone /> }
                       </div>
                   </div>
               </div>

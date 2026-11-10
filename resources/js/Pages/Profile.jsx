@@ -4,10 +4,8 @@ import { useState } from 'react';
 import UpdateProfile from '../components/modal/UpdateProfile';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios';
-import InfoRow from "@/components/atom/InfoRow.jsx";
 import ProfileDataSection from "@/components/molecules/Profile/DataSection.jsx";
 import HeaderSection from "@/components/molecules/Profile/HeaderSection.jsx";
-
 
 const Profile = () => {
     const [userProfile,setUserProfile] = useState([])

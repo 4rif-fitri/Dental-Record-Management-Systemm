@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
 |
 */
 Route::middleware('auth')->group(function () {
+    Route::get('/asd', [AppointmentBookingController::class, 'getWeeklySchedule']);
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [UserController::class, 'getProfileData'])->name('getProfileData');
@@ -147,12 +148,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [AppointmentController::class, 'createAppointment'])->name('createAppointment');
         Route::put('update/{id}', [AppointmentController::class, 'updateAppointment'])->name('updateAppointment');
         Route::delete('delete/{id}', [AppointmentController::class, 'deleteAppointment'])->name('deleteAppointment');
+
     });
+
+        Route::get('/booking/day', [AppointmentBookingController::class, 'getDailyAppointmentWithStatus']);
 
     Route::prefix('booking')->group(function () {
         Route::get('/', [AppointmentBookingController::class, 'getAllBooking'])->name('getAllBooking');
         Route::get('/{id}', [AppointmentBookingController::class, 'getBookingById'])->name('getBookingById');
-        Route::post('/weekly-schedule', [AppointmentBookingController::class, 'getWeeklySchedule']);
         Route::post('/store', [AppointmentBookingController::class, 'createBooking'])->name('createBooking');
         Route::put('update/{id}', [AppointmentBookingController::class, 'updateBooking'])->name('updateBooking');
         Route::delete('delete/{id}', [AppointmentBookingController::class, 'deleteBooking'])->name('deleteBooking');
