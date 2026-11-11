@@ -39,15 +39,16 @@ class AppointmentController extends Controller
 
     public function createAppointment(Request $request){
 
+        $dentist_id = session('id');
+
         $validated = $request->validate([
-            'dentist_id' => 'required',
             'appointment_date' => 'required',
             'time_slot' => 'required',
             'status' => 'required',
         ]);
 
         $appointment = new Appointment();
-        $appointment->dentist_id = $request->dentist_id;
+        $appointment->dentist_id = $dentist_id;
         $appointment->appointment_date = $request->appointment_date;
         $appointment->status = $request->status;
         $appointment->time_slot = $request->time_slot;
@@ -58,17 +59,11 @@ class AppointmentController extends Controller
 
     public function updateAppointment(Request $request, $id){
         $validated = $request->validate([
-            'dentist_id' => 'required',
-            'appointment_date' => 'required',
-            'time_slot' => 'required',
             'status' => 'required',
         ]);
 
         $appointment = Appointment::where('id', $id)->first();
-        $appointment->dentist_id = $request->dentist_id;
-        $appointment->appointment_date = $request->appointment_date;
         $appointment->status = $request->status;
-        $appointment->time_slot = $request->time_slot;
         $appointment->save();
 
         return ApiResponse::success(200, $appointment)->toJsonResponse();
