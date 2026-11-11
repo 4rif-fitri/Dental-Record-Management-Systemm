@@ -142,6 +142,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('appointment')->group(function () {
+        Route::patch('/appointment/booking/{id}/{action}', [AppointmentBookingController::class, 'updateBookingStatus'])->name('updateBookingStatus');
         Route::get('/getWeeklySchedule', [AppointmentBookingController::class, 'getWeeklySchedule'])->name('getWeeklySchedule');
         Route::get('/', [AppointmentController::class, 'getAllAppointment'])->name('getAllAppointment');
         Route::get('/{id}', [AppointmentController::class, 'getAppointmentById'])->name('getAppointmentById');

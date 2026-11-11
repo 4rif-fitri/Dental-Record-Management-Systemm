@@ -55,6 +55,7 @@ const ListAppointment = () => {
                 { params: { date: formatDate(weekStart) } }
             );
 
+            console.log(response)
             setDaysFromApi(response.data.days || []);
 
         } catch (error) {
@@ -197,9 +198,6 @@ const ListAppointment = () => {
 
             if (!selectedAppointment) return;
 
-            console.log({selectedAppointment})
-            console.log({value})
-
             const result = await Swal.fire({
                 title: "Are you sure?",
                 text: `Change appointment status to ${value}?`,
@@ -264,32 +262,35 @@ const ListAppointment = () => {
             return;
         }
 
-        const isAccept = action === "Accept";
+        const bookingAction = action === "Accept" ? "accept" : "reject";
 
         const result = await Swal.fire({
             title: "Are you sure?",
-            text: `Do you want to ${action.toLowerCase()} this appointment?`,
+            text: `Do you want to ${bookingAction} this appointment?`,
             icon: "question",
             showCancelButton: true,
             confirmButtonText: "Yes",
             cancelButtonText: "Cancel",
-            confirmButtonColor: isAccept ? "#16a34a" : "#ef4444",
+            confirmButtonColor: bookingAction === "accept" ? "#16a34a" : "#ef4444",
         });
 
         if (!result.isConfirmed) return;
 
         try {
-            const bookingId = selectedAppointment.bookingId;
+            response = await api.patch(
+                route("updateBookingStatus", {
+                    id: selectedAppointment.bookingId,
+                    action: bookingAction
+                })
+            );
 
-            await api.patch(`/appointment/booking/${bookingId}/${isAccept ? "accept" : "reject"}`);
-            await Swal.fire("Success!", `Appointment ${isAccept ? "accepted" : "rejected"} successfully.`, "success");
+            await Swal.fire("Success!", `Appointment ${bookingAction}ed successfully.`, "success");
             await fetchAppointments();
 
             setSelectedAppointment(null);
             setCurrentStatus("None");
 
         } catch (error) {
-
             console.error("API Error:", error.response?.data || error);
             Swal.fire("Error", error.response?.data?.message || "Unable to update booking.", "error");
         }

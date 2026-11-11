@@ -249,7 +249,7 @@ class AppointmentBookingController extends Controller
             'bookings' => function ($query) {
                 $query->whereIn('status', [
                     'pending',
-                    'approved'
+                    'accepted'
                 ])->with('patient');
             }
         ])
@@ -352,7 +352,7 @@ class AppointmentBookingController extends Controller
             'bookings' => function ($query) {
                 $query->whereIn('status', [
                     'pending',
-                    'approved'
+                    'accepted'
                 ]);
             }
         ])
@@ -454,6 +454,27 @@ class AppointmentBookingController extends Controller
         return ApiResponse::success(
             200,
             $response
+        )->toJsonResponse();
+    }
+
+    public function updateBookingStatus(Request $request, $id, $action)
+    {
+        $validated = validator(
+            ['action' => $action],
+            ['action' => 'required|in:accept,reject']
+        )->validate();
+
+        $booking = AppointmentBooking::findOrFail($id);
+
+        $booking->status = $action === 'accept'
+            ? 'accepted'
+            : 'rejected';
+
+        $booking->save();
+
+        return ApiResponse::success(
+            200,
+            $booking
         )->toJsonResponse();
     }
 }
