@@ -151,7 +151,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
-        Route::get('/booking/day', [AppointmentBookingController::class, 'getDailyAppointmentWithStatus']);
+    Route::get('/booking/day', [AppointmentBookingController::class, 'getDailyAppointmentWithStatus']);
 
     Route::prefix('booking')->group(function () {
         Route::get('/', [AppointmentBookingController::class, 'getAllBooking'])->name('getAllBooking');

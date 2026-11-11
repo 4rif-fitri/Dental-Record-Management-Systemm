@@ -230,12 +230,20 @@ class AppointmentBookingController extends Controller
         )->toJsonResponse();
     }
 
+
     public function getWeeklySchedule(Request $request)
     {
+        $validated = $request->validate([
+            'date' => ['required', 'date'],
+        ]);
+
         $dentistId = session('id');
 
-        $startDate = Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $endDate = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+        $startDate = Carbon::parse($validated['date'])
+            ->startOfWeek(Carbon::MONDAY);
+
+        $endDate = $startDate->copy()
+            ->endOfWeek(Carbon::SUNDAY);
 
         $appointments = Appointment::with([
             'bookings' => function ($query) {
@@ -260,7 +268,7 @@ class AppointmentBookingController extends Controller
             ->orderBy('time_slot')
             ->get();
 
-        // Group by date
+        // Group appointments by date
         $groupedAppointments = $appointments
             ->groupBy(function ($appointment) {
                 return $appointment->getRawOriginal('appointment_date');
@@ -273,10 +281,10 @@ class AppointmentBookingController extends Controller
 
                     'appointments' => $items->map(function ($item) {
 
-                        // Check active booking
+                        // Get active booking
                         $booking = $item->bookings->first();
 
-                        // Determine status
+                        // Determine appointment status
                         if ($item->status === 'unavailable') {
                             $status = 'unavailable';
                         } elseif ($booking) {
@@ -295,7 +303,7 @@ class AppointmentBookingController extends Controller
                                 'status' => $booking->status,
                                 'reason' => $booking->reason,
 
-                                'patient' => [
+                                'patient' => $booking->patient ? [
                                     'id' => $booking->patient->id,
                                     'name' => $booking->patient->name,
                                     'ic_passport' => $booking->patient->ic_passport,
@@ -303,8 +311,9 @@ class AppointmentBookingController extends Controller
                                     'student_staff_id' => $booking->patient->student_staff_id,
                                     'gender' => $booking->patient->gender,
                                     'email' => $booking->patient->email,
-                                ]
-                            ] : false
+                                ] : null,
+
+                            ] : null
                         ];
 
                     })->values()
@@ -323,6 +332,7 @@ class AppointmentBookingController extends Controller
             $response
         )->toJsonResponse();
     }
+
 
     public function getWeeklyAppointmentWithStatus(Request $request)
     {

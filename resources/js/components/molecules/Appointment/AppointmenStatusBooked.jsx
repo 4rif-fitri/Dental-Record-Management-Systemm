@@ -1,4 +1,7 @@
-const AppointmenStatusBooked = ({selectedAppointment,handleStatusChange}) => {
+
+const AppointmenStatusBooked = ({ selectedAppointment, handleStatusChange }) => {
+    if (!selectedAppointment) return null;
+
     return (
         <>
             <div className="grid grid-cols-[90px_minmax(0,1fr)] items-center gap-2 text-sm">
@@ -24,28 +27,33 @@ const AppointmenStatusBooked = ({selectedAppointment,handleStatusChange}) => {
                     className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 text-xs"
                 >
                     <span>{label}</span>
-                    <span className="break-words">{value}</span>
+                    <span className="break-words">{value || "-"}</span>
                 </div>
             ))}
 
             <div className="flex flex-wrap justify-end gap-3 pt-12">
-                <button
-                    type="button"
-                    onClick={() => handleStatusChange("Reject")}
-                    className="min-w-[100px] flex-1 rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-                >
-                    Reject
-                </button>
+                {selectedAppointment.approval === "pending" && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => handleStatusChange("Reject")}
+                            className="min-w-[100px] flex-1 rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+                        >
+                            Reject
+                        </button>
 
-                <button
-                    type="button"
-                    onClick={() => handleStatusChange("Accept")}
-                    className="min-w-[100px] flex-1 rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
-                >
-                    Accept
-                </button>
+                        <button
+                            type="button"
+                            onClick={() => handleStatusChange("Accept")}
+                            className="min-w-[100px] flex-1 rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+                        >
+                            Accept
+                        </button>
+                    </>
+                )}
             </div>
         </>
-    )
-}
-export default AppointmenStatusBooked
+    );
+};
+
+export default AppointmenStatusBooked;
