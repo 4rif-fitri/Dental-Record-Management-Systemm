@@ -13,7 +13,6 @@ import Medicine from "../../components/modal/Medicine";
 import Photo from "../../components/modal/Photo";
 import PreviewPhoto from "../../components/modal/previewPhoto";
 import ToothProcedure from "../../components/modal/ToothProcedure";
-import {useParams} from "react-router-dom";
 import {route} from "ziggy-js";
 import api from "@/lib/axios.js";
 import PageTitle from "@/components/layout/PageTitle.jsx";
@@ -30,7 +29,6 @@ const Examination = () => {
     let [showPreviewPhoto, setShowPreviewPhoto] = useState(false);
     let [showToothProcedure, setShowToothProcedure] = useState(false);
     let [selectedTooth, setSelectedTooth] = useState(null);
-
     const [patientDetails, setPatientDetails] = useState([])
 
     const [procedures, setProcedures] = useState([
@@ -163,10 +161,10 @@ const Examination = () => {
     const getPatientDetails = async (id) => {
         try {
             const response = await api.get(
-                route('patientDetails', { id })
+                route('getPatientById', { id })
             );
             setPatientDetails(response.data)
-            console.log(response)
+            setNotes(response.data.examinations.case_summary)
 
         }catch (error){
             console.log(error)

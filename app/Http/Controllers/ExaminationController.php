@@ -60,8 +60,8 @@ class ExaminationController extends Controller
 
     public function updateExamination(Request $request){
         $validated = $request->validate([
-            'case_summary' => 'required',
             'examination_id' => 'required',
+            'case_summary' => 'required',
         ]);
 
         $examination = Examination::where('id', $request->examination_id)->first();

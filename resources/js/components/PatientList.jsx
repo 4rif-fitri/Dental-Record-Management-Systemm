@@ -7,6 +7,7 @@ const PatientList = ({ datas = [], role }) => {
             <tr key={patient.id}>
                 <th>{index + 1}</th>
                 <td>{patient.name}</td>
+                <td>{patient.student_staff_id}</td>
                 <td className="hidden md:table-cell">
                     {patient.ic_passport}
                 </td>
@@ -17,7 +18,7 @@ const PatientList = ({ datas = [], role }) => {
 
                 {role === "Dentist" && (
                     <td>
-                        <Link href={`/examination/${patient.id}`}
+                        <Link href={`/dentist-examination/${patient.id}`}
                             className="btn btn-primary font-semibold btn-wide h-7">
                             View
                         </Link>
@@ -44,9 +45,8 @@ const PatientTable = ({role = "Dentist", datas = []}) => {
                   <tr>
                       <th>ID</th>
                       <th>Name</th>
-                      <th className="hidden md:table-cell">
-                          IC/Passport Number
-                      </th>
+                      <th>Student/Staff Id</th>
+                      <th>IC/Passport Number</th>
                       <th className="hidden md:table-cell">Catagory</th>
                       <th>Phone Number</th>
                       {role === "Dentist" ? <th>Action</th> : ""}

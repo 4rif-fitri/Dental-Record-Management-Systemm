@@ -12,13 +12,18 @@ const ListPatient = () => {
 
     const handleSearch = async () => {
         try {
-            const response = await api.get(route('getPatientSearch', {keyword: search}))
-            console.log(response)
+            const response = await api.post('/patient/search', {
+                keyword: search
+            });
 
-        }catch (error) {
-            console.log(error)
+            setPatients(response.data)
+
+            console.log(response.data);
+
+        } catch (error) {
+            console.error(error.response?.data || error);
         }
-    }
+    };
 
     const getAllPatient = async () => {
         try {

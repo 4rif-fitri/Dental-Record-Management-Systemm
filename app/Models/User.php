@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public function examinations()
     {
-        return $this->hasMany(Examination::class, 'patient_id');
+        return $this->hasOne(Examination::class, 'patient_id');
     }
 
     public function media()

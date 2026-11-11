@@ -100,12 +100,14 @@ class UserController extends Controller
 
     public function getPatientSearch(Request $request)
     {
-        $keyword = $request->query('keyword', '');
+
+        $keyword = $request->keyword;
 
         $icKeyword = str_replace('-', '', $keyword);
 
         $patients = User::where('role', 'patient')
             ->where(function ($query) use ($keyword, $icKeyword) {
+
                 $query->where('name', 'LIKE', "%{$keyword}%")
                     ->orWhere('student_staff_id', 'LIKE', "%{$keyword}%")
                     ->orWhere('ic_passport', 'LIKE', "%{$keyword}%")
@@ -114,10 +116,14 @@ class UserController extends Controller
                         "REPLACE(ic_passport, '-', '') LIKE ?",
                         ["%{$icKeyword}%"]
                     );
+
             })
             ->get();
 
-        return ApiResponse::success('Success', $patients)->toJsonResponse();
+        return ApiResponse::success(
+            'Success',
+            $patients
+        )->toJsonResponse();
     }
 
     public function dentistListPatient()
@@ -176,9 +182,17 @@ class UserController extends Controller
         return Inertia::render('Auth/ForgotPassword');
     }
 
-    public function getPatientById($id){
-        $patientDetails = User::where('id', $id)->first();
-        return ApiResponse::success('Success', $patientDetails)->toJsonResponse();
+    public function getPatientById($id)
+    {
+        $patientDetails = User::with('examinations')
+            ->where('id', $id)
+            ->where('role', 'patient')
+            ->firstOrFail();
+
+        return ApiResponse::success(
+            'Success',
+            $patientDetails
+        )->toJsonResponse();
     }
 
 }

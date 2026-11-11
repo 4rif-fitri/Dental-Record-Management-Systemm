@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:dentist')->group(function () {
         Route::get('/dentist-list-appointment', [AppointmentController::class, 'dentistListAppointment'])->name('dentistListAppointment');
         Route::get('/dentist-list-patient', [UserController::class, 'dentistListPatient'])->name('dentistListPatient');
-        Route::get('/dentist-examination/{id}', [ExaminationController::class, 'dentistExamination'])->name('dentistExamination');
+        Route::get('/dentist-examination/{id}', [ExaminationController::class, 'pageExamination'])->name('dentistExamination');
     });
 });
 
@@ -96,8 +96,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('patient')->group(function () {
         Route::get('/', [UserController::class, 'getAllPatient'])->name('getAllPatient');
-        Route::post('/store', [UserController::class, 'createPatient'])->name('createPatient');
         Route::get('/{id}', [UserController::class, 'getPatientById'])->name('getPatientById');
+        Route::post('/store', [UserController::class, 'createPatient'])->name('createPatient');
         Route::post('/search', [UserController::class, 'getPatientSearch'])->name('getPatientSearch');
     });
 

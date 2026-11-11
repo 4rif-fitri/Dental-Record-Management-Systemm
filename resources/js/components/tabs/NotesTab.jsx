@@ -11,7 +11,7 @@ const NotesTab = ({ activeTab, notes, setNotes, savedNotes, onSaveNotes }) => {
             </div>
             <textarea
                 className="border border-gray-500 w-full rounded h-75"
-                value={notes}
+                value={notes.examinations.case_summary}
                 onChange={(e) => setNotes(e.target.value)}
             />
             {savedNotes && (
