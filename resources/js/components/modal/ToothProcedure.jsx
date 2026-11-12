@@ -3,12 +3,12 @@ import React from 'react';
 import FiveSurfacee from '@/components/tooth/FiveSurfacee';
 import FourSurfacee from '@/components/tooth/FourSurfacee.jsx';
 
-const ToothProcedure = ({
-                            showToothProcedure,
-                            setShowToothProcedure,
-                            currentTooth,
-                            setCurrentTooth
-                        }) => {
+const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth}) => {
+
+    const hanleCloseModal = () => {
+        setCurrentTooth("")
+        setShowToothProcedure(false)
+    }
 
     const handleSurfaceSelect = (surface) => {
         setCurrentTooth(prev => {
@@ -39,10 +39,7 @@ const ToothProcedure = ({
                         Tooth Treatment
                     </h2>
 
-                    <button
-                        onClick={() => setShowToothProcedure(false)}
-                        className="btn bg-black text-white w-24"
-                    >
+                    <button onClick={hanleCloseModal} className="btn bg-black text-white w-24">
                         Close
                     </button>
                 </div>
@@ -59,15 +56,17 @@ const ToothProcedure = ({
 
                     <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-[350px]">
 
-                        {currentTooth.numberOfsurface === 5 ? (
+                        {currentTooth.number_of_surface === 5 ? (
                             <FiveSurfacee
                                 currentTooth={currentTooth}
                                 onSelect={handleSurfaceSelect}
+                                skala={"200"}
                             />
                         ) : (
                             <FourSurfacee
                                 currentTooth={currentTooth}
                                 onSelect={handleSurfaceSelect}
+                                skala={"200"}
                             />
                         )}
 

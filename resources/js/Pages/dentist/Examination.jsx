@@ -24,21 +24,20 @@ let linkTabs = [
 ];
 
 const Examination = () => {
-    let [activeTab, setActiveTab] = useState("patient");
-    let [examination, setExamination] = useState("");
-    let [patientDetails, setPatientDetails] = useState("");
+    const [activeTab, setActiveTab] = useState("patient");
+    const [examination, setExamination] = useState("");
+    const [patientDetails, setPatientDetails] = useState("");
 
-    let [showToothProcedure, setShowToothProcedure] = useState(false);
-    let [showAddMedicine, setShowAddMedicine] = useState(false);
+    const [showToothProcedure, setShowToothProcedure] = useState(false);
+    const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
     const [selectedSurfacesByTooth, setSelectedSurfacesByTooth] = useState({});
 
     const getPatientDetails = async (id) => {
         try {
-            const response = await api.get(
-                route('getPatientById', { id })
-            );
+            const response = await api.get(route('getPatientById', { id }));
+
             setPatientDetails(response.data)
             setExamination(response.data.examinations)
 

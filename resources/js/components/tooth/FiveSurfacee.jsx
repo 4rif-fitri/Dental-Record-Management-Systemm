@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./InteractivePolygon.css";
 
-const FiveSurfacee = ({ onSelect, currentTooth }) => {
+const FiveSurfacee = ({ onSelect, currentTooth, skala }) => {
 
     const selected = currentTooth?.selected_surfaces || [];
 
@@ -13,7 +13,7 @@ const FiveSurfacee = ({ onSelect, currentTooth }) => {
     ];
 
     return (
-        <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
+        <div className={`container scale-${skala}`}>
 
             <svg className="shapes" viewBox="0 0 300 300">
 

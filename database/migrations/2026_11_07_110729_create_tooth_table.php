@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('tooth', function (Blueprint $table) {
             $table->id();
-            $table->integer('tooth_number')->unique();
+            $table->string('tooth_number', 2)->unique();
             $table->string('tooth_name', 100);
-            $table->string('tooth_type', 100);
-            $table->string('jaw', 100);
-            $table->string('quadrant', 100);
+            $table->enum('jaw', ['upper', 'lower']);
+            $table->unsignedTinyInteger('quadrant');
+            $table->enum('tooth_type', ['permanent', 'primary']);
+            $table->unsignedTinyInteger('number_of_surface');
             $table->timestamps();
         });
     }
