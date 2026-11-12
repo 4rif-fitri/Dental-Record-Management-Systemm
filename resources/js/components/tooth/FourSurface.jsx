@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import "./InteractivePolygon.css";
 
-const FourSurface = ({onSelect}) => {
+const FourSurface = ({onSelect, toothNumber}) => {
     const [selected, setSelected] = useState(null);
 
     const areas = [
@@ -24,16 +24,14 @@ const FourSurface = ({onSelect}) => {
     ];
 
     const handleSelect = (name) => {
-        setSelected(name);
-
-        onSelect?.({
+        onSelect({
             tooth: toothNumber,
             surface: name,
         });
     };
 
     return (
-        <div className="container">
+        <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
             <svg className="shapes" viewBox="0 0 300 300">
                 {areas.map((area) => (
                     <polygon
@@ -42,7 +40,6 @@ const FourSurface = ({onSelect}) => {
                             selected === area.name ? "active" : ""
                         }`}
                         points={area.points}
-                        onMouseEnter={() => console.log("Hover:", area.name)}
                         onClick={() => handleSelect(area.name)}
                     />
                 ))}

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import FiveSurface from '../tooth/FiveSurface';
+import FourSurface from "@/components/tooth/FourSurface.jsx";
 
-const ToothProcedure = ({ showToothProcedure, setShowToothProcedure }) => {
+const ToothProcedure = ({currentTooth, showToothProcedure, setShowToothProcedure }) => {
+
+    console.log(currentTooth)
 
     const [view, setView] = useState("3D");
     const [toothView, setToothView] = useState("Surface");
@@ -99,11 +102,8 @@ const ToothProcedure = ({ showToothProcedure, setShowToothProcedure }) => {
 
                     </div>
 
-                    {/* Right - Tooth Surface Diagram */}
                     <div className="border-2 border-gray-300 flex justify-center items-center p-5 min-h-[350px]">
-
-                        <FiveSurface />
-
+                        { currentTooth.numberOfsurface === 5 ? <FiveSurface /> : <FourSurface /> }
                     </div>
 
                 </div>

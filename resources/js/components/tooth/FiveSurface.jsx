@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./InteractivePolygon.css";
 
-const FiveSurface = ({ onSelect }) => {
+const FiveSurface = ({ onSelect, toothNumber }) => {
     const [selected, setSelected] = useState(null);
 
     const areas = [
@@ -24,27 +24,19 @@ const FiveSurface = ({ onSelect }) => {
     ];
 
     const handleSelect = (name) => {
-        setSelected(name);
-
-        // onSelect?.({
-        //     component: "ShapeOne",
-        //     surface: name
-        // });
-
-        onSelect();
+        onSelect?.({
+            tooth: toothNumber,
+            surface: name,
+        });
     };
 
     return (
-        <div className="container">
+        <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
             <svg className="shapes" viewBox="0 0 300 300">
                 {areas.map((area) => (
-                    <polygon
-                        key={area.name}
-                        className={`area ${
-                            selected === area.name ? "active" : ""
-                        }`}
+                    <polygon key={area.name}
+                        className={`area ${selected === area.name ? "active" : "" }`}
                         points={area.points}
-                        onMouseEnter={() => console.log("Hover:", area.name)}
                         onClick={() => handleSelect(area.name)}
                     />
                 ))}
@@ -55,8 +47,7 @@ const FiveSurface = ({ onSelect }) => {
             <div className="content right-content"></div>
             <div className="content bottom-content"></div>
 
-            <div
-                className={`center ${selected === "CENTER" ? "active" : ""}`}
+            <div className={`center ${selected === "CENTER" ? "active" : ""}`}
                 onClick={() => handleSelect("CENTER")}
             ></div>
         </div>

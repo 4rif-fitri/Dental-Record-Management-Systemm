@@ -31,6 +31,8 @@ const Examination = () => {
     let [selectedTooth, setSelectedTooth] = useState(null);
     const [patientDetails, setPatientDetails] = useState([])
 
+    let [currentTooth,setCurrentTooth] = useState([])
+
     const [procedures, setProcedures] = useState([
         {
             id: 1,
@@ -75,14 +77,9 @@ const Examination = () => {
         alert("Note saved successfully!");
     }
 
-    function onSelect(tooth) {
-        const toothNumber =
-            typeof tooth === "object"
-                ? (tooth?.toothNumber ?? tooth?.tooth ?? tooth?.name ?? "")
-                : tooth;
-
-        setSelectedTooth(toothNumber);
-        setShowToothProcedure(true);
+    function onSelect(data) {
+        setCurrentTooth(data)
+        setShowToothProcedure(true)
     }
 
     function deletePhoto(id) {
@@ -181,7 +178,7 @@ const Examination = () => {
             <Medicine showAddMedicine={showAddMedicine} setAddMedicine={setAddMedicine} onSave={handleAddMedicine}/>
             <Photo showAddPhoto={showAddPhoto} setAddPhoto={setAddPhoto} onSave={handleAddPhoto}/>
             <PreviewPhoto showPreviewPhoto={showPreviewPhoto} setShowPreviewPhoto={setShowPreviewPhoto} photo={selectedPhoto}/>
-            <ToothProcedure showToothProcedure={showToothProcedure} setShowToothProcedure={setShowToothProcedure} selectedTooth={selectedTooth}/>
+            <ToothProcedure currentTooth={currentTooth} showToothProcedure={showToothProcedure} setShowToothProcedure={setShowToothProcedure} selectedTooth={selectedTooth}/>
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
