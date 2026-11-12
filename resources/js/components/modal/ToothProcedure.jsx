@@ -1,7 +1,6 @@
-
 import React from 'react';
-import FiveSurfacee from '@/components/tooth/FiveSurfacee';
-import FourSurfacee from '@/components/tooth/FourSurfacee.jsx';
+import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
+import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 
 const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth}) => {
 
@@ -47,14 +46,14 @@ const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,s
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
 
                     <div className="border-2 border-gray-300 p-2">
-                        <div className="relative flex justify-center items-center h-[350px] bg-gray-100">
+                        <div className="relative flex justify-center items-center h-87.5 bg-gray-100">
                             <span className="text-gray-400">
                                 3D Tooth Model
                             </span>
                         </div>
                     </div>
 
-                    <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-[350px]">
+                    <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-87.5">
 
                         {currentTooth.number_of_surface === 5 ? (
                             <FiveSurfacee

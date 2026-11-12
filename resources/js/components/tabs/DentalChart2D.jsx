@@ -13,17 +13,9 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
         const getAllTooth = async () => {
             try {
                 const response = await api.get(route('getAllTooth'));
-
-                // Semak struktur response
-                console.log('Full response:', response.data);
-
                 const toothData = response.data;
 
-                if (Array.isArray(toothData)) {
-                    setTeeth(toothData);
-                } else {
-                    console.error('API data bukan array:', toothData);
-                }
+                setTeeth(toothData);
 
             } catch (error) {
                 console.error('Failed to get teeth:', error);

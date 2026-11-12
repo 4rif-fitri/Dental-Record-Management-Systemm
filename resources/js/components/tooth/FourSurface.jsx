@@ -1,11 +1,7 @@
 import React from 'react';
 import "./InteractivePolygon.css";
 
-const FourSurface = ({
-                         onSelect,
-                         toothNumber,
-                         selectedSurfaces = []
-                     }) => {
+const FourSurface = ({onSelect,toothNumber, selectedSurfaces = []}) => {
 
     const areas = [
         { name: "TOP", points: "0,0 300,0 195,150 105,150" },

@@ -1,6 +1,8 @@
 import React from 'react'
 import FiveSurface from './tooth/FiveSurface';
 import FourSurface from './tooth/FourSurface';
+import BoxFiveSurface from "./tooth/box/BoxFiveSurfacee";
+import BoxFourSurfacee from "./tooth/box/BoxFourSurfacee";
 
 const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
     return (
@@ -8,9 +10,9 @@ const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
             <div className="grid grid-cols-1 grid-rows-1">
                 <div className="p-2 flex justify-center items-center">
                     {procedure.typeTooth === "Molar" ? (
-                        <FiveSurface />
+                        <BoxFiveSurface />
                     ) : (
-                        <FourSurface />
+                        <BoxFourSurfacee />
                     )}
                 </div>
 
