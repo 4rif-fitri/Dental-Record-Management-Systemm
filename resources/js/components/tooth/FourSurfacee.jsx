@@ -1,36 +1,31 @@
-
 import React, { useState, useEffect } from "react";
 import "./InteractivePolygon.css";
 
 const FourSurfacee = ({ onSelect, currentTooth }) => {
 
-    const [selected, setSelected] = useState(
-        currentTooth?.surfaces || []
-    );
-
-    useEffect(() => {
-        setSelected(currentTooth?.surfaces || []);
-    }, [currentTooth]);
+    const selected = currentTooth?.selected_surfaces || [];
 
     const areas = [
-        { name: "TOP", points: "0,0 300,0 195,150 105,150" },
-        { name: "LEFT", points: "0,0 105,150 0,300" },
-        { name: "RIGHT", points: "300,0 300,300 195,150" },
-        { name: "BOTTOM", points: "0,300 300,300 195,150 105,150" },
+        {
+            name: "TOP",
+            points: "0,0 300,0 195,150 105,150",
+        },
+        {
+            name: "LEFT",
+            points: "0,0 105,150 0,300",
+        },
+        {
+            name: "RIGHT",
+            points: "300,0 195,150 300,300",
+        },
+        {
+            name: "BOTTOM",
+            points: "0,300 300,300 195,180 105,180",
+        },
     ];
 
     const handleSelect = (name) => {
-
-        const updated = selected.includes(name)
-            ? selected.filter((item) => item !== name)
-            : [...selected, name];
-
-        setSelected(updated);
-
-        onSelect?.({
-            tooth: currentTooth?.tooth_number,
-            surfaces: updated,
-        });
+        onSelect?.(name);
     };
 
     return (

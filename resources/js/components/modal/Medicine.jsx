@@ -12,27 +12,11 @@ const Medicine = ({ showAddMedicine }) => {
         notes: ""
     });
 
-    const handleChange = (e) => {
-        setMedicine({
-            ...medicine,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        console.log(medicine);
-
-        setAddMedicine(false);
-    };
-
     const inputStyle = "w-full h-[55px] border-2 border-gray-300 rounded-lg px-4 outline-none focus:border-blue-500";
 
     const labelStyle = "block text-lg font-medium mb-1";
 
     return (
-        showAddMedicine && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-black">
 
                 <div className="w-[95vw] sm:w-[80vw] lg:w-[40vw] rounded-xl bg-white p-6 sm:p-10 shadow-xl">
@@ -44,7 +28,6 @@ const Medicine = ({ showAddMedicine }) => {
                     </h2>
 
                     <button
-                        onClick={() => setAddMedicine(false)}
                         className="btn w-24"
                     >
                         Close
@@ -52,13 +35,11 @@ const Medicine = ({ showAddMedicine }) => {
 
                 </div>
 
-                    <form onSubmit={handleSubmit}>
+                    <form>
 
                         <div className="mb-6">
                             <select
                                 name="name"
-                                value={medicine.name}
-                                onChange={handleChange}
                                 className={`${inputStyle} px-4`}
                                 required
                             >
@@ -76,7 +57,6 @@ const Medicine = ({ showAddMedicine }) => {
                                     type="text"
                                     name="dosage"
                                     value={medicine.dosage}
-                                    onChange={handleChange}
                                     className={inputStyle}
                                 />
                             </div>
@@ -89,7 +69,6 @@ const Medicine = ({ showAddMedicine }) => {
                                     type="text"
                                     name="frequency"
                                     value={medicine.frequency}
-                                    onChange={handleChange}
                                     className={inputStyle}
                                 />
                             </div>
@@ -106,7 +85,6 @@ const Medicine = ({ showAddMedicine }) => {
                                     type="text"
                                     name="duration"
                                     value={medicine.duration}
-                                    onChange={handleChange}
                                     className={inputStyle}
                                 />
                             </div>
@@ -119,7 +97,6 @@ const Medicine = ({ showAddMedicine }) => {
                                     type="number"
                                     name="quantity"
                                     value={medicine.quantity}
-                                    onChange={handleChange}
                                     className={inputStyle}
                                 />
                             </div>
@@ -134,7 +111,6 @@ const Medicine = ({ showAddMedicine }) => {
                                 type="text"
                                 name="instruction"
                                 value={medicine.instruction}
-                                onChange={handleChange}
                                 className={inputStyle}
                             />
                         </div>
@@ -147,7 +123,6 @@ const Medicine = ({ showAddMedicine }) => {
                                 type="text"
                                 name="notes"
                                 value={medicine.notes}
-                                onChange={handleChange}
                                 className={inputStyle}
                             />
                         </div>
@@ -167,7 +142,6 @@ const Medicine = ({ showAddMedicine }) => {
 
                 </div>
             </div>
-        )
     );
 };
 

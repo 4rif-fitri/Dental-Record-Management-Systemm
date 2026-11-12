@@ -9,8 +9,6 @@ import PenandaWarna from "../../components/PenandaWarna";
 import DentalChart3D from "../../components/tabs/DentalChart3D";
 import Tretment from "../../components/tabs/Tretment";
 import Medicine from "../../components/modal/Medicine";
-import Photo from "../../components/modal/Photo";
-import PreviewPhoto from "../../components/modal/previewPhoto";
 import ToothProcedure from "../../components/modal/ToothProcedure";
 import {route} from "ziggy-js";
 import api from "@/lib/axios.js";
@@ -27,18 +25,11 @@ let linkTabs = [
 
 const Examination = () => {
     let [activeTab, setActiveTab] = useState("patient");
-    let [notes, setNotes] = useState("");
-    let [savedNotes, setSavedNotes] = useState("");
-    let [medicines, setMedicines] = useState([]);
-    let [selectedPhoto, setSelectedPhoto] = useState(null);
-
-    let [showAddMedicine, setAddMedicine] = useState(false);
-    let [showAddPhoto, setAddPhoto] = useState(false);
-    let [showPreviewPhoto, setShowPreviewPhoto] = useState(false);
-    let [showToothProcedure, setShowToothProcedure] = useState(false);
-    let [patientDetails, setPatientDetails] = useState("");
     let [examination, setExamination] = useState("");
+    let [patientDetails, setPatientDetails] = useState("");
 
+    let [showToothProcedure, setShowToothProcedure] = useState(false);
+    let [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
     const [selectedSurfacesByTooth, setSelectedSurfacesByTooth] = useState({});
@@ -50,7 +41,6 @@ const Examination = () => {
             );
             setPatientDetails(response.data)
             setExamination(response.data.examinations)
-            setNotes(response.data.examinations.case_summary)
 
         }catch (error){
             console.log(error)
@@ -64,10 +54,15 @@ const Examination = () => {
 
     return (
         <MainLayout>
-            {/*<Medicine showAddMedicine={showAddMedicine}/>*/}
-            {/*<Photo showAddPhoto={showAddPhoto}/>*/}
-            {/*<PreviewPhoto showPreviewPhoto={showPreviewPhoto} />*/}
-            {/*<ToothProcedure showToothProcedure={showToothProcedure} />*/}
+            {showAddMedicine && <Medicine showAddMedicine={showAddMedicine}/> }
+            {showToothProcedure && (
+                <ToothProcedure
+                    showToothProcedure={showToothProcedure}
+                    setShowToothProcedure={setShowToothProcedure}
+                    currentTooth={currentTooth}
+                    setCurrentTooth={setCurrentTooth}
+                />
+            )}
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
@@ -77,17 +72,20 @@ const Examination = () => {
 
                     <div className="w-full h-auto bg-white rounded mt-2">
                         {activeTab === "patient" && <PatientDetails patientDetails={patientDetails} />}
-                        {activeTab === "chart" && <DentalChart2D /> }
-                        {/*{activeTab === "3d" && <DentalChart3D /> }*/}
-                        {/*{activeTab === "patientConsent" && <ConsentTab />}*/}
-                        {/*{activeTab === "medicine" && <MedicineTab activeTab={activeTab} /> }*/}
+                        {activeTab === "chart" && <DentalChart2D
+                            setShowToothProcedure={setShowToothProcedure}
+                            setCurrentTooth={setCurrentTooth}
+                        /> }
+                        {activeTab === "3d" && <DentalChart3D /> }
+                        {activeTab === "patientConsent" && <ConsentTab />}
+                        {activeTab === "medicine" && <MedicineTab activeTab={activeTab} /> }
                     </div>
 
-                    {activeTab === "chart" || activeTab === "3d" && <PenandaWarna /> }
+                    {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna /> : "" }
 
                 </div>
 
-                {/*{activeTab === "chart" || activeTab === "3d" && <Tretment/> }*/}
+                {activeTab === "chart" || activeTab === "3d" ? <Tretment/> : "" }
             </div>
         </MainLayout>
     );

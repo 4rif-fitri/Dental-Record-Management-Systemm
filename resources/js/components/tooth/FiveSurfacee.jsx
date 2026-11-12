@@ -1,16 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import "./InteractivePolygon.css";
 
 const FiveSurfacee = ({ onSelect, currentTooth }) => {
 
-    const [selected, setSelected] = useState(
-        currentTooth?.surfaces || []
-    );
-
-    useEffect(() => {
-        setSelected(currentTooth?.surfaces || []);
-    }, [currentTooth]);
+    const selected = currentTooth?.selected_surfaces || [];
 
     const areas = [
         { name: "TOP", points: "0,0 400,0 195,150 105,150" },
@@ -19,33 +12,19 @@ const FiveSurfacee = ({ onSelect, currentTooth }) => {
         { name: "BOTTOM", points: "0,300 300,300 195,180 105,180" },
     ];
 
-    const handleSelect = (name) => {
-
-        const updated = selected.includes(name)
-            ? selected.filter((item) => item !== name)
-            : [...selected, name];
-
-        setSelected(updated);
-
-        onSelect?.({
-            tooth: currentTooth?.tooth_number,
-            surfaces: updated,
-        });
-    };
-
     return (
         <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
 
             <svg className="shapes" viewBox="0 0 300 300">
 
-                {areas.map((area) => (
+                {areas.map(area => (
                     <polygon
                         key={area.name}
                         className={`area ${
                             selected.includes(area.name) ? "active" : ""
                         }`}
                         points={area.points}
-                        onClick={() => handleSelect(area.name)}
+                        onClick={() => onSelect(area.name)}
                     />
                 ))}
 
@@ -60,9 +39,8 @@ const FiveSurfacee = ({ onSelect, currentTooth }) => {
                 className={`center ${
                     selected.includes("CENTER") ? "active" : ""
                 }`}
-                onClick={() => handleSelect("CENTER")}
-            ></div>
-
+                onClick={() => onSelect("CENTER")}
+            />
         </div>
     );
 };

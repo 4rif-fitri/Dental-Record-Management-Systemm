@@ -1,31 +1,20 @@
 import React from 'react'
 
-const MedicineTab = ({
-    activeTab,
-    medicines,
-    onAddMedicine,
-    onDeleteMedicine,
-}) => {
+const MedicineTab = () => {
     return (
         <div>
             <div className="flex justify-between mb-2">
                 <h1 className="text-2xl pb-3 font-semibold">Medicine</h1>
-                <button
-                    onClick={onAddMedicine}
-                    className="btn btn-primary w-40"
-                >
+                <button className="btn btn-primary w-40">
                     Add Medicine
                 </button>
             </div>
             <div className="h-75 overflow-y-scroll border border-gray-500 p-3 w-full rounded h-40 flex flex-col gap-2">
                 {medicines.map((medicine) => (
-                    <div
-                        key={medicine.id}
-                        className="w-full rounded border border-gray-500 p-3 flex justify-between"
-                    >
+                    <div key={medicine.id} className="w-full rounded border border-gray-500 p-3 flex justify-between">
                         <h2>{medicine.name}</h2>
                         <h2>{medicine.notes}</h2>
-                        <button onClick={() => onDeleteMedicine(medicine.id)}>
+                        <button>
                             <i className="fa-solid fa-trash"></i>
                         </button>
                     </div>

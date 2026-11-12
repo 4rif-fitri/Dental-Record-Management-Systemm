@@ -73,19 +73,42 @@ const teeth = [
     { tooth_number: "85", tooth_name: "Second Molar", jaw: "lower", quadrant: 8, set: "primary" },
 ];
 
-const DentalChart2D = () => {
+const DentalChart2D = ({setShowToothProcedure, setCurrentTooth}) => {
+
+    const handleClickSurface = (tooth, surface) => {
+        setCurrentTooth(prev => {
+            const existing =
+                prev?.tooth_number === tooth.tooth_number
+                    ? prev.selected_surfaces || []
+                    : [];
+
+            const updated = existing.includes(surface)
+                ? existing.filter(item => item !== surface)
+                : [...existing, surface];
+
+            return {
+                ...tooth,
+                selected_surfaces: updated
+            };
+        });
+
+        setShowToothProcedure(true);
+    };
 
     const renderTooth = (tooth) => {
-
         const ToothComponent =
             ["Central Incisor", "Lateral Incisor", "Canine"]
-                .includes(tooth.tooth_name) ? FourSurface : FiveSurface;
+                .includes(tooth.tooth_name)
+                ? FourSurface
+                : FiveSurface;
 
         return (
             <ToothComponent
                 key={tooth.tooth_number}
                 toothNumber={tooth.tooth_number}
-                onSelect={() => console.log('ssss')}
+                onSelect={(surface) =>
+                    handleClickSurface(tooth, surface)
+                }
             />
         );
     };
