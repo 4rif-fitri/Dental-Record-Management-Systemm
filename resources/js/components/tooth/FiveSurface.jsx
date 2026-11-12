@@ -1,45 +1,37 @@
-import { useState } from "react";
+import React from 'react';
 import "./InteractivePolygon.css";
 
-const FiveSurface = ({ onSelect, toothNumber }) => {
-    const [selected, setSelected] = useState(null);
+const FiveSurface = ({
+                         onSelect,
+                         toothNumber,
+                         selectedSurfaces = []
+                     }) => {
 
     const areas = [
-        {
-            name: "TOP",
-            points: "0,0 400,0 195,150 105,150",
-        },
-        {
-            name: "LEFT",
-            points: "0,0 150,170 0,300",
-        },
-        {
-            name: "RIGHT",
-            points: "300,0 300,300 170,150",
-        },
-        {
-            name: "BOTTOM",
-            points: "0,300 300,300 195,180 105,180",
-        },
+        { name: "TOP", points: "0,0 300,0 195,150 105,150" },
+        { name: "LEFT", points: "0,0 150,170 0,300" },
+        { name: "RIGHT", points: "300,0 300,300 170,150" },
+        { name: "BOTTOM", points: "0,300 300,300 195,180 105,180" },
     ];
-
-    const handleSelect = (name) => {
-        onSelect?.({
-            tooth: toothNumber,
-            surface: name,
-        });
-    };
 
     return (
         <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
+
             <svg className="shapes" viewBox="0 0 300 300">
+
                 {areas.map((area) => (
-                    <polygon key={area.name}
-                        className={`area ${selected === area.name ? "active" : "" }`}
+                    <polygon
+                        key={area.name}
+                        className={`area ${
+                            selectedSurfaces.includes(area.name)
+                                ? "active"
+                                : ""
+                        }`}
                         points={area.points}
-                        onClick={() => handleSelect(area.name)}
+                        onClick={() => onSelect(area.name)}
                     />
                 ))}
+
             </svg>
 
             <div className="content top-content"></div>
@@ -47,9 +39,15 @@ const FiveSurface = ({ onSelect, toothNumber }) => {
             <div className="content right-content"></div>
             <div className="content bottom-content"></div>
 
-            <div className={`center ${selected === "CENTER" ? "active" : ""}`}
-                onClick={() => handleSelect("CENTER")}
+            <div
+                className={`center ${
+                    selectedSurfaces.includes("CENTER")
+                        ? "active"
+                        : ""
+                }`}
+                onClick={() => onSelect("CENTER")}
             ></div>
+
         </div>
     );
 };

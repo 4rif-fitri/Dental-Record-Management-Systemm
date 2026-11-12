@@ -1,6 +1,34 @@
 import BoxCondition from "../BoxCondition";
+import {useState} from "react";
 
-const Tretment = ({ procedures, updateProcedureStatus }) => {
+const Tretment = ({updateProcedureStatus }) => {
+
+    const [procedures, setProcedures] = useState([
+        {
+            id: 1,
+            tooth: "16",
+            typeTooth: "Molar",
+            condition: "Dental Caries",
+            treatment: "Dental Filling",
+            status: "Planning",
+        },
+        {
+            id: 2,
+            tooth: "21",
+            typeTooth: "Acenter",
+            condition: "Fractured Tooth",
+            treatment: "Composite Restoration",
+            status: "In Progress",
+        },
+        {
+            id: 3,
+            tooth: "11",
+            typeTooth: "Acenter",
+            condition: "Dental Caries",
+            treatment: "Dental Filling",
+            status: "Completed",
+        },
+    ]);
 
     let renderTemplate = (procedures, status) => {
         return procedures

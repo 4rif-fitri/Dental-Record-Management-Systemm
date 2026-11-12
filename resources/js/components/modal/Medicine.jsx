@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Medicine = ({ showAddMedicine, setAddMedicine }) => {
+const Medicine = ({ showAddMedicine }) => {
 
     const [medicine, setMedicine] = useState({
         name: "",

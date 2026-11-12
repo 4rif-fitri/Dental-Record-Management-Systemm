@@ -1,11 +1,6 @@
 import React from 'react';
 
-const PreviewPhoto = ({
-    showPreviewPhoto,
-    setShowPreviewPhoto,
-    photo = "",
-    notes = ""
-}) => {
+const PreviewPhoto = ({showPreviewPhoto}) => {
 
     if (!showPreviewPhoto) return null;
 
@@ -33,17 +28,14 @@ const PreviewPhoto = ({
                 {/* Image */}
                 <div className="w-full h-[350px] border-2 border-gray-300 flex justify-center items-center overflow-hidden">
 
-                    {photo ? (
                         <img
                             src={photo.preview || photo}
                             alt="Dental Record"
                             className="w-full h-full object-contain"
                         />
-                    ) : (
                         <p className="text-gray-400">
                             No Photo Available
                         </p>
-                    )}
 
                 </div>
 
@@ -54,9 +46,6 @@ const PreviewPhoto = ({
                         Notes
                     </h3>
 
-                    <div className="w-full min-h-24 border-2 border-gray-300 rounded-lg p-4 whitespace-pre-wrap">
-                        {notes || "No notes available"}
-                    </div>
 
                 </div>
 

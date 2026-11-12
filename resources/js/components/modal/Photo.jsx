@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const Photo = ({ showAddPhoto, setAddPhoto }) => {
+const Photo = ({ showAddPhoto }) => {
 
     const [photo, setPhoto] = useState(null);
     const [notes, setNotes] = useState("");

@@ -52,23 +52,19 @@ class ExaminationController extends Controller
     public function createExamination(Request $request){
         $examination = new Examination([
             'patient_id' => $request->patient_id,
-            'case_summary' => "",
         ]);
 
         return ApiResponse::success(200, $examination)->toJsonResponse();
     }
 
-    public function updateExamination(Request $request){
-        $validated = $request->validate([
-            'examination_id' => 'required',
-            'case_summary' => 'required',
-        ]);
+    public function updateExamination(Request $request, $id){
 
-        $examination = Examination::where('id', $request->examination_id)->first();
+        $examination = Examination::where('id', $id)->first();
         $examination->case_summary = $request->case_summary;
         $examination->save();
 
         return ApiResponse::success(200, $examination)->toJsonResponse();
 
     }
+
 }

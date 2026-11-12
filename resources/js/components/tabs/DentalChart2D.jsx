@@ -73,22 +73,19 @@ const teeth = [
     { tooth_number: "85", tooth_name: "Second Molar", jaw: "lower", quadrant: 8, set: "primary" },
 ];
 
-const DentalChart2D = ({ onSelect }) => {
+const DentalChart2D = () => {
 
     const renderTooth = (tooth) => {
+
         const ToothComponent =
-            ["First Incisor", "Central Incisor", "Lateral Incisor", "Canine"].includes(tooth.tooth_name)
-                ? FourSurface
-                : FiveSurface;
+            ["Central Incisor", "Lateral Incisor", "Canine"]
+                .includes(tooth.tooth_name) ? FourSurface : FiveSurface;
 
         return (
             <ToothComponent
                 key={tooth.tooth_number}
-                onSelect={(surface) => onSelect({
-                    ...tooth,
-                    surface
-                })}
                 toothNumber={tooth.tooth_number}
+                onSelect={() => console.log('ssss')}
             />
         );
     };

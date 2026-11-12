@@ -5,7 +5,7 @@ import FourSurface from './tooth/FourSurface';
 const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
     return (
         <div className="border-1 border-gray-300 p-2">
-            <div className="grid grid-cols-2 grid-rows-1">
+            <div className="grid grid-cols-1 grid-rows-1">
                 <div className="p-2 flex justify-center items-center">
                     {procedure.typeTooth === "Molar" ? (
                         <FiveSurface />

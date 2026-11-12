@@ -1,40 +1,9 @@
 import React, { useState } from 'react';
-import FiveSurface from '../tooth/FiveSurface';
-import FourSurface from "@/components/tooth/FourSurface.jsx";
+import FiveSurfacee from '@/components/tooth/FiveSurfacee';
+import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 
-const ToothProcedure = ({currentTooth, showToothProcedure, setShowToothProcedure }) => {
+const ToothProcedure = () => {
 
-    console.log(currentTooth)
-
-    const [view, setView] = useState("3D");
-    const [toothView, setToothView] = useState("Surface");
-
-    const [formData, setFormData] = useState({
-        condition: "",
-        treatment: "",
-        notes: ""
-    });
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSave = (e) => {
-        e.preventDefault();
-
-        console.log({
-            view,
-            toothView,
-            ...formData
-        });
-
-        setShowToothProcedure(false);
-    };
-
-    if (!showToothProcedure) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 text-black">
@@ -103,9 +72,22 @@ const ToothProcedure = ({currentTooth, showToothProcedure, setShowToothProcedure
                     </div>
 
                     <div className="border-2 border-gray-300 flex justify-center items-center p-5 min-h-[350px]">
-                        { currentTooth.numberOfsurface === 5 ? <FiveSurface /> : <FourSurface /> }
-                    </div>
 
+                        {currentTooth?.numberOfsurface === 5 ? (
+                            <FiveSurfacee
+                                currentTooth={currentTooth}
+                                selectedSurfaces={currentTooth?.surfaces || []}
+                                onSelect={(surfaceName) => onSurfaceSelect(surfaceName)}
+                            />
+                        ) : (
+                            <FourSurfacee
+                                currentTooth={currentTooth}
+                                selectedSurfaces={currentTooth?.surfaces || []}
+                                onSelect={(surfaceName) => onSurfaceSelect(surfaceName)}
+                            />
+                        )}
+
+                    </div>
                 </div>
 
                 {/* Form */}
