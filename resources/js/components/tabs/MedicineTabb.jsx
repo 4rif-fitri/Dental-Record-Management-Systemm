@@ -1,23 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {router} from "@inertiajs/react";
 
-const MedicineTab = () => {
-
-    const [medicines, setMedicines] = useState("")
-
-    const getAllMedicine = () => {
-        try {
-            let response = api.get(router("getAllMedicine"))
-            console.log(response)
-
-        }catch (error){
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        getAllMedicine()
-    },[])
+const MedicineTab = ({medicines}) => {
 
     return (
         <div>

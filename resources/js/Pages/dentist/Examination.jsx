@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
 import PatientDetails from "@/components/tabs/PatientDetailsTab";
 import ConsentTab from "@/components/tabs/ConsentTab";
-import MedicineTab from "@/components/tabs/medicineTab";
 import DentalChart2D from "@/components/tabs/DentalChart2D";
 import PenandaWarna from "@/components/PenandaWarna";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
@@ -13,6 +12,7 @@ import {route} from "ziggy-js";
 import api from "@/lib/axios.js";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
+import MedicineTabb from "@/components/tabs/MedicineTabb.jsx";
 
 let linkTabs = [
     { text: "patient", label: "Patient Details" },
@@ -24,11 +24,11 @@ let linkTabs = [
 
 const Examination = () => {
     const [activeTab, setActiveTab] = useState("patient");
-    const [examination, setExamination] = useState("");
     const [patientDetails, setPatientDetails] = useState("");
     const [conditions, setConditions] = useState("");
     const [treatment, setTreatment] = useState("")
     const [surfaces, setSurfaces] = useState("")
+    const [medicines, setMedicines] = useState("")
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showAddMedicine, setShowAddMedicine] = useState(false);
@@ -43,20 +43,24 @@ const Examination = () => {
                 patientResponse,
                 conditionResponse,
                 procedureResponse,
-                surfaceResponse
+                surfaceResponse,
+                medicineResponse
 
             ] = await Promise.all([
 
                 api.get(route('getPatientById', { id })),
                 api.get(route('getAllCondition')),
                 api.get(route('getAllProcedure')),
-                api.get(route('getAllSurface'))
+                api.get(route('getAllSurface')),
+                api.get(route('getAllMedicine')),
+
             ]);
 
             setPatientDetails(patientResponse.data);
             setConditions(conditionResponse.data);
             setTreatment(procedureResponse.data);
             setSurfaces(surfaceResponse.data);
+            setMedicines(medicineResponse.data)
 
         } catch (error) {
             console.log(error);
@@ -69,7 +73,7 @@ const Examination = () => {
 
     return (
         <MainLayout>
-            {showAddMedicine && <Medicine showAddMedicine={showAddMedicine}/> }
+            {showAddMedicine && <Medicine /> }
             {showToothProcedure && (
                 <ToothProcedure
                     setShowToothProcedure={setShowToothProcedure}
@@ -96,7 +100,7 @@ const Examination = () => {
                         /> }
                         {activeTab === "3d" && <DentalChart3D /> }
                         {activeTab === "patientConsent" && <ConsentTab />}
-                        {activeTab === "medicine" && <MedicineTab activeTab={activeTab} /> }
+                        {activeTab === "medicine" && <MedicineTabb medicines={medicines} /> }
                     </div>
 
                     {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna /> : "" }
