@@ -1,24 +1,58 @@
 import React, {useEffect, useState} from 'react';
 import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
 import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
-import {route} from "ziggy-js";
+import api from '@/lib/axios';
+import Swal from "sweetalert2";
 
-const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth, conditions,treatment}) => {
+const ToothProcedure = ({patientDetails, setShowToothProcedure,currentTooth,setCurrentTooth, conditions,treatment, surfaces}) => {
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
 
-    const handleSubmit = (e) => {
+    const selectedSurfaceIds = currentTooth.selected_surfaces.map(name => {
+        return surfaces.find(surface => surface.surface_name === name)?.id;
+    });
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Tooth:", currentTooth);
-        console.log("Condition:", selectedCondition);
-        console.log("Treatment:", selectedTreatment);
+        const jsonData = {
+            patient_id: patientDetails.id,
+            procedure_id: selectedTreatment.id,
+            condition_id: selectedCondition.id,
+            tooth_id: currentTooth.id,
+            status: "Planning",
+            selectedSurfaceIds: selectedSurfaceIds,
+            finding_description: "asd"
+        };
+
+        try {
+            const response = await api.post(
+                "/toothFinding/store",
+                jsonData,
+            );
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Finding saved successfully!',
+            });
+
+            hanleCloseModal();
+        } catch (error) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Unable to connect to server.'
+            });
+
+        }
     };
 
     const hanleCloseModal = () => {
-        setCurrentTooth("")
-        setShowToothProcedure(false)
-    }
+        setCurrentTooth("");
+        setShowToothProcedure(false);
+    };
 
     const handleSurfaceSelect = (surface) => {
         setCurrentTooth(prev => {

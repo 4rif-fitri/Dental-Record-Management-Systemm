@@ -9,7 +9,7 @@ class ToothFinding extends Model
     protected $table = 'tooth_findings';
 
     protected $fillable = [
-        'examination_id',
+        'patient_id',
         'tooth_id',
         'condition_id',
         'procedure_id',
@@ -17,9 +17,9 @@ class ToothFinding extends Model
         'status',
     ];
 
-    public function examination()
+    public function patient()
     {
-        return $this->belongsTo(Examination::class, 'examination_id');
+        return $this->belongsTo(User::class, 'patient_id');
     }
 
     public function tooth()

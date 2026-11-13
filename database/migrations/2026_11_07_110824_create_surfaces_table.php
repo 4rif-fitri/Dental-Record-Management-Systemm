@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('surface_name', 100);
             $table->string('surface_code', 100);
-            $table->string('points', 100);
+            $table->string('points', 100)->nullable();
         });
     }
 

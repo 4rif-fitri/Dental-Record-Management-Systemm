@@ -27,50 +27,40 @@ const Examination = () => {
     const [examination, setExamination] = useState("");
     const [patientDetails, setPatientDetails] = useState("");
     const [conditions, setConditions] = useState("");
-    const [treatment, setTreatment] = useState("");
+    const [treatment, setTreatment] = useState("")
+    const [surfaces, setSurfaces] = useState("")
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
 
-    const getPatientDetails = async (id) => {
-        try {
-            const response = await api.get(route('getPatientById', { id }));
-
-            setPatientDetails(response.data)
-            setExamination(response.data.examinations)
-
-        }catch (error){
-            console.log(error)
-        }
-    }
-
-    const getAllCondition = async () => {
-        try {
-            const response = await api.get(route('getAllCondition'));
-            setConditions(response.data)
-
-        }catch (error){
-            console.log(error)
-        }
-    }
-
-    const getAllProcedure = async () => {
-        try {
-            const response = await api.get(route('getAllProcedure'));
-            setTreatment(response.data)
-
-        }catch (error){
-            console.log(error)
-        }
-    }
-
     const fetchData = async () => {
-        const id = window.location.pathname.split('/').pop();
-        await getPatientDetails(id);
-        await getAllCondition();
-        await getAllProcedure();
+        try {
+            const id = window.location.pathname.split('/').pop();
+
+            const [
+                patientResponse,
+                conditionResponse,
+                procedureResponse,
+                surfaceResponse
+
+            ] = await Promise.all([
+
+                api.get(route('getPatientById', { id })),
+                api.get(route('getAllCondition')),
+                api.get(route('getAllProcedure')),
+                api.get(route('getAllSurface'))
+            ]);
+
+            setPatientDetails(patientResponse.data);
+            setConditions(conditionResponse.data);
+            setTreatment(procedureResponse.data);
+            setSurfaces(surfaceResponse.data);
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -82,12 +72,13 @@ const Examination = () => {
             {showAddMedicine && <Medicine showAddMedicine={showAddMedicine}/> }
             {showToothProcedure && (
                 <ToothProcedure
-                    showToothProcedure={showToothProcedure}
                     setShowToothProcedure={setShowToothProcedure}
                     currentTooth={currentTooth}
                     setCurrentTooth={setCurrentTooth}
                     conditions={conditions}
                     treatment={treatment}
+                    surfaces={surfaces}
+                    patientDetails={patientDetails}
                 />
             )}
 

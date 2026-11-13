@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tooth_findings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('examination_id')->constrained('examination')->onDelete('restrict');
+            $table->foreignId('patient_id')->constrained('users')->onDelete('restrict');
             $table->foreignId('tooth_id')->constrained('tooth')->onDelete('restrict');
             $table->foreignId('condition_id')->constrained('condition')->onDelete('restrict');
             $table->foreignId('procedure_id')->constrained('procedure')->onDelete('restrict');

@@ -11,7 +11,7 @@ class ToothFindingSeeder extends Seeder
     {
         DB::table('tooth_findings')->insert([
             [
-                'examination_id' => 1,
+                'patient_id' => 3,
                 'tooth_id' => 6,
                 'condition_id' => 1,
                 'procedure_id' => 1,
@@ -21,7 +21,7 @@ class ToothFindingSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'examination_id' => 2,
+                'patient_id' => 3,
                 'tooth_id' => 11,
                 'condition_id' => 5,
                 'procedure_id' => 6,
