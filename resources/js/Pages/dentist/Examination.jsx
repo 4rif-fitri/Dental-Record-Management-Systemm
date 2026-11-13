@@ -27,6 +27,8 @@ const Examination = () => {
     const [activeTab, setActiveTab] = useState("patient");
     const [examination, setExamination] = useState("");
     const [patientDetails, setPatientDetails] = useState("");
+    const [conditions, setConditions] = useState("");
+    const [treatment, setTreatment] = useState("");
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showAddMedicine, setShowAddMedicine] = useState(false);
@@ -46,10 +48,36 @@ const Examination = () => {
         }
     }
 
+    const getAllCondition = async () => {
+        try {
+            const response = await api.get(route('getAllCondition'));
+            setConditions(response.data)
+
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    const getAllProcedure = async () => {
+        try {
+            const response = await api.get(route('getAllProcedure'));
+            setTreatment(response.data)
+
+        }catch (error){
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
-        const id = window.location.pathname.split('/').pop();
-        getPatientDetails(id)
-    },[])
+        const fetchData = async () => {
+            const id = window.location.pathname.split('/').pop();
+            await getPatientDetails(id);
+            await getAllCondition();
+            await getAllProcedure();
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <MainLayout>
@@ -60,6 +88,8 @@ const Examination = () => {
                     setShowToothProcedure={setShowToothProcedure}
                     currentTooth={currentTooth}
                     setCurrentTooth={setCurrentTooth}
+                    conditions={conditions}
+                    treatment={treatment}
                 />
             )}
 

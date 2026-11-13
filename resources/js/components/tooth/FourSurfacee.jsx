@@ -6,22 +6,10 @@ const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
     const selected = currentTooth?.selected_surfaces || [];
 
     const areas = [
-        {
-            name: "TOP",
-            points: "0,0 300,0 195,150 105,150",
-        },
-        {
-            name: "LEFT",
-            points: "0,0 105,150 0,300",
-        },
-        {
-            name: "RIGHT",
-            points: "300,0 195,150 300,300",
-        },
-        {
-            name: "BOTTOM",
-            points: "0,300 300,300 198,150 105,150",
-        },
+        { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
+        { name: "Mesial", points: "0,0 105,150 0,300" },
+        { name: "Distal", points: "300,0 300,300 195,150" },
+        { name: "Lingual", points: "0,300 300,300 195,150 105,150" },
     ];
 
     const handleSelect = (name) => {

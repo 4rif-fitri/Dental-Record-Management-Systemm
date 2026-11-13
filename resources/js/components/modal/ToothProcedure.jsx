@@ -1,8 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
 import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 
-const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth}) => {
+const ToothProcedure = (
+    {showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth,
+        conditions,treatment}) => {
+
+    const RenderOptionConditions = () => {
+        return (
+            conditions.map((data, index) => (
+                <option key={index} value={data.id}>
+                    {data.condition_name}
+                </option>
+            ))
+        );
+    };
+
+    const RenderOptionTreatment = () => {
+        return (
+            treatment.map((data, index) => (
+                <option key={index} value={data.id}>
+                    {data.procedure_name}
+                </option>
+            ))
+        );
+    };
 
     const hanleCloseModal = () => {
         setCurrentTooth("")
@@ -26,6 +48,10 @@ const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,s
         });
     };
 
+    useEffect(()=>{
+        console.log(currentTooth)
+    },[currentTooth])
+
     if (!currentTooth) return null;
 
     return (
@@ -46,14 +72,15 @@ const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,s
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
 
                     <div className="border-2 border-gray-300 p-2">
-                        <div className="relative flex justify-center items-center h-87.5 bg-gray-100">
-                            <span className="text-gray-400">
-                                3D Tooth Model
-                            </span>
+                        <div className="relative flex justify-center items-center h-60 bg-gray-100">
+                        </div>
+                        <div className={"grid grid-cols-2 mt-2 gap-2"}>
+                            <button className={"btn btn-outline"}>Surface</button>
+                            <button className={"btn btn-outline"}>Cross Section</button>
                         </div>
                     </div>
 
-                    <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-87.5">
+                    <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-60">
 
                         {currentTooth.number_of_surface === 5 ? (
                             <FiveSurfacee
@@ -73,44 +100,28 @@ const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,s
                 </div>
 
                 <form>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
 
-                        <div>
-                            <label className="text-2xl font-medium">
-                                Condition
-                            </label>
+                        <div className={"grid grid-cols-1 md:grid-cols-2 gap-4"}>
+                            <div>
+                                <label className="text-2xl font-medium">Condition</label>
+                                <select name="condition" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500" required>
+                                    <option value="">Select Condition</option>
+                                    <RenderOptionConditions />
+                                </select>
+                            </div>
 
-                            <select name="condition" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500"  required>
-                                <option value="">Select Condition</option>
-                                <option value="Dental Caries">Dental Caries</option>
-                                <option value="Fracture">Fracture</option>
-                                <option value="Discoloration">Discoloration</option>
-                                <option value="Missing Tooth">Missing Tooth</option>
-                                <option value="Normal">Normal</option>
-                            </select>
-                        </div>
-
-                        {/* Treatment */}
-                        <div>
-                            <label className="text-2xl font-medium">
-                                Treatment
-                            </label>
-
-                            <select name="treatment" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500"  required>
-                                <option value="">Select Treatment</option>
-                                <option value="Filling">Filling</option>
-                                <option value="Extraction">Extraction</option>
-                                <option value="Root Canal Treatment">Root Canal Treatment</option>
-                                <option value="Scaling">Scaling</option>
-                                <option value="Crown">Crown</option>
-                            </select>
+                            <div>
+                                <label className="text-2xl font-medium">Treatment</label>
+                                <select name="treatment" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500"  required>
+                                    <option value="">Select Treatment</option>
+                                    <RenderOptionTreatment />
+                                </select>
+                            </div>
                         </div>
 
                         <div>
-                            <label className="text-2xl font-medium">
-                                Notes
-                            </label>
-
+                            <label className="text-2xl font-medium">Notes</label>
                             <textarea name="notes" className="w-full h-36 border-2 border-gray-300 p-3 outline-none focus:border-blue-500 resize-none"/>
                         </div>
 

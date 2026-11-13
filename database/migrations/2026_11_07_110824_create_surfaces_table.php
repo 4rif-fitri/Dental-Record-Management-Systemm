@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('surfaces', function (Blueprint $table) {
             $table->id();
             $table->string('surface_name', 100);
-            $table->string('surface_type', 100);
             $table->string('surface_code', 100);
-            $table->timestamps();
+            $table->string('points', 100);
         });
     }
 

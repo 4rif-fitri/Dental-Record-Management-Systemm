@@ -8,10 +8,10 @@ const FiveSurface = ({
                      }) => {
 
     const areas = [
-        { name: "TOP", points: "0,0 300,0 195,150 105,150" },
-        { name: "LEFT", points: "0,0 150,170 0,300" },
-        { name: "RIGHT", points: "300,0 300,300 170,150" },
-        { name: "BOTTOM", points: "0,300 300,300 195,180 105,180" },
+        { name: "Buccal", points: "0,0 300,0 195,150 105,150" },
+        { name: "Mesial", points: "0,0 150,170 0,300" },
+        { name: "Distal", points: "300,0 300,300 170,150" },
+        { name: "Lingual", points: "0,300 300,300 195,180 105,180" },
     ];
 
     return (
@@ -41,11 +41,11 @@ const FiveSurface = ({
 
             <div
                 className={`center ${
-                    selectedSurfaces.includes("CENTER")
+                    selectedSurfaces.includes("Occlusal")
                         ? "active"
                         : ""
                 }`}
-                onClick={() => onSelect("CENTER")}
+                onClick={() => onSelect("Occlusal")}
             ></div>
 
         </div>
