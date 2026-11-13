@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
-import PatientDetails from "../../components/tabs/PatientDetailsTab";
-import ConsentTab from "../../components/tabs/ConsentTab";
-import MedicineTab from "../../components/tabs/medicineTab";
-import PhotosTab from "../../components/tabs/photosTab";
-import DentalChart2D from "../../components/tabs/DentalChart2D";
-import PenandaWarna from "../../components/PenandaWarna";
-import DentalChart3D from "../../components/tabs/DentalChart3D";
-import Tretment from "../../components/tabs/Tretment";
-import Medicine from "../../components/modal/Medicine";
-import ToothProcedure from "../../components/modal/ToothProcedure";
+import PatientDetails from "@/components/tabs/PatientDetailsTab";
+import ConsentTab from "@/components/tabs/ConsentTab";
+import MedicineTab from "@/components/tabs/medicineTab";
+import DentalChart2D from "@/components/tabs/DentalChart2D";
+import PenandaWarna from "@/components/PenandaWarna";
+import DentalChart3D from "@/components/tabs/DentalChart3D";
+import Tretment from "@/components/tabs/Tretment";
+import Medicine from "@/components/modal/Medicine";
+import ToothProcedure from "@/components/modal/ToothProcedure";
 import {route} from "ziggy-js";
 import api from "@/lib/axios.js";
 import PageTitle from "@/components/layout/PageTitle.jsx";
@@ -34,7 +33,6 @@ const Examination = () => {
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
-    const [selectedSurfacesByTooth, setSelectedSurfacesByTooth] = useState({});
 
     const getPatientDetails = async (id) => {
         try {
@@ -68,14 +66,14 @@ const Examination = () => {
         }
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const id = window.location.pathname.split('/').pop();
-            await getPatientDetails(id);
-            await getAllCondition();
-            await getAllProcedure();
-        };
+    const fetchData = async () => {
+        const id = window.location.pathname.split('/').pop();
+        await getPatientDetails(id);
+        await getAllCondition();
+        await getAllProcedure();
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 

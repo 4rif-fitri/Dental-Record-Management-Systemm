@@ -1,6 +1,24 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import {router} from "@inertiajs/react";
 
 const MedicineTab = () => {
+
+    const [medicines, setMedicines] = useState("")
+
+    const getAllMedicine = () => {
+        try {
+            let response = api.get(router("getAllMedicine"))
+            console.log(response)
+
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getAllMedicine()
+    },[])
+
     return (
         <div>
             <div className="flex justify-between mb-2">
@@ -9,7 +27,7 @@ const MedicineTab = () => {
                     Add Medicine
                 </button>
             </div>
-            <div className="h-75 overflow-y-scroll border border-gray-500 p-3 w-full rounded h-40 flex flex-col gap-2">
+            <div className="h-75 overflow-y-scroll border border-gray-500 p-3 w-full rounded flex flex-col gap-2">
                 {medicines.map((medicine) => (
                     <div key={medicine.id} className="w-full rounded border border-gray-500 p-3 flex justify-between">
                         <h2>{medicine.name}</h2>

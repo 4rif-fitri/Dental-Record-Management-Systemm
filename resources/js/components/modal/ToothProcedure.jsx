@@ -1,29 +1,18 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
 import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
+import {route} from "ziggy-js";
 
-const ToothProcedure = (
-    {showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth,
-        conditions,treatment}) => {
+const ToothProcedure = ({showToothProcedure,setShowToothProcedure,currentTooth,setCurrentTooth, conditions,treatment}) => {
+    const [selectedCondition, setSelectedCondition] = useState({});
+    const [selectedTreatment, setSelectedTreatment] = useState({});
 
-    const RenderOptionConditions = () => {
-        return (
-            conditions.map((data, index) => (
-                <option key={index} value={data.id}>
-                    {data.condition_name}
-                </option>
-            ))
-        );
-    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-    const RenderOptionTreatment = () => {
-        return (
-            treatment.map((data, index) => (
-                <option key={index} value={data.id}>
-                    {data.procedure_name}
-                </option>
-            ))
-        );
+        console.log("Tooth:", currentTooth);
+        console.log("Condition:", selectedCondition);
+        console.log("Treatment:", selectedTreatment);
     };
 
     const hanleCloseModal = () => {
@@ -57,20 +46,17 @@ const ToothProcedure = (
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 text-black">
 
-            <div className="w-[95vw] lg:w-[50vw] max-w-7xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
-
+            <div className="w-[95vw] lg:w-[75vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
                 <div className="mb-4 flex flex-wrap justify-between items-center">
                     <h2 className="font-bold text-3xl">
                         Tooth Treatment
                     </h2>
-
                     <button onClick={hanleCloseModal} className="btn bg-black text-white w-24">
                         Close
                     </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-
                     <div className="border-2 border-gray-300 p-2">
                         <div className="relative flex justify-center items-center h-60 bg-gray-100">
                         </div>
@@ -81,7 +67,6 @@ const ToothProcedure = (
                     </div>
 
                     <div className="border-2 border-gray-300 flex flex-col justify-center items-center p-5 min-h-60">
-
                         {currentTooth.number_of_surface === 5 ? (
                             <FiveSurfacee
                                 currentTooth={currentTooth}
@@ -99,23 +84,47 @@ const ToothProcedure = (
                     </div>
                 </div>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">
 
                         <div className={"grid grid-cols-1 md:grid-cols-2 gap-4"}>
                             <div>
                                 <label className="text-2xl font-medium">Condition</label>
-                                <select name="condition" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500" required>
+                                <select name="condition" className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    value={selectedCondition.id ?? ""}
+                                    onChange={(e) => {
+                                        const id = e.target.value;
+                                        const selected = conditions.find(item => String(item.id) === id);
+                                        setSelectedCondition(selected || {});
+                                    }} required>
+
                                     <option value="">Select Condition</option>
-                                    <RenderOptionConditions />
+
+                                    {conditions.map((data) => (
+                                        <option key={data.id} value={data.id}>
+                                            {data.condition_name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
 
                             <div>
                                 <label className="text-2xl font-medium">Treatment</label>
-                                <select name="treatment" className="w-full h-12 border-2 border-gray-300 px-3 bg-white outline-none focus:border-blue-500"  required>
+                                <select name="treatment" className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    value={selectedTreatment.id ?? ""}
+                                    onChange={(e) => {
+                                        const id = e.target.value;
+                                        const selected = treatment.find(item => String(item.id) === id);
+                                        setSelectedTreatment(selected || {});
+                                    }} required>
+
                                     <option value="">Select Treatment</option>
-                                    <RenderOptionTreatment />
+
+                                    {treatment.map((data) => (
+                                        <option key={data.id} value={data.id}>
+                                            {data.procedure_name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
