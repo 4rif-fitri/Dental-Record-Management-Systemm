@@ -11,13 +11,8 @@ const toothModels = import.meta.glob("../../assets/*.glb", {
     import: "default",
 });
 
-// =====================================
-// PERMANENT TEETH
-// =====================================
-
 const permanentTeeth = [
 
-    // Permanent Upper Right
     { number: 18, model: toothModels["../../assets/18.glb"] },
     { number: 17, model: toothModels["../../assets/17.glb"] },
     { number: 16, model: toothModels["../../assets/16.glb"] },
@@ -27,7 +22,6 @@ const permanentTeeth = [
     { number: 12, model: toothModels["../../assets/12.glb"] },
     { number: 11, model: toothModels["../../assets/11.glb"] },
 
-    // Permanent Upper Left
     { number: 21, model: toothModels["../../assets/21.glb"] },
     { number: 22, model: toothModels["../../assets/22.glb"] },
     { number: 23, model: toothModels["../../assets/23.glb"] },
@@ -37,7 +31,6 @@ const permanentTeeth = [
     { number: 27, model: toothModels["../../assets/27.glb"] },
     { number: 28, model: toothModels["../../assets/28.glb"] },
 
-    // Permanent Lower Right
     { number: 48, model: toothModels["../../assets/48.glb"] },
     { number: 47, model: toothModels["../../assets/47.glb"] },
     { number: 46, model: toothModels["../../assets/46.glb"] },
@@ -47,7 +40,6 @@ const permanentTeeth = [
     { number: 42, model: toothModels["../../assets/42.glb"] },
     { number: 41, model: toothModels["../../assets/41.glb"] },
 
-    // Permanent Lower Left
     { number: 31, model: toothModels["../../assets/31.glb"] },
     { number: 32, model: toothModels["../../assets/32.glb"] },
     { number: 33, model: toothModels["../../assets/33.glb"] },
@@ -73,14 +65,12 @@ const primaryTeeth = [
     { number: 64, model: toothModels["../../assets/64.glb"] },
     { number: 65, model: toothModels["../../assets/65.glb"] },
 
-    // Primary Lower Right
     { number: 85, model: toothModels["../../assets/85.glb"] },
     { number: 84, model: toothModels["../../assets/84.glb"] },
     { number: 83, model: toothModels["../../assets/83.glb"] },
     { number: 82, model: toothModels["../../assets/82.glb"] },
     { number: 81, model: toothModels["../../assets/81.glb"] },
 
-    // Primary Lower Left
     { number: 71, model: toothModels["../../assets/71.glb"] },
     { number: 72, model: toothModels["../../assets/72.glb"] },
     { number: 73, model: toothModels["../../assets/73.glb"] },
@@ -113,7 +103,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
     };
 
-    // Select array based on dentition
     const selectedTeeth =
         selectedDentition === "primary"
             ? primaryTeeth
@@ -121,7 +110,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                 ? permanentTeeth
                 : [...permanentTeeth, ...primaryTeeth];
 
-    // Filter Upper / Lower
     const filteredTeeth = selectedTeeth.filter(tooth => {
 
         const firstDigit = String(tooth.number)[0];
@@ -137,7 +125,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
     });
 
-    // Determine mouth models
     const showPrimary =
         selectedDentition === "primary" ||
         selectedDentition === "all";
@@ -148,23 +135,61 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
     return (
         <>
+            <div className="flex gap-3 justify-around">
+
+                <div className="flex gap-3 p-1">
+
+                    <button onClick={() => setSelectedDentition("primary")}
+                        className={`p-2 rounded border
+                        ${selectedDentition === "primary" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
+                        Primary
+                    </button>
+
+                    <button onClick={() => setSelectedDentition("permanent")}
+                        className={`p-2 rounded border
+                        ${selectedDentition === "permanent" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
+                        Permanent
+                    </button>
+
+                </div>
+
+                <div className="flex gap-3 p-1">
+
+                    <button onClick={() => setSelectedJaw("upper")}
+                        className={`p-2 rounded border
+                        ${selectedJaw === "upper" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
+                        Upper
+                    </button>
+
+                    <button onClick={() => setSelectedJaw("lower")}
+                        className={`p-2 rounded border
+                        ${selectedJaw === "lower" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
+                        Lower
+                    </button>
+
+                    <button onClick={() => setSelectedJaw("all")}
+                        className={`p-2 rounded border
+                        ${selectedJaw === "all" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
+                        All
+                    </button>
+
+                </div>
+
+            </div>
 
             <div className="h-150 gap-0 bg-black overflow-hidden">
 
-                <Canvas camera={{ position: [0, 0.25, 0.75] }}>
+                <Canvas
+                    key={selectedDentition}
+                    camera={{ position: [0, 0.25, 0.75] }}
+                >
 
                     <ambientLight intensity={2} />
 
                     <OrbitControls />
 
-                    {/* =========================
-                        UPPER JAW
-                    ========================= */}
-
                     {selectedJaw !== "lower" && (
                         <>
-
-                            {/* Permanent Upper */}
                             {showPermanent && (
                                 <Mouth
                                     toothNumber="maxilla"
@@ -175,7 +200,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                                 />
                             )}
 
-                            {/* Primary Upper */}
                             {showPrimary && (
                                 <Mouth
                                     toothNumber="maxilla"
@@ -189,14 +213,8 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                         </>
                     )}
 
-                    {/* =========================
-                        LOWER JAW
-                    ========================= */}
-
                     {selectedJaw !== "upper" && (
                         <>
-
-                            {/* Permanent Lower */}
                             {showPermanent && (
                                 <Mouth
                                     toothNumber="mandible"
@@ -207,7 +225,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                                 />
                             )}
 
-                            {/* Primary Lower */}
                             {showPrimary && (
                                 <Mouth
                                     toothNumber="mandible"
@@ -220,10 +237,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
                         </>
                     )}
-
-                    {/* =========================
-                        INDIVIDUAL TEETH
-                    ========================= */}
 
                     {filteredTeeth.map((tooth) => {
 
@@ -256,82 +269,6 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                 </Canvas>
 
             </div>
-
-            {/* =========================
-                FILTER BUTTONS
-            ========================= */}
-
-            <div className="flex gap-3 justify-around">
-
-                {/* PRIMARY / PERMANENT */}
-
-                <div className="flex gap-3 p-1">
-
-                    <button
-                        onClick={() => setSelectedDentition("primary")}
-                        className={`p-2 rounded border ${
-                            selectedDentition === "primary"
-                                ? "bg-blue-700 text-white"
-                                : "bg-white text-black"
-                        }`}
-                    >
-                        Primary
-                    </button>
-
-                    <button
-                        onClick={() => setSelectedDentition("permanent")}
-                        className={`p-2 rounded border ${
-                            selectedDentition === "permanent"
-                                ? "bg-blue-700 text-white"
-                                : "bg-white text-black"
-                        }`}
-                    >
-                        Permanent
-                    </button>
-
-                </div>
-
-                {/* UPPER / LOWER */}
-
-                <div className="flex gap-3 p-1">
-
-                    <button
-                        onClick={() => setSelectedJaw("upper")}
-                        className={`p-2 rounded border ${
-                            selectedJaw === "upper"
-                                ? "bg-blue-700 text-white"
-                                : "bg-white text-black"
-                        }`}
-                    >
-                        Upper
-                    </button>
-
-                    <button
-                        onClick={() => setSelectedJaw("lower")}
-                        className={`p-2 rounded border ${
-                            selectedJaw === "lower"
-                                ? "bg-blue-700 text-white"
-                                : "bg-white text-black"
-                        }`}
-                    >
-                        Lower
-                    </button>
-
-                    <button
-                        onClick={() => setSelectedJaw("all")}
-                        className={`p-2 rounded border ${
-                            selectedJaw === "all"
-                                ? "bg-blue-700 text-white"
-                                : "bg-white text-black"
-                        }`}
-                    >
-                        All
-                    </button>
-
-                </div>
-
-            </div>
-
         </>
     );
 };

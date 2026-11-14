@@ -14,8 +14,10 @@ const ToothProcedure = ({
     const [selectedTreatment, setSelectedTreatment] = useState({});
     const [notes, setNotes] = useState("");
 
-    const selectedSurfaceIds = currentTooth.selected_surfaces.map(name => {
-        return surfaces.find(surface => surface.surface_name === name)?.id;
+    const selectedSurfaceIds = (currentTooth?.selected_surfaces ?? []).map(name => {
+        return surfaces.find(
+            surface => surface.surface_name === name
+        )?.id;
     });
 
     const handleSubmit = async (e) => {

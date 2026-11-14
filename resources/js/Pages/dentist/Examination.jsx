@@ -26,11 +26,12 @@ let linkTabs = [
 const Examination = () => {
     const [activeTab, setActiveTab] = useState("patient");
     const [patientDetails, setPatientDetails] = useState("");
-    const [conditions, setConditions] = useState("");
-    const [treatment, setTreatment] = useState("")
-    const [surfaces, setSurfaces] = useState("")
-    const [medicines, setMedicines] = useState("")
-    const [toothFinding, setToothFinding] = useState("")
+    const [conditions, setConditions] = useState([]);
+    const [treatment, setTreatment] = useState([]);
+    const [surfaces, setSurfaces] = useState([]);
+    const [medicines, setMedicines] = useState([]);
+    const [toothFinding, setToothFinding] = useState([]);
+    const [tooth, setTooth] = useState([]);
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
@@ -38,6 +39,7 @@ const Examination = () => {
 
     const [currentTooth, setCurrentTooth] = useState(null);
     const [currentToothFinding, setCurrentToothFinding] = useState(null);
+
 
     const laodToothFinding = async () => {
         try {
@@ -66,7 +68,8 @@ const Examination = () => {
                 procedureResponse,
                 surfaceResponse,
                 medicineResponse,
-                toothFindingResponse
+                toothFindingResponse,
+                tooth
 
             ] = await Promise.all([
 
@@ -76,6 +79,7 @@ const Examination = () => {
                 api.get(route('getAllSurface')),
                 api.get(route('getAllMedicine')),
                 api.get(route('getFindingByPatientId', { id })),
+                api.get(route('getAllTooth')),
 
             ]);
 
@@ -85,6 +89,7 @@ const Examination = () => {
             setSurfaces(surfaceResponse.data);
             setMedicines(medicineResponse.data)
             setToothFinding(toothFindingResponse.data)
+            setTooth(tooth.data)
 
         } catch (error) {
             console.log(error);
@@ -92,7 +97,21 @@ const Examination = () => {
     };
 
     const handleToothSelect = (toothNumber) => {
-        console.log("Selected tooth:", toothNumber);
+
+        const selectedTooth = tooth.find(item =>
+            String(item.tooth_number) === String(toothNumber)
+        );
+
+        if (!selectedTooth) {
+            console.log("Tooth not found:", toothNumber);
+            return;
+        }
+
+        console.log("Selected tooth:", selectedTooth);
+
+        setCurrentTooth(selectedTooth);
+
+        setShowToothProcedure(true);
     };
 
     useEffect(() => {
@@ -130,16 +149,27 @@ const Examination = () => {
                    <TabsHeader setActiveTab={setActiveTab} linkTabs={linkTabs} activeTab={activeTab} />
 
                     <div className="w-full h-auto bg-white rounded mt-2">
-                        {activeTab === "patient" && <PatientDetails patientDetails={patientDetails} />}
-                        {activeTab === "chart" && <DentalChart2D
-                            setShowToothProcedure={setShowToothProcedure}
-                            setCurrentTooth={setCurrentTooth}
-                            toothFinding={toothFinding}
-                        /> }
-                        {activeTab === "3d" && <DentalChart3D
-                            toothFinding={toothFinding}
-                            onSelect={handleToothSelect}
-                        /> }
+                        {activeTab === "patient" &&
+                            <PatientDetails
+                                patientDetails={patientDetails}
+                            />
+                        }
+
+                        {activeTab === "chart" &&
+                            <DentalChart2D
+                                setShowToothProcedure={setShowToothProcedure}
+                                setCurrentTooth={setCurrentTooth}
+                                toothFinding={toothFinding}
+                            />
+                        }
+
+                        {activeTab === "3d" &&
+                            <DentalChart3D
+                                toothFinding={toothFinding}
+                                onSelect={handleToothSelect}
+                            />
+                        }
+
                         {activeTab === "patientConsent" && <ConsentTab />}
                         {activeTab === "medicine" && <MedicineTabb medicines={medicines} /> }
                     </div>
