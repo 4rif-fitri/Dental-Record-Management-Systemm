@@ -172,6 +172,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('examinationMedicine')->group(function () {
         Route::get('/', [ExaminationMedicineController::class, 'getAllExaminationMedicine'])->name('getAllExaminationMedicine');
         Route::get('/{id}', [ExaminationMedicineController::class, 'getExaminationMedicineById'])->name('getExaminationById');
+        Route::get('/patient/{id}', [ExaminationMedicineController::class, 'getExaminationMedicineByPatientId'])->name('getExaminationMedicineByPatientId');
         Route::post('/store', [ExaminationMedicineController::class, 'createExaminationMedicine'])->name('createExamination');
         Route::put('update/{id}', [ExaminationMedicineController::class, 'updateExaminationMedicine'])->name('updateExamination');
         Route::delete('delete/{id}', [ExaminationMedicineController::class, 'deleteExaminationMedicine'])->name('deleteExamination');

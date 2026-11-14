@@ -32,6 +32,7 @@ const Examination = () => {
     const [medicines, setMedicines] = useState([]);
     const [toothFinding, setToothFinding] = useState([]);
     const [tooth, setTooth] = useState([]);
+    const [examinationMedicine, setExaminationMedicine] = useState([])
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
@@ -69,7 +70,8 @@ const Examination = () => {
                 surfaceResponse,
                 medicineResponse,
                 toothFindingResponse,
-                tooth
+                toothResponse,
+                examinationMedicineResponse
 
             ] = await Promise.all([
 
@@ -80,6 +82,7 @@ const Examination = () => {
                 api.get(route('getAllMedicine')),
                 api.get(route('getFindingByPatientId', { id })),
                 api.get(route('getAllTooth')),
+                api.get(route('getExaminationMedicineByPatientId', { id })),
 
             ]);
 
@@ -89,7 +92,8 @@ const Examination = () => {
             setSurfaces(surfaceResponse.data);
             setMedicines(medicineResponse.data)
             setToothFinding(toothFindingResponse.data)
-            setTooth(tooth.data)
+            setTooth(toothResponse.data)
+            setExaminationMedicine(examinationMedicineResponse.data ?? [])
 
         } catch (error) {
             console.log(error);
@@ -120,8 +124,14 @@ const Examination = () => {
 
     return (
         <MainLayout>
-            {showAddMedicine && <Medicine /> }
-            {showToothProcedure && (
+            {showAddMedicine &&
+                <Medicine
+                    medicines={medicines}
+                    setShowAddMedicine={setShowAddMedicine}
+                />
+            }
+
+            {showToothProcedure &&
                 <ToothProcedure
                     setShowToothProcedure={setShowToothProcedure}
                     currentTooth={currentTooth}
@@ -132,15 +142,18 @@ const Examination = () => {
                     patientDetails={patientDetails}
                     laodToothFinding={laodToothFinding}
                 />
-            )}
-            {showUpdateToothProcedure && (<UpdateToothProcedure
-                setShowUpdateToothProcedure={setShowUpdateToothProcedure}
-                currentToothFinding={currentToothFinding}
-                conditions={conditions}
-                treatment={treatment}
-                surfaces={surfaces}
-                laodToothFinding={laodToothFinding}
-            />)}
+            }
+
+            {showUpdateToothProcedure &&
+                <UpdateToothProcedure
+                    setShowUpdateToothProcedure={setShowUpdateToothProcedure}
+                    currentToothFinding={currentToothFinding}
+                    conditions={conditions}
+                    treatment={treatment}
+                    surfaces={surfaces}
+                    laodToothFinding={laodToothFinding}
+                />
+            }
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
@@ -171,7 +184,13 @@ const Examination = () => {
                         }
 
                         {activeTab === "patientConsent" && <ConsentTab />}
-                        {activeTab === "medicine" && <MedicineTabb medicines={medicines} /> }
+
+                        {activeTab === "medicine" &&
+                            <MedicineTabb
+                                examinationMedicine={examinationMedicine}
+                                setShowAddMedicine={setShowAddMedicine}
+                            />
+                        }
                     </div>
 
                     {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }

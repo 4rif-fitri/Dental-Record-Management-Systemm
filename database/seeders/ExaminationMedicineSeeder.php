@@ -11,7 +11,7 @@ class ExaminationMedicineSeeder extends Seeder
     {
         DB::table('examination_medicine')->insert([
             [
-                'examination_id' => 1,
+                'patient_id' => 3,
                 'medicine_id' => 1,
                 'dosage' => '500mg',
                 'frequency' => 'Every 6 hours',

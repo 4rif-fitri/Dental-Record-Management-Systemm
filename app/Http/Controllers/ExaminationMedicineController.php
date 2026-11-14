@@ -27,6 +27,16 @@ class ExaminationMedicineController extends Controller
         )->toJsonResponse();
     }
 
+    public function getExaminationMedicineByPatientId($id)
+    {
+        $medicine = ExaminationMedicine::where('patient_id', $id)->first();
+
+        return ApiResponse::success(
+            "List of examination medicine",
+            $medicine
+        )->toJsonResponse();
+    }
+
     public function createExaminationMedicine(Request $request){
         $validated = $request->validate([
             'examination_id' => 'required',
