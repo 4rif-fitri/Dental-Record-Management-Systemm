@@ -1,7 +1,9 @@
 import BoxCondition from "../BoxCondition";
 import api from "@/lib/axios.js";
 
-const Tretment = ({ toothFinding = [], laodToothFinding }) => {
+const Tretment = ({
+    toothFinding = [], laodToothFinding,
+    setShowUpdateToothProcedure, setCurrentToothFinding }) => {
 
     const updateProcedureStatus = async (id,status) => {
         try {
@@ -26,12 +28,14 @@ const Tretment = ({ toothFinding = [], laodToothFinding }) => {
                     key={item.id}
                     procedure={item}
                     updateProcedureStatus={updateProcedureStatus}
+                    setShowUpdateToothProcedure={setShowUpdateToothProcedure}
+                    setCurrentToothFinding={setCurrentToothFinding}
                 />
             ));
     };
 
     const renderSection = (procedures, status) => (
-        <div className="border border-gray-300 p-5 flex flex-col gap-2 h-150 overflow-y-scroll">
+        <div className="border border-gray-300 p-5 flex h-auto flex-col gap-2 h-150">
             <h1 className="text-2xl pb-3 font-semibold">
                 {status}
             </h1>
@@ -40,7 +44,7 @@ const Tretment = ({ toothFinding = [], laodToothFinding }) => {
     );
 
     return (
-        <div className="mt-10 mb-2 grid grid-cols-3 gap-3 overflow-x-scroll p-2">
+        <div className="mt-10 mb-2 grid grid-cols-3 h-auto gap-3 p-2">
             {renderSection(toothFinding, "Planning")}
             {renderSection(toothFinding, "In Progress")}
             {renderSection(toothFinding, "Completed")}

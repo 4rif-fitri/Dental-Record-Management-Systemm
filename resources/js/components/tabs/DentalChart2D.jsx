@@ -47,12 +47,10 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
 
     const renderTooth = (tooth) => {
 
-        // Cari semua finding untuk gigi ini
         const findings = toothFinding?.filter(
             item => Number(item.tooth_id) === Number(tooth.id)
         ) || [];
 
-        // Ambil finding paling latest
         const latestFinding = findings.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
         )[0] || null;
@@ -92,26 +90,55 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
         ).map(renderTooth);
     };
 
+    const primaryNumbers = [55, 54, 53, 52, 51, 61, 62, 63, 64, 65];
+
+    const upperPermanent = [
+        18, 17, 16, 15, 14, 13, 12, 11,
+        21, 22, 23, 24, 25, 26, 27, 28
+    ];
+
+    const lowerPermanent = [
+        48, 47, 46, 45, 44, 43, 42, 41,
+        31, 32, 33, 34, 35, 36, 37, 38
+    ];
+
+    const renderNumber = (numbers) => {
+        return numbers.map((number, index) => (
+            <span
+                key={`${number}-${index}`}
+                className={`flex justify-center items-end font-semibold`}
+            >
+            {number}
+        </span>
+        ));
+    }
+
+    const renderDualNumber = (upperNumbers, lowerNumbers) => {
+        return upperNumbers.map((number, index) => (
+            <span key={number} className="grid grid-rows-2 font-semibold">
+            <p className="flex justify-center items-start border border-t-0 border-l-0 border-r-0">
+                {number}
+            </p>
+
+            <p className="flex justify-center items-end">
+                {lowerNumbers[index]}
+            </p>
+        </span>
+        ));
+    };
+
     return (
-        <div className="grid grid-cols-[repeat(16,minmax(0,1fr))] grid-rows-4 gap-0">
+        <div className="grid grid-cols-[repeat(16,minmax(0,1fr))] grid-rows-5 gap-0">
 
             <span></span>
             <span></span>
             <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
 
+            {renderNumber(primaryNumbers)}
+
+            <span></span>
+            <span></span>
+            <span></span>
             <span></span>
             <span></span>
             <span></span>
@@ -126,22 +153,7 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
             {renderQuadrant("permanent", 1)}
             {renderQuadrant("permanent", 2)}
 
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            {renderDualNumber(upperPermanent, lowerPermanent)}
 
             {renderQuadrant("permanent", 3)}
             {renderQuadrant("permanent", 4)}
@@ -156,6 +168,12 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
             <span></span>
             <span></span>
             <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+            {renderNumber(primaryNumbers)}
+
         </div>
     );
 };

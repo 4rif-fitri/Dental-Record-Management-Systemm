@@ -1,12 +1,7 @@
 import React from 'react';
 import "./InteractivePolygon.css";
 
-const FourSurface = ({
-                         onSelect,
-                         toothNumber,
-                         currentTooth = null,
-                         selectedSurfaces = []
-                     }) => {
+const FourSurface = ({onSelect, currentTooth = null}) => {
 
     const areas = [
         { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
@@ -34,7 +29,7 @@ const FourSurface = ({
                     return (
                         <polygon
                             key={area.name}
-                            className="area"
+                            className={"area"}
                             points={area.points}
                             style={{
                                 fill: isSelected ? conditionColor : "white"

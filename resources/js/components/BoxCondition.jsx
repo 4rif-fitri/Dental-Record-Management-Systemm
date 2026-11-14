@@ -3,14 +3,19 @@ import React from 'react';
 import BoxFiveSurface from "./tooth/box/BoxFiveSurfacee";
 import BoxFourSurfacee from "./tooth/box/BoxFourSurfacee";
 
-const BoxCondition = ({ procedure, updateProcedureStatus }) => {
+const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
+
+    const handleViewDetail = () => {
+        setShowUpdateToothProcedure(true)
+        setCurrentToothFinding(procedure)
+    }
 
     return (
         <div className="border border-gray-300 p-2">
 
-            <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1 p-2">
 
-                <div className="p-2 flex justify-center items-center">
+                <div className="py-10 flex justify-center items-center">
                     {procedure.tooth?.number_of_surface === 5 ? (
                         <BoxFiveSurface currentTooth={procedure} />
                     ) : (
@@ -49,6 +54,18 @@ const BoxCondition = ({ procedure, updateProcedureStatus }) => {
                     </div>
 
                 </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 p-1">
+                <div></div>
+
+                <button
+                    type="button"
+                    className="btn btn-outline"
+                    onClick={handleViewDetail}
+                >
+                    View Detail
+                </button>
             </div>
 
             {procedure.status === "Planning" && (

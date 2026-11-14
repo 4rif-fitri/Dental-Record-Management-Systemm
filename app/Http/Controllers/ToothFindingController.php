@@ -108,30 +108,88 @@ class ToothFindingController extends Controller
         }
     }
 
-    public function updateFinding(Request $request, $id){
+    public function updateFinding(Request $request, $id)
+    {
         $validate = $request->validate([
-            'examination_id' => 'required',
-            'tooth_id' => 'required',
-            'condition_id' => 'required',
-            'procedure_id' =>  'required',
-            'status' =>  'required'
+            'condition_id' => 'required|exists:condition,id',
+            'procedure_id' => 'required|exists:procedure,id',
+            'finding_description' => 'nullable|string',
+            'selectedSurfaceIds' => 'required|array|min:1',
+            'selectedSurfaceIds.*' => 'required|exists:surfaces,id',
         ]);
 
-        $toothFinding = ToothFinding::where('id', $id)->first();
-        $toothFinding->examination_id = $request->examination_id;
-        $toothFinding->tooth_id = $request->tooth_id;
-        $toothFinding->condition_id = $request->condition_id;
-        $toothFinding->procedure_id = $request->procedure_id;
-        $toothFinding->finding_description  = $request->finding_description;
-        $toothFinding->status = $request->status;
-        $toothFinding->save();
+        try {
 
-        return ApiResponse::success(200, $toothFinding)->toJsonResponse();
+            DB::transaction(function () use ($validate, $id) {
+
+                // Get existing finding
+                $toothFinding = ToothFinding::findOrFail($id);
+
+                // Update finding information
+                $toothFinding->update([
+                    'condition_id' => $validate['condition_id'],
+                    'procedure_id' => $validate['procedure_id'],
+                    'finding_description' => $validate['finding_description'] ?? null,
+                ]);
+
+                // Delete old surfaces
+                ToothSurface::where(
+                    'tooth_findings_id',
+                    $toothFinding->id
+                )->delete();
+
+                // Insert updated surfaces
+                foreach ($validate['selectedSurfaceIds'] as $surfaceId) {
+
+                    ToothSurface::create([
+                        'tooth_findings_id' => $toothFinding->id,
+                        'surface_id' => $surfaceId,
+                    ]);
+
+                }
+
+            });
+
+            // Get updated finding with relationships
+            $toothFinding = ToothFinding::with([
+                'tooth',
+                'condition',
+                'procedure',
+                'surfaces.surface'
+            ])->findOrFail($id);
+
+            return ApiResponse::success(
+                "Finding updated successfully",
+                $toothFinding
+            )->toJsonResponse();
+
+        } catch (\Exception $e) {
+
+            return ApiResponse::error(
+                $e->getMessage()
+            )->toJsonResponse();
+
+        }
     }
 
-    public function deleteFinding($id){
-        $response = ToothFinding::where('id', $id)->delete();
+    public function deleteFinding($id)
+    {
+        $finding = ToothFinding::findOrFail($id);
 
-        return ApiResponse::success(200, $response)->toJsonResponse();
+        DB::transaction(function () use ($finding) {
+
+            ToothSurface::where(
+                'tooth_findings_id',
+                $finding->id
+            )->delete();
+
+            $finding->delete();
+
+        });
+
+        return ApiResponse::success(
+            "Finding deleted successfully",
+            null
+        )->toJsonResponse();
     }
 }

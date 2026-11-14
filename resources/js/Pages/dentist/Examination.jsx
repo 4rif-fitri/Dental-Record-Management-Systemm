@@ -13,6 +13,7 @@ import api from "@/lib/axios.js";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
 import MedicineTabb from "@/components/tabs/MedicineTabb.jsx";
+import UpdateToothProcedure from "@/components/modal/UpdateToothProcedure.jsx";
 
 let linkTabs = [
     { text: "patient", label: "Patient Details" },
@@ -32,9 +33,11 @@ const Examination = () => {
     const [toothFinding, setToothFinding] = useState("")
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
+    const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
+    const [currentToothFinding, setCurrentToothFinding] = useState(null);
 
     const laodToothFinding = async () => {
         try {
@@ -107,6 +110,14 @@ const Examination = () => {
                     laodToothFinding={laodToothFinding}
                 />
             )}
+            {showUpdateToothProcedure && (<UpdateToothProcedure
+                setShowUpdateToothProcedure={setShowUpdateToothProcedure}
+                currentToothFinding={currentToothFinding}
+                conditions={conditions}
+                treatment={treatment}
+                surfaces={surfaces}
+                laodToothFinding={laodToothFinding}
+            />)}
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
@@ -134,6 +145,8 @@ const Examination = () => {
                     <Tretment
                         toothFinding={toothFinding}
                         laodToothFinding={laodToothFinding}
+                        setShowUpdateToothProcedure={setShowUpdateToothProcedure}
+                        setCurrentToothFinding={setCurrentToothFinding}
                     />
                     : "" }
             </div>
