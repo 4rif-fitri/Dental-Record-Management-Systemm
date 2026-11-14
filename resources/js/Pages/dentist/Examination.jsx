@@ -119,6 +119,7 @@ const Examination = () => {
                         {activeTab === "chart" && <DentalChart2D
                             setShowToothProcedure={setShowToothProcedure}
                             setCurrentTooth={setCurrentTooth}
+                            toothFinding={toothFinding}
                         /> }
                         {activeTab === "3d" && <DentalChart3D /> }
                         {activeTab === "patientConsent" && <ConsentTab />}

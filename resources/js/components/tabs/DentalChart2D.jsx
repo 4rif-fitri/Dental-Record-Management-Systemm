@@ -1,11 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
 import FiveSurface from '../tooth/FiveSurface';
 import FourSurface from '../tooth/FourSurface';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios.js';
 
-const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
+const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding }) => {
+    console.log(toothFinding)
 
     const [teeth, setTeeth] = useState([]);
 
@@ -13,9 +13,9 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
         const getAllTooth = async () => {
             try {
                 const response = await api.get(route('getAllTooth'));
-                const toothData = response.data;
+                console.log(response)
 
-                setTeeth(toothData);
+                setTeeth(response.data);
 
             } catch (error) {
                 console.error('Failed to get teeth:', error);
@@ -46,6 +46,17 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
     };
 
     const renderTooth = (tooth) => {
+
+        // Cari semua finding untuk gigi ini
+        const findings = toothFinding?.filter(
+            item => Number(item.tooth_id) === Number(tooth.id)
+        ) || [];
+
+        // Ambil finding paling latest
+        const latestFinding = findings.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )[0] || null;
+
         const ToothComponent =
             ["Central Incisor", "Lateral Incisor", "Canine"]
                 .includes(tooth.tooth_name)
@@ -56,11 +67,29 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
             <ToothComponent
                 key={tooth.tooth_number}
                 toothNumber={tooth.tooth_number}
+                currentTooth={latestFinding}
                 onSelect={(surface) =>
                     handleClickSurface(tooth, surface)
                 }
             />
         );
+    };
+
+    const renderQuadrant = (type, quadrant) => {
+        const filtered = teeth.filter(t =>
+            t.tooth_type === type &&
+            Number(t.quadrant) === quadrant
+        );
+
+        const sorted = filtered.sort((a, b) =>
+            Number(a.tooth_number) - Number(b.tooth_number)
+        );
+
+        return (
+            [1, 4, 5, 8].includes(quadrant)
+                ? sorted.reverse()
+                : sorted
+        ).map(renderTooth);
     };
 
     return (
@@ -87,15 +116,15 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
             <span></span>
             <span></span>
 
-            {teeth.filter(t => t.tooth_type === "primary" && Number(t.quadrant) === 5).map(renderTooth)}
-            {teeth.filter(t => t.tooth_type === "primary" && Number(t.quadrant) === 6).map(renderTooth)}
+            {renderQuadrant("primary", 5)}
+            {renderQuadrant("primary", 6)}
 
             <span></span>
             <span></span>
             <span></span>
 
-            {teeth.filter(t => t.tooth_type === "permanent" && Number(t.quadrant) === 1).map(renderTooth)}
-            {teeth.filter(t => t.tooth_type === "permanent" && Number(t.quadrant) === 2).map(renderTooth)}
+            {renderQuadrant("permanent", 1)}
+            {renderQuadrant("permanent", 2)}
 
             <span></span>
             <span></span>
@@ -114,15 +143,15 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth }) => {
             <span></span>
             <span></span>
 
-            {teeth.filter(t => t.tooth_type === "permanent" && Number(t.quadrant) === 3).map(renderTooth)}
-            {teeth.filter(t => t.tooth_type === "permanent" && Number(t.quadrant) === 4).map(renderTooth)}
+            {renderQuadrant("permanent", 3)}
+            {renderQuadrant("permanent", 4)}
 
             <span></span>
             <span></span>
             <span></span>
 
-            {teeth.filter(t => t.tooth_type === "primary" && Number(t.quadrant) === 7).map(renderTooth)}
-            {teeth.filter(t => t.tooth_type === "primary" && Number(t.quadrant) === 8).map(renderTooth)}
+            {renderQuadrant("primary", 7)}
+            {renderQuadrant("primary", 8)}
 
             <span></span>
             <span></span>
