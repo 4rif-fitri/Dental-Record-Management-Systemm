@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('condition', function (Blueprint $table) {
             $table->id();
             $table->string('condition_name', 100);
-            $table->string('condition_description', 255);
-            $table->string('condition_type', 100);
             $table->string('condition_code', 100);
+            $table->string('color', 100);
             $table->timestamps();
         });
     }

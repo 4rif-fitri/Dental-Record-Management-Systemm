@@ -103,7 +103,7 @@ const Examination = () => {
                         {activeTab === "medicine" && <MedicineTabb medicines={medicines} /> }
                     </div>
 
-                    {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna /> : "" }
+                    {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }
 
                 </div>
 

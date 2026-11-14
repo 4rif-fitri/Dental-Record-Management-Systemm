@@ -10,9 +10,8 @@ class Condition extends Model
 
     protected $fillable = [
         'condition_name',
-        'condition_description',
-        'condition_type',
         'condition_code',
+        'color'
     ];
 
     public function findings()

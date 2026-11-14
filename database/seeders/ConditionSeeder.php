@@ -12,33 +12,28 @@ class ConditionSeeder extends Seeder
         DB::table('condition')->insert([
             [
                 'condition_name' => 'Dental Caries',
-                'condition_description' => 'Tooth decay caused by bacteria.',
-                'condition_type' => 'Disease',
                 'condition_code' => 'CAR',
+                'color' => 'bg-red-300'
             ],
             [
                 'condition_name' => 'Fractured Tooth',
-                'condition_description' => 'Crack or break in the tooth.',
-                'condition_type' => 'Injury',
                 'condition_code' => 'FRA',
+                'color' => 'bg-orange-300'
             ],
             [
                 'condition_name' => 'Missing Tooth',
-                'condition_description' => 'Tooth is missing.',
-                'condition_type' => 'Status',
                 'condition_code' => 'MIS',
+                'color' => 'bg-amber-300'
             ],
             [
                 'condition_name' => 'Dental Calculus',
-                'condition_description' => 'Hardened dental plaque.',
-                'condition_type' => 'Disease',
                 'condition_code' => 'CAL',
+                'color' => 'bg-lime-300'
             ],
             [
                 'condition_name' => 'Healthy',
-                'condition_description' => 'No visible dental abnormalities.',
-                'condition_type' => 'Normal',
                 'condition_code' => 'HLT',
+                'color' => 'bg-teal-300'
             ],
         ]);
     }
