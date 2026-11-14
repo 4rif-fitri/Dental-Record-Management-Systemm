@@ -36,6 +36,23 @@ const Examination = () => {
 
     const [currentTooth, setCurrentTooth] = useState(null);
 
+    const laodToothFinding = async () => {
+        try {
+            const id = window.location.pathname.split('/').pop();
+
+            const response = await api.get(
+                route("getFindingByPatientId", { id })
+            );
+
+            console.log(response)
+
+            setToothFinding(response.data);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchData = async () => {
         try {
             const id = window.location.pathname.split('/').pop();
@@ -87,6 +104,7 @@ const Examination = () => {
                     treatment={treatment}
                     surfaces={surfaces}
                     patientDetails={patientDetails}
+                    laodToothFinding={laodToothFinding}
                 />
             )}
 
@@ -114,7 +132,7 @@ const Examination = () => {
                 {activeTab === "chart" || activeTab === "3d" ?
                     <Tretment
                         toothFinding={toothFinding}
-                        setToothFinding={setToothFinding}
+                        laodToothFinding={laodToothFinding}
                     />
                     : "" }
             </div>

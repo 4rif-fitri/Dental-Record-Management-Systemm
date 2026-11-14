@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('condition_name', 100);
             $table->string('condition_code', 100);
             $table->string('color', 100);
+            $table->string('color_code', 7);
             $table->timestamps();
         });
     }

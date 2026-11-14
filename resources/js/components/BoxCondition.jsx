@@ -12,9 +12,9 @@ const BoxCondition = ({ procedure, updateProcedureStatus }) => {
 
                 <div className="p-2 flex justify-center items-center">
                     {procedure.tooth?.number_of_surface === 5 ? (
-                        <BoxFiveSurface />
+                        <BoxFiveSurface currentTooth={procedure} />
                     ) : (
-                        <BoxFourSurfacee />
+                        <BoxFourSurfacee currentTooth={procedure} />
                     )}
                 </div>
 
@@ -51,7 +51,6 @@ const BoxCondition = ({ procedure, updateProcedureStatus }) => {
                 </div>
             </div>
 
-            {/* Planning */}
             {procedure.status === "Planning" && (
                 <div className="grid grid-cols-2 gap-2 p-1">
                     <div></div>
@@ -66,38 +65,27 @@ const BoxCondition = ({ procedure, updateProcedureStatus }) => {
                 </div>
             )}
 
-            {/* In Progress */}
             {procedure.status === "In Progress" && (
                 <div className="grid grid-cols-2 gap-2 p-1">
 
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "Planning")}
-                    >
+                    <button type="button" className="btn btn-primary"
+                        onClick={() => updateProcedureStatus(procedure.id, "Planning")}>
                         Planning
                     </button>
 
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "Completed")}
-                    >
+                    <button type="button" className="btn btn-primary"
+                        onClick={() => updateProcedureStatus(procedure.id, "Completed")}>
                         Completed
                     </button>
 
                 </div>
             )}
 
-            {/* Completed */}
             {procedure.status === "Completed" && (
                 <div className="grid grid-cols-2 gap-2 p-1">
 
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}
-                    >
+                    <button type="button" className="btn btn-primary"
+                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}>
                         In Progress
                     </button>
 

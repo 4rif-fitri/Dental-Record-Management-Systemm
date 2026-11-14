@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../InteractivePolygon.css";
 
-const BoxFourSurfacee = ({currentTooth = [], skala}) => {
+const BoxFourSurfacee = ({ currentTooth = {}, skala }) => {
 
-    const selected = currentTooth?.selected_surfaces || [];
+    const selected = currentTooth.surfaces || [];
+
+    const selectedSurfaceNames = selected.map(
+        (item) => item.surface?.surface_name
+    );
+
+    const conditionColor = currentTooth.condition?.color_code || "#ffffff";
 
     const areas = [
         { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
@@ -12,24 +18,26 @@ const BoxFourSurfacee = ({currentTooth = [], skala}) => {
         { name: "Lingual", points: "0,300 300,300 195,150 105,150" },
     ];
 
-    const handleSelect = (name) => {
-        onSelect?.(name);
-    };
-
     return (
         <div className={`container scale-${skala}`}>
 
             <svg className="shapes" viewBox="0 0 300 300">
 
-                {areas.map((area) => (
-                    <polygon
-                        key={area.name}
-                        className={`area ${
-                            selected.includes(area.name) ? "active" : ""
-                        }`}
-                        points={area.points}
-                    />
-                ))}
+                {areas.map((area) => {
+
+                    const isSelected = selectedSurfaceNames.includes(area.name);
+
+                    return (
+                        <polygon
+                            key={area.name}
+                            className="area"
+                            points={area.points}
+                            style={{
+                                fill: isSelected ? conditionColor : "white"
+                            }}
+                        />
+                    );
+                })}
 
             </svg>
 

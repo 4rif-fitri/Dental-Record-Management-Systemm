@@ -52,7 +52,7 @@
 /* Active */
 
 .area.active {
-	fill: #93c5fd;
+    fill: var(--condition-color, #93c5fd);
 }
 
 /* Center */
@@ -87,7 +87,7 @@
 }
 
 .center.active {
-	background: #93c5fd;
+    background: var(--condition-color, #93c5fd);
 }
 
 /* HTML Content */

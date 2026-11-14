@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../InteractivePolygon.css";
 
-const BoxFiveSurface = ({ currentTooth, skala }) => {
+const BoxFiveSurface = ({ currentTooth = {}, skala }) => {
 
-    const selected = currentTooth?.selected_surfaces || [];
+    const conditionColor = currentTooth.condition?.color_code || "#93c5fd";
+
+    const selected = currentTooth.surfaces || [];
+
+    const selectedSurfaceNames = selected.map(
+        (item) => item.surface?.surface_name
+    );
 
     const areas = [
         { name: "Buccal", points: "0,0 400,0 195,150 105,150" },
@@ -17,15 +23,21 @@ const BoxFiveSurface = ({ currentTooth, skala }) => {
 
             <svg className="shapes" viewBox="0 0 300 300">
 
-                {areas.map(area => (
-                    <polygon
-                        key={area.name}
-                        className={`area ${
-                            selected.includes(area.name) ? "active" : ""
-                        }`}
-                        points={area.points}
-                    />
-                ))}
+                {areas.map((area) => {
+
+                    const isSelected = selectedSurfaceNames.includes(area.name);
+
+                    return (
+                        <polygon
+                            key={area.name}
+                            className={`area ${isSelected ? "active" : ""}`}
+                            points={area.points}
+                            style={{
+                                "--condition-color": conditionColor
+                            }}
+                        />
+                    );
+                })}
 
             </svg>
 
@@ -36,10 +48,13 @@ const BoxFiveSurface = ({ currentTooth, skala }) => {
 
             <div
                 className={`center ${
-                    selected.includes("Occlusal") ? "active" : ""
+                    selectedSurfaceNames.includes("Occlusal") ? "active" : ""
                 }`}
-                onClick={() => onSelect("Occlusal")}
+                style={{
+                    "--condition-color": conditionColor
+                }}
             />
+
         </div>
     );
 };

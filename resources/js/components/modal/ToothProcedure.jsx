@@ -4,7 +4,12 @@ import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 import api from '@/lib/axios';
 import Swal from "sweetalert2";
 
-const ToothProcedure = ({patientDetails, setShowToothProcedure,currentTooth,setCurrentTooth, conditions,treatment, surfaces}) => {
+const ToothProcedure = ({
+    laodToothFinding,
+    patientDetails, setShowToothProcedure,currentTooth,
+    setCurrentTooth, conditions,treatment, surfaces
+}) => {
+
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
 
@@ -37,7 +42,9 @@ const ToothProcedure = ({patientDetails, setShowToothProcedure,currentTooth,setC
                 text: 'Finding saved successfully!',
             });
 
+            laodToothFinding()
             hanleCloseModal();
+
         } catch (error) {
 
             Swal.fire({
