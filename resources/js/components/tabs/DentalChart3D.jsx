@@ -1,7 +1,9 @@
+
+import React, { useState } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Tooth from '../tooth/Tooth';
-import { useState } from "react";
+import Mouth from '../tooth/Mouth';
 
 const toothModels = import.meta.glob("../../assets/*.glb", {
     eager: true,
@@ -47,41 +49,163 @@ const teeth = [
     { number: 38, model: toothModels["../../assets/38.glb"] },
 ];
 
-const DentalChart3D = ({ onSelect }) => {
+const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
+
+    // all = Upper + Lower
+    // upper = Maxilla
+    // lower = Mandible
+    const [selectedJaw, setSelectedJaw] = useState("all");
+
+    const getLatestFinding = (toothNumber) => {
+
+        const findings = toothFinding.filter(item =>
+            String(item.tooth?.tooth_number) === String(toothNumber)
+        );
+
+        if (findings.length === 0) return null;
+
+        return [...findings].sort((a, b) => {
+
+            const dateCompare =
+                new Date(b.created_at) - new Date(a.created_at);
+
+            return dateCompare || Number(b.id) - Number(a.id);
+
+        })[0];
+
+    };
+
+    // Filter teeth based on selected jaw
+    const filteredTeeth = teeth.filter(tooth => {
+
+        const firstDigit = String(tooth.number)[0];
+
+        if (selectedJaw === "upper") {
+            return firstDigit === "1" || firstDigit === "2";
+        }
+
+        if (selectedJaw === "lower") {
+            return firstDigit === "3" || firstDigit === "4";
+        }
+
+        return true;
+
+    });
+
     return (
-        <div className=" h-150 gap-0 bg-black">
-            <Canvas camera={{ position: [0, 0.25, 0.75] }}>
-                <ambientLight intensity={2} />
-                <OrbitControls />
-                <Tooth
-                    toothNumber="maxilla"
-                    model={toothModels["../../assets/ma.glb"]}
-                    position={[0, -0.175, 0]}
-                    rotation={[0, 0, 0]}
-                    onSelect={onSelect}
-                />
+        <>
+            <div className="h-150 gap-0 bg-black overflow-hidden">
 
-                <Tooth
-                    toothNumber="mandible"
-                    model={toothModels["../../assets/mb.glb"]}
-                    position={[0, -0.175, 0]}
-                    rotation={[0, 0, 0]}
-                    onSelect={onSelect}
-                />
+                <Canvas camera={{ position: [0, 0.25, 0.75] }}>
 
-                {teeth.map((tooth) => (
-                    <Tooth
-                        key={tooth.number}
-                        toothNumber={tooth.number}
-                        model={tooth.model}
-                        position={[0, -0.175, 0]}
-                        rotation={[0, 0, 0]}
-                        onSelect={onSelect}
-                    />
-                ))}
-            </Canvas>
-        </div>
+                    <ambientLight intensity={2} />
+
+                    <OrbitControls />
+
+                    {/* MAXILLA */}
+                    {selectedJaw !== "lower" && (
+                        <Mouth
+                            toothNumber="maxilla"
+                            model={toothModels["../../assets/ma.glb"]}
+                            position={[0, -0.175, 0]}
+                            rotation={[0, 0, 0]}
+                            onSelect={onSelect}
+                        />
+                    )}
+
+                    {/* MANDIBLE */}
+                    {selectedJaw !== "upper" && (
+                        <Mouth
+                            toothNumber="mandible"
+                            model={toothModels["../../assets/mb.glb"]}
+                            position={[0, -0.175, 0]}
+                            rotation={[0, 0, 0]}
+                            onSelect={onSelect}
+                        />
+                    )}
+
+                    {/* INDIVIDUAL TEETH */}
+                    {filteredTeeth.map((tooth) => {
+
+                        const finding = getLatestFinding(tooth.number);
+
+                        return (
+                            <Tooth
+                                key={tooth.number}
+                                toothNumber={tooth.number}
+                                model={tooth.model}
+                                position={[0, -0.175, 0]}
+                                rotation={[0, 0, 0]}
+                                onSelect={onSelect}
+                                finding={finding}
+                                conditionColor={
+                                    finding?.condition?.color_code || null
+                                }
+                            />
+                        );
+
+                    })}
+
+                </Canvas>
+
+            </div>
+
+            <div className="flex gap-3 justify-around">
+
+                {/* PRIMARY / PERMANENT */}
+                <div className="flex gap-3 p-1">
+
+                    <button className="bg-white p-2 rounded border">
+                        Primary
+                    </button>
+
+                    <button className="bg-white p-2 rounded border">
+                        Permanent
+                    </button>
+
+                </div>
+
+                {/* UPPER / LOWER */}
+                <div className="flex gap-3 p-1">
+
+                    <button
+                        onClick={() => setSelectedJaw("upper")}
+                        className={`p-2 rounded border ${
+                            selectedJaw === "upper"
+                                ? "bg-blue-700 text-white"
+                                : "bg-white text-black"
+                        }`}
+                    >
+                        Upper
+                    </button>
+
+                    <button
+                        onClick={() => setSelectedJaw("lower")}
+                        className={`p-2 rounded border ${
+                            selectedJaw === "lower"
+                                ? "bg-blue-700 text-white"
+                                : "bg-white text-black"
+                        }`}
+                    >
+                        Lower
+                    </button>
+
+                    <button
+                        onClick={() => setSelectedJaw("all")}
+                        className={`p-2 rounded border ${
+                            selectedJaw === "all"
+                                ? "bg-blue-700 text-white"
+                                : "bg-white text-black"
+                        }`}
+                    >
+                        All
+                    </button>
+
+                </div>
+
+            </div>
+        </>
     );
 };
 
-export default DentalChart3D
+export default DentalChart3D;

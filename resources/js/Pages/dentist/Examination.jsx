@@ -91,6 +91,10 @@ const Examination = () => {
         }
     };
 
+    const handleToothSelect = (toothNumber) => {
+        console.log("Selected tooth:", toothNumber);
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -132,7 +136,10 @@ const Examination = () => {
                             setCurrentTooth={setCurrentTooth}
                             toothFinding={toothFinding}
                         /> }
-                        {activeTab === "3d" && <DentalChart3D /> }
+                        {activeTab === "3d" && <DentalChart3D
+                            toothFinding={toothFinding}
+                            onSelect={handleToothSelect}
+                        /> }
                         {activeTab === "patientConsent" && <ConsentTab />}
                         {activeTab === "medicine" && <MedicineTabb medicines={medicines} /> }
                     </div>
