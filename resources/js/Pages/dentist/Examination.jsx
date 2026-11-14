@@ -29,6 +29,7 @@ const Examination = () => {
     const [treatment, setTreatment] = useState("")
     const [surfaces, setSurfaces] = useState("")
     const [medicines, setMedicines] = useState("")
+    const [toothFinding, setToothFinding] = useState("")
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showAddMedicine, setShowAddMedicine] = useState(false);
@@ -44,7 +45,8 @@ const Examination = () => {
                 conditionResponse,
                 procedureResponse,
                 surfaceResponse,
-                medicineResponse
+                medicineResponse,
+                toothFindingResponse
 
             ] = await Promise.all([
 
@@ -53,6 +55,7 @@ const Examination = () => {
                 api.get(route('getAllProcedure')),
                 api.get(route('getAllSurface')),
                 api.get(route('getAllMedicine')),
+                api.get(route('getFindingByPatientId', { id })),
 
             ]);
 
@@ -61,6 +64,7 @@ const Examination = () => {
             setTreatment(procedureResponse.data);
             setSurfaces(surfaceResponse.data);
             setMedicines(medicineResponse.data)
+            setToothFinding(toothFindingResponse.data)
 
         } catch (error) {
             console.log(error);
@@ -107,7 +111,12 @@ const Examination = () => {
 
                 </div>
 
-                {activeTab === "chart" || activeTab === "3d" ? <Tretment/> : "" }
+                {activeTab === "chart" || activeTab === "3d" ?
+                    <Tretment
+                        toothFinding={toothFinding}
+                        setToothFinding={setToothFinding}
+                    />
+                    : "" }
             </div>
         </MainLayout>
     );

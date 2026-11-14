@@ -187,9 +187,11 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('toothFinding')->group(function () {
         Route::get('/',[ToothFindingController::class, 'getAllToothFinding'])->name('getAllToothFinding');
-        Route::get('{id}', [ToothFindingController::class, 'getFindingById'])->name('getFindingById');
+        Route::get('/{id}', [ToothFindingController::class, 'getFindingById'])->name('getFindingById');
+        Route::get('/patient/{id}', [ToothFindingController::class, 'getFindingByPatientId'])->name('getFindingByPatientId');
         Route::post('/store', [ToothFindingController::class, 'createFinding'])->name('createFinding');
         Route::put('update/{id}', [ToothFindingController::class, 'updateFinding'])->name('updateFinding');
+        Route::put('update/status/{id}', [ToothFindingController::class, 'updateFindingStatus'])->name('updateFindingStatus');
         Route::delete('delete/{id}', [ToothFindingController::class, 'deleteFinding'])->name('deleteFinding');
     });
 

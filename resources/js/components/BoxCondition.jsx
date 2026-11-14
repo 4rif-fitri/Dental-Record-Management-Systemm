@@ -1,15 +1,17 @@
-import React from 'react'
-import FiveSurface from './tooth/FiveSurface';
-import FourSurface from './tooth/FourSurface';
+
+import React from 'react';
 import BoxFiveSurface from "./tooth/box/BoxFiveSurfacee";
 import BoxFourSurfacee from "./tooth/box/BoxFourSurfacee";
 
-const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
+const BoxCondition = ({ procedure, updateProcedureStatus }) => {
+
     return (
-        <div className="border-1 border-gray-300 p-2">
-            <div className="grid grid-cols-1 grid-rows-1">
+        <div className="border border-gray-300 p-2">
+
+            <div className="grid grid-cols-1">
+
                 <div className="p-2 flex justify-center items-center">
-                    {procedure.typeTooth === "Molar" ? (
+                    {procedure.tooth?.number_of_surface === 5 ? (
                         <BoxFiveSurface />
                     ) : (
                         <BoxFourSurfacee />
@@ -17,60 +19,61 @@ const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
                 </div>
 
                 <div className="p-2">
-                    <div className=" mb-2">
+
+                    <div className="mb-2 grid grid-cols-1 sm:grid-cols-2">
                         <h1>Tooth:</h1>
-                        <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                            {procedure.tooth}
+                        <p className="font-semibold rounded">
+                            {procedure.tooth?.tooth_number} - {procedure.tooth?.tooth_name}
                         </p>
                     </div>
 
-                    <div className=" mb-2">
+                    <div className="mb-2 grid grid-cols-1 sm:grid-cols-2">
                         <h1>Condition:</h1>
-                        <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                            {procedure.condition}
+                        <p className="font-semibold rounded">
+                            {procedure.condition?.condition_name}
                         </p>
                     </div>
-                    <div className="mb-2">
+
+                    <div className="mb-2 grid grid-cols-1 sm:grid-cols-2">
                         <h1>Treatment:</h1>
-                        <p className="font-semibold border border-gray-400 p-2 rounded-2">
-                            {procedure.treatment}
+                        <p className="font-semibold rounded">
+                            {procedure.procedure?.procedure_name}
                         </p>
                     </div>
-                    <div className="">
-                        <button
-                            className="w-full btn-soft btn-primary border p-1.5 rounded cursor-pointer"
-                            onClick={onSelect}
-                        >
-                            View
-                        </button>
+
+                    <div className="mb-2 grid grid-cols-1 sm:grid-cols-2">
+                        <h1>Status:</h1>
+                        <p className="font-semibold rounded">
+                            {procedure.status}
+                        </p>
                     </div>
+
                 </div>
             </div>
 
+            {/* Planning */}
             {procedure.status === "Planning" && (
-                <div className=" grid grid-cols-2 gap-2 p-1">
+                <div className="grid grid-cols-2 gap-2 p-1">
                     <div></div>
 
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() =>
-                            updateProcedureStatus(procedure.id, "In Progress")
-                        }
+                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}
                     >
                         In Progress
                     </button>
                 </div>
             )}
 
+            {/* In Progress */}
             {procedure.status === "In Progress" && (
-                <div className=" grid grid-cols-2 gap-2 p-1">
+                <div className="grid grid-cols-2 gap-2 p-1">
+
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() =>
-                            updateProcedureStatus(procedure.id, "Planning")
-                        }
+                        onClick={() => updateProcedureStatus(procedure.id, "Planning")}
                     >
                         Planning
                     </button>
@@ -78,32 +81,33 @@ const BoxCondition = ({ procedure, onSelect, updateProcedureStatus }) => {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() =>
-                            updateProcedureStatus(procedure.id, "Completed")
-                        }
+                        onClick={() => updateProcedureStatus(procedure.id, "Completed")}
                     >
                         Completed
                     </button>
+
                 </div>
             )}
 
+            {/* Completed */}
             {procedure.status === "Completed" && (
-                <div className=" grid grid-cols-2 gap-2 p-1">
+                <div className="grid grid-cols-2 gap-2 p-1">
+
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() =>
-                            updateProcedureStatus(procedure.id, "In Progress")
-                        }
+                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}
                     >
                         In Progress
                     </button>
 
                     <div></div>
+
                 </div>
             )}
+
         </div>
     );
 };
 
-export default BoxCondition
+export default BoxCondition;

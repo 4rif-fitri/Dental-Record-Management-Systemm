@@ -24,6 +24,33 @@ class ToothFindingController extends Controller
         return ApiResponse::success(200, $toothFinding)->toJsonResponse();
     }
 
+    public function updateFindingStatus(Request $request, $id){
+
+        $validated = $request->validate([
+            'status' => 'required'
+        ]);
+
+        $findind = ToothFinding::where('id', $id)->first();
+        $findind->status = $request->status;
+        $findind->save();
+
+        return ApiResponse::success(200, $findind)->toJsonResponse();
+    }
+
+    public function getFindingByPatientId($id)
+    {
+        $toothFinding = ToothFinding::where('patient_id', $id)
+            ->with([
+                'tooth',
+                'condition',
+                'procedure',
+                'surfaces.surface'
+            ])
+            ->get();
+
+        return ApiResponse::success("asd", $toothFinding)->toJsonResponse();
+    }
+
     public function createFinding(Request $request)
     {
         try {
