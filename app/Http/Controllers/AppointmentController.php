@@ -28,13 +28,19 @@ class AppointmentController extends Controller
     public function getAllAppointment(){
         $appointment = Appointment::all();
 
-        return ApiResponse::success(200, $appointment)->toJsonResponse();
+        return ApiResponse::success(
+            "Appointment list successfully",
+            $appointment
+        )->toJsonResponse();
     }
 
     public function getAppointmentById($id){
         $appointment = Appointment::where('id', $id)->first();
 
-        return ApiResponse::success(200, $appointment)->toJsonResponse();
+        return ApiResponse::success(
+            "Appointment status updated successfully",
+            $appointment
+        )->toJsonResponse();
     }
 
     public function createAppointment(Request $request){
@@ -54,7 +60,10 @@ class AppointmentController extends Controller
         $appointment->time_slot = $request->time_slot;
         $appointment->save();
 
-        return ApiResponse::success(200, $appointment)->toJsonResponse();
+        return ApiResponse::success(
+            "Appointment created successfully",
+            $appointment
+        )->toJsonResponse();
     }
 
     public function updateAppointment(Request $request, $id){
@@ -66,12 +75,18 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         $appointment->save();
 
-        return ApiResponse::success(200, $appointment)->toJsonResponse();
+        return ApiResponse::success(
+            "Appointment status updated successfully",
+            $appointment
+        )->toJsonResponse();
     }
 
     public function deleteAppointment($id){
         $response = Appointment::where('id', $id)->delete();
 
-        return ApiResponse::success(200, $response)->toJsonResponse();
+        return ApiResponse::success(
+            "Appointment deleted successfully",
+            $response
+        )->toJsonResponse();
     }
 }

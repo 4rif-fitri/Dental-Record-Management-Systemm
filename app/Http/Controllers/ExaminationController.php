@@ -25,7 +25,10 @@ class ExaminationController extends Controller
     {
         $examinations = Examination::all();
 
-        return ApiResponse::success(200, $examinations)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examinations",
+            $examinations
+        )->toJsonResponse();
     }
 
     public function getExaminationById($id)
@@ -42,9 +45,15 @@ class ExaminationController extends Controller
             ->first();
 
         if($examination == null){
-            return ApiResponse::error("Data not found!", 400)->toJsonResponse();
+            return ApiResponse::error(
+                "Examination not found",
+                400
+            )->toJsonResponse();
         }else{
-            return ApiResponse::success(200, $examination)->toJsonResponse();
+            return ApiResponse::success(
+                "Examination list successfully",
+                $examination
+            )->toJsonResponse();
         }
 
     }
@@ -54,7 +63,10 @@ class ExaminationController extends Controller
             'patient_id' => $request->patient_id,
         ]);
 
-        return ApiResponse::success(200, $examination)->toJsonResponse();
+        return ApiResponse::success(
+            "Examination created successfully",
+            $examination
+        )->toJsonResponse();
     }
 
     public function updateExamination(Request $request, $id){
@@ -63,8 +75,10 @@ class ExaminationController extends Controller
         $examination->case_summary = $request->case_summary;
         $examination->save();
 
-        return ApiResponse::success(200, $examination)->toJsonResponse();
-
+        return ApiResponse::success(
+            "Examination updated successfully",
+            $examination
+        )->toJsonResponse();
     }
 
 }

@@ -12,13 +12,19 @@ class ExaminationMedicineController extends Controller
     {
         $examinationMedicines = ExaminationMedicine::all();
 
-        return ApiResponse::success(200, $examinationMedicines)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examination medicine",
+            $examinationMedicines
+        )->toJsonResponse();
     }
 
     public function getExaminationMedicineById($id){
         $examinationMedicines = ExaminationMedicine::where('id', $id)->first();
 
-        return ApiResponse::success(200, $examinationMedicines)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examination medicine",
+            $examinationMedicines
+        )->toJsonResponse();
     }
 
     public function createExaminationMedicine(Request $request){
@@ -43,7 +49,10 @@ class ExaminationMedicineController extends Controller
         $examinationMedicine->notes = $request->notes;
         $examinationMedicine->save();
 
-        return ApiResponse::success(200, $examinationMedicine)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examination medicine",
+            $examinationMedicine
+        )->toJsonResponse();
     }
 
     public function updateExaminationMedicine(Request $request, $id){
@@ -67,13 +76,19 @@ class ExaminationMedicineController extends Controller
         $examinationMedicines->notes = $request->notes;
         $examinationMedicines->save();
 
-        return ApiResponse::success(200, $examinationMedicines)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examination medicine",
+            $examinationMedicines
+        )->toJsonResponse();
     }
 
     public function deleteExaminationMedicine($id){
         $response = ExaminationMedicine::where('id', $id)->delete();
 
-        return ApiResponse::success(200, $response)->toJsonResponse();
+        return ApiResponse::success(
+            "List of examination medicine",
+            $response
+        )->toJsonResponse();
     }
 
 }

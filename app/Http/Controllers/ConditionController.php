@@ -17,7 +17,10 @@ class ConditionController extends Controller
     public function getConditionById($id){
         $conditions = Condition::where('id', $id)->get();
 
-        return ApiResponse::success(200,$conditions)->toJsonResponse();
+        return ApiResponse::success(
+            "Condition list successfully",
+            $conditions
+        )->toJsonResponse();
     }
 
     public function createCondition(Request $request){
@@ -35,7 +38,10 @@ class ConditionController extends Controller
         $condition->condition_code = $validate['condition_code'];
         $condition->save();
 
-        return ApiResponse::success(200,$condition)->toJsonResponse();
+        return ApiResponse::success(
+            "New condition successfully created",
+            $condition
+        )->toJsonResponse();
     }
 
     public function updateCondition(Request $request, $id){
@@ -53,13 +59,19 @@ class ConditionController extends Controller
         $condition->condition_code = $validate['condition_code'];
         $condition->save();
 
-        return ApiResponse::success(200,$condition)->toJsonResponse();
+        return ApiResponse::success(
+            "New condition successfully updated",
+            $condition
+        )->toJsonResponse();
     }
 
     public function deleteCondition(Request $request, $id){
 
         $response = Condition::destroy($id);
 
-        return ApiResponse::success(200, $response)->toJsonResponse();
+        return ApiResponse::success(
+            "Condition successfully deleted",
+            $response
+        )->toJsonResponse();
     }
 }

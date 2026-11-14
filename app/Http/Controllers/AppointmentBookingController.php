@@ -34,19 +34,14 @@ class AppointmentBookingController extends Controller
 
             $booking = DB::transaction(function () use ($validated) {
 
-                $appointment = Appointment::where(
-                    'id',
-                    $validated['appointment_id']
-                )
+                $appointment = Appointment::where('id', $validated['appointment_id'])
                     ->lockForUpdate()
                     ->firstOrFail();
 
-                // Check appointment availability
                 if ($appointment->status !== 'available') {
                     abort(409, 'Appointment is unavailable.');
                 }
 
-                // Check existing active booking
                 $existingBooking = AppointmentBooking::where(
                     'appointment_id',
                     $validated['appointment_id']
@@ -61,7 +56,6 @@ class AppointmentBookingController extends Controller
                     abort(409, 'This appointment already has an active booking.');
                 }
 
-                // Create new booking
                 $booking = new AppointmentBooking();
 
                 $booking->appointment_id = $validated['appointment_id'];
@@ -71,17 +65,15 @@ class AppointmentBookingController extends Controller
 
                 $booking->save();
 
-                // Update appointment status
                 $appointment->update([
                     'status' => 'booked'
                 ]);
 
                 return $booking;
-
             });
 
             return ApiResponse::success(
-                200,
+                "Booking created successfully.",
                 $booking
             )->toJsonResponse();
 
@@ -122,7 +114,10 @@ class AppointmentBookingController extends Controller
     public function deleteBooking($id){
         $response = AppointmentBooking::destroy($id);
 
-        return ApiResponse::success(200, $response)->toJsonResponse();
+        return ApiResponse::success(
+            "Booking deleted successfully.",
+            $response
+        )->toJsonResponse();
     }
 
     public function getWeeklyAppointment(Request $request)
@@ -328,7 +323,7 @@ class AppointmentBookingController extends Controller
         ];
 
         return ApiResponse::success(
-            200,
+            "Weekly appointment retrieved successfully",
             $response
         )->toJsonResponse();
     }
@@ -406,7 +401,7 @@ class AppointmentBookingController extends Controller
         ];
 
         return ApiResponse::success(
-            200,
+            "Weekly appointment retrieved successfully",
             $response
         )->toJsonResponse();
     }
@@ -452,7 +447,7 @@ class AppointmentBookingController extends Controller
         })->values();
 
         return ApiResponse::success(
-            200,
+            "Daily appointment retrieved successfully",
             $response
         )->toJsonResponse();
     }
@@ -473,7 +468,7 @@ class AppointmentBookingController extends Controller
         $booking->save();
 
         return ApiResponse::success(
-            200,
+            "Booking status updated successfully",
             $booking
         )->toJsonResponse();
     }
