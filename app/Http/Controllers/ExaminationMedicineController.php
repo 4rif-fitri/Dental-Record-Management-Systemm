@@ -29,7 +29,9 @@ class ExaminationMedicineController extends Controller
 
     public function getExaminationMedicineByPatientId($id)
     {
-        $medicine = ExaminationMedicine::where('patient_id', $id)->first();
+        $medicine = ExaminationMedicine::where('patient_id', $id)
+            ->with("medicine")
+            ->get();
 
         return ApiResponse::success(
             "List of examination medicine",
