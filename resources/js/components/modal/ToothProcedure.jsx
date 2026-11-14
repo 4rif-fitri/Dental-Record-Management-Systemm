@@ -12,6 +12,7 @@ const ToothProcedure = ({
 
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
+    const [notes, setNotes] = useState("");
 
     const selectedSurfaceIds = currentTooth.selected_surfaces.map(name => {
         return surfaces.find(surface => surface.surface_name === name)?.id;
@@ -27,7 +28,7 @@ const ToothProcedure = ({
             tooth_id: currentTooth.id,
             status: "Planning",
             selectedSurfaceIds: selectedSurfaceIds,
-            finding_description: "asd"
+            finding_description: notes
         };
 
         try {
@@ -172,7 +173,13 @@ const ToothProcedure = ({
 
                         <div>
                             <label className="text-2xl font-medium">Notes</label>
-                            <textarea name="notes" className="w-full h-36 border-2 border-gray-300 p-3 outline-none focus:border-blue-500 resize-none"/>
+                            <textarea
+                                name="notes"
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Enter treatment notes..."
+                                className="w-full h-36 border-2 border-gray-300 p-3 outline-none focus:border-blue-500 resize-none"
+                            />
                         </div>
 
                     </div>

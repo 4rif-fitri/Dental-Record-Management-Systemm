@@ -8,12 +8,12 @@ import DentalChart3D from "@/components/tabs/DentalChart3D";
 import Tretment from "@/components/tabs/Tretment";
 import Medicine from "@/components/modal/Medicine";
 import ToothProcedure from "@/components/modal/ToothProcedure";
-import {route} from "ziggy-js";
-import api from "@/lib/axios.js";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
 import MedicineTabb from "@/components/tabs/MedicineTabb.jsx";
 import UpdateToothProcedure from "@/components/modal/UpdateToothProcedure.jsx";
+import api from "@/lib/axios.js";
+import {route} from "ziggy-js";
 
 let linkTabs = [
     { text: "patient", label: "Patient Details" },

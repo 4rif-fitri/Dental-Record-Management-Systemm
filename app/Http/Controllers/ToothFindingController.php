@@ -122,23 +122,16 @@ class ToothFindingController extends Controller
 
             DB::transaction(function () use ($validate, $id) {
 
-                // Get existing finding
                 $toothFinding = ToothFinding::findOrFail($id);
 
-                // Update finding information
                 $toothFinding->update([
                     'condition_id' => $validate['condition_id'],
                     'procedure_id' => $validate['procedure_id'],
                     'finding_description' => $validate['finding_description'] ?? null,
                 ]);
 
-                // Delete old surfaces
-                ToothSurface::where(
-                    'tooth_findings_id',
-                    $toothFinding->id
-                )->delete();
+                ToothSurface::where('tooth_findings_id', $toothFinding->id)->delete();
 
-                // Insert updated surfaces
                 foreach ($validate['selectedSurfaceIds'] as $surfaceId) {
 
                     ToothSurface::create([
@@ -150,7 +143,6 @@ class ToothFindingController extends Controller
 
             });
 
-            // Get updated finding with relationships
             $toothFinding = ToothFinding::with([
                 'tooth',
                 'condition',

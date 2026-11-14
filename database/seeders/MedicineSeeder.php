@@ -13,18 +13,26 @@ class MedicineSeeder extends Seeder
             [
                 'name' => 'Paracetamol',
                 'description' => 'Pain relief medication.',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Ibuprofen',
                 'description' => 'Non-steroidal anti-inflammatory medication.',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Amoxicillin',
                 'description' => 'Penicillin antibiotic.',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Chlorhexidine',
                 'description' => 'Antiseptic mouthwash.',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }
