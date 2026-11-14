@@ -11,7 +11,13 @@ const toothModels = import.meta.glob("../../assets/*.glb", {
     import: "default",
 });
 
-const teeth = [
+// =====================================
+// PERMANENT TEETH
+// =====================================
+
+const permanentTeeth = [
+
+    // Permanent Upper Right
     { number: 18, model: toothModels["../../assets/18.glb"] },
     { number: 17, model: toothModels["../../assets/17.glb"] },
     { number: 16, model: toothModels["../../assets/16.glb"] },
@@ -21,6 +27,7 @@ const teeth = [
     { number: 12, model: toothModels["../../assets/12.glb"] },
     { number: 11, model: toothModels["../../assets/11.glb"] },
 
+    // Permanent Upper Left
     { number: 21, model: toothModels["../../assets/21.glb"] },
     { number: 22, model: toothModels["../../assets/22.glb"] },
     { number: 23, model: toothModels["../../assets/23.glb"] },
@@ -30,6 +37,7 @@ const teeth = [
     { number: 27, model: toothModels["../../assets/27.glb"] },
     { number: 28, model: toothModels["../../assets/28.glb"] },
 
+    // Permanent Lower Right
     { number: 48, model: toothModels["../../assets/48.glb"] },
     { number: 47, model: toothModels["../../assets/47.glb"] },
     { number: 46, model: toothModels["../../assets/46.glb"] },
@@ -39,6 +47,7 @@ const teeth = [
     { number: 42, model: toothModels["../../assets/42.glb"] },
     { number: 41, model: toothModels["../../assets/41.glb"] },
 
+    // Permanent Lower Left
     { number: 31, model: toothModels["../../assets/31.glb"] },
     { number: 32, model: toothModels["../../assets/32.glb"] },
     { number: 33, model: toothModels["../../assets/33.glb"] },
@@ -47,14 +56,43 @@ const teeth = [
     { number: 36, model: toothModels["../../assets/36.glb"] },
     { number: 37, model: toothModels["../../assets/37.glb"] },
     { number: 38, model: toothModels["../../assets/38.glb"] },
+
+];
+
+const primaryTeeth = [
+
+    { number: 55, model: toothModels["../../assets/55.glb"] },
+    { number: 54, model: toothModels["../../assets/54.glb"] },
+    { number: 53, model: toothModels["../../assets/53.glb"] },
+    { number: 52, model: toothModels["../../assets/52.glb"] },
+    { number: 51, model: toothModels["../../assets/51.glb"] },
+
+    { number: 61, model: toothModels["../../assets/61.glb"] },
+    { number: 62, model: toothModels["../../assets/62.glb"] },
+    { number: 63, model: toothModels["../../assets/63.glb"] },
+    { number: 64, model: toothModels["../../assets/64.glb"] },
+    { number: 65, model: toothModels["../../assets/65.glb"] },
+
+    // Primary Lower Right
+    { number: 85, model: toothModels["../../assets/85.glb"] },
+    { number: 84, model: toothModels["../../assets/84.glb"] },
+    { number: 83, model: toothModels["../../assets/83.glb"] },
+    { number: 82, model: toothModels["../../assets/82.glb"] },
+    { number: 81, model: toothModels["../../assets/81.glb"] },
+
+    // Primary Lower Left
+    { number: 71, model: toothModels["../../assets/71.glb"] },
+    { number: 72, model: toothModels["../../assets/72.glb"] },
+    { number: 73, model: toothModels["../../assets/73.glb"] },
+    { number: 74, model: toothModels["../../assets/74.glb"] },
+    { number: 75, model: toothModels["../../assets/75.glb"] },
+
 ];
 
 const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
-    // all = Upper + Lower
-    // upper = Maxilla
-    // lower = Mandible
     const [selectedJaw, setSelectedJaw] = useState("all");
+    const [selectedDentition, setSelectedDentition] = useState("permanent");
 
     const getLatestFinding = (toothNumber) => {
 
@@ -75,25 +113,42 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
     };
 
-    // Filter teeth based on selected jaw
-    const filteredTeeth = teeth.filter(tooth => {
+    // Select array based on dentition
+    const selectedTeeth =
+        selectedDentition === "primary"
+            ? primaryTeeth
+            : selectedDentition === "permanent"
+                ? permanentTeeth
+                : [...permanentTeeth, ...primaryTeeth];
+
+    // Filter Upper / Lower
+    const filteredTeeth = selectedTeeth.filter(tooth => {
 
         const firstDigit = String(tooth.number)[0];
 
-        if (selectedJaw === "upper") {
-            return firstDigit === "1" || firstDigit === "2";
-        }
+        const isUpper = ["1", "2", "5", "6"].includes(firstDigit);
+        const isLower = ["3", "4", "7", "8"].includes(firstDigit);
 
-        if (selectedJaw === "lower") {
-            return firstDigit === "3" || firstDigit === "4";
-        }
-
-        return true;
+        return (
+            selectedJaw === "all" ||
+            (selectedJaw === "upper" && isUpper) ||
+            (selectedJaw === "lower" && isLower)
+        );
 
     });
 
+    // Determine mouth models
+    const showPrimary =
+        selectedDentition === "primary" ||
+        selectedDentition === "all";
+
+    const showPermanent =
+        selectedDentition === "permanent" ||
+        selectedDentition === "all";
+
     return (
         <>
+
             <div className="h-150 gap-0 bg-black overflow-hidden">
 
                 <Canvas camera={{ position: [0, 0.25, 0.75] }}>
@@ -102,32 +157,84 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
                     <OrbitControls />
 
-                    {/* MAXILLA */}
+                    {/* =========================
+                        UPPER JAW
+                    ========================= */}
+
                     {selectedJaw !== "lower" && (
-                        <Mouth
-                            toothNumber="maxilla"
-                            model={toothModels["../../assets/ma.glb"]}
-                            position={[0, -0.175, 0]}
-                            rotation={[0, 0, 0]}
-                            onSelect={onSelect}
-                        />
+                        <>
+
+                            {/* Permanent Upper */}
+                            {showPermanent && (
+                                <Mouth
+                                    toothNumber="maxilla"
+                                    model={toothModels["../../assets/ma.glb"]}
+                                    position={[0, -0.175, 0]}
+                                    rotation={[0, 0, 0]}
+                                    onSelect={onSelect}
+                                />
+                            )}
+
+                            {/* Primary Upper */}
+                            {showPrimary && (
+                                <Mouth
+                                    toothNumber="maxilla"
+                                    model={toothModels["../../assets/ma2.glb"]}
+                                    position={[0, -0.175, 0]}
+                                    rotation={[0, 0, 0]}
+                                    onSelect={onSelect}
+                                />
+                            )}
+
+                        </>
                     )}
 
-                    {/* MANDIBLE */}
+                    {/* =========================
+                        LOWER JAW
+                    ========================= */}
+
                     {selectedJaw !== "upper" && (
-                        <Mouth
-                            toothNumber="mandible"
-                            model={toothModels["../../assets/mb.glb"]}
-                            position={[0, -0.175, 0]}
-                            rotation={[0, 0, 0]}
-                            onSelect={onSelect}
-                        />
+                        <>
+
+                            {/* Permanent Lower */}
+                            {showPermanent && (
+                                <Mouth
+                                    toothNumber="mandible"
+                                    model={toothModels["../../assets/mb.glb"]}
+                                    position={[0, -0.175, 0]}
+                                    rotation={[0, 0, 0]}
+                                    onSelect={onSelect}
+                                />
+                            )}
+
+                            {/* Primary Lower */}
+                            {showPrimary && (
+                                <Mouth
+                                    toothNumber="mandible"
+                                    model={toothModels["../../assets/mb2.glb"]}
+                                    position={[0, -0.175, 0]}
+                                    rotation={[0, 0, 0]}
+                                    onSelect={onSelect}
+                                />
+                            )}
+
+                        </>
                     )}
 
-                    {/* INDIVIDUAL TEETH */}
+                    {/* =========================
+                        INDIVIDUAL TEETH
+                    ========================= */}
+
                     {filteredTeeth.map((tooth) => {
 
                         const finding = getLatestFinding(tooth.number);
+
+                        if (!tooth.model) {
+                            console.error(
+                                `Model ${tooth.number}.glb tidak dijumpai`
+                            );
+                            return null;
+                        }
 
                         return (
                             <Tooth
@@ -150,22 +257,42 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
             </div>
 
+            {/* =========================
+                FILTER BUTTONS
+            ========================= */}
+
             <div className="flex gap-3 justify-around">
 
                 {/* PRIMARY / PERMANENT */}
+
                 <div className="flex gap-3 p-1">
 
-                    <button className="bg-white p-2 rounded border">
+                    <button
+                        onClick={() => setSelectedDentition("primary")}
+                        className={`p-2 rounded border ${
+                            selectedDentition === "primary"
+                                ? "bg-blue-700 text-white"
+                                : "bg-white text-black"
+                        }`}
+                    >
                         Primary
                     </button>
 
-                    <button className="bg-white p-2 rounded border">
+                    <button
+                        onClick={() => setSelectedDentition("permanent")}
+                        className={`p-2 rounded border ${
+                            selectedDentition === "permanent"
+                                ? "bg-blue-700 text-white"
+                                : "bg-white text-black"
+                        }`}
+                    >
                         Permanent
                     </button>
 
                 </div>
 
                 {/* UPPER / LOWER */}
+
                 <div className="flex gap-3 p-1">
 
                     <button
@@ -204,6 +331,7 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                 </div>
 
             </div>
+
         </>
     );
 };

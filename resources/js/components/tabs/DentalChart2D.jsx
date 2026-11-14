@@ -102,6 +102,8 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
         31, 32, 33, 34, 35, 36, 37, 38
     ];
 
+    const primaryNumbersLower = [85,84,83,82,81,71,72,73,74,75];
+
     const renderNumber = (numbers) => {
         return numbers.map((number, index) => (
             <span
@@ -172,7 +174,7 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
             <span></span>
             <span></span>
 
-            {renderNumber(primaryNumbers)}
+            {renderNumber(primaryNumbersLower)}
 
         </div>
     );
