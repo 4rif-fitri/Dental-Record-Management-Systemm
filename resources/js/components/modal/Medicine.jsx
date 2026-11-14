@@ -1,7 +1,14 @@
 
 import React, { useState } from 'react';
+import api from "@/lib/axios.js";
+import { route } from "ziggy-js";
 
-const Medicine = ({ medicines = [], setShowAddMedicine }) => {
+const Medicine = ({
+                      medicines = [],
+                      patientDetails,
+                      setShowAddMedicine,
+                      loadExaminationMedicine
+                  }) => {
 
     const [medicine, setMedicine] = useState({
         medicine_id: "",
@@ -9,9 +16,11 @@ const Medicine = ({ medicines = [], setShowAddMedicine }) => {
         frequency: "",
         duration: "",
         quantity: "",
-        instruction: "",
+        instructions: "",
         notes: ""
     });
+
+    const [loading, setLoading] = useState(false);
 
     const inputStyle =
         "w-full h-[55px] border-2 border-gray-300 rounded-lg px-4 outline-none focus:border-blue-500";
@@ -29,13 +38,50 @@ const Medicine = ({ medicines = [], setShowAddMedicine }) => {
         }));
     };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
+    // Submit medicine
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Selected medicine:", medicine);
+        try {
+            setLoading(true);
 
-        // TODO: Submit medicine data to Laravel API
+            const payload = {
+                patient_id: patientDetails.id,
+                medicine_id: medicine.medicine_id,
+                dosage: medicine.dosage,
+                frequency: medicine.frequency,
+                duration: medicine.duration,
+                quantity: medicine.quantity,
+                instructions: medicine.instructions,
+                notes: medicine.notes
+            };
+
+            console.log("Medicine payload:", payload);
+
+            const response = await api.post(
+                route("createExamination"),
+                payload
+            );
+
+            console.log("Medicine saved:", response.data);
+
+            if (loadExaminationMedicine) {
+                await loadExaminationMedicine();
+            }
+
+            setShowAddMedicine(false);
+
+        } catch (error) {
+
+            console.log("Save medicine error:", error);
+
+            if (error.response) {
+                console.log("Validation errors:", error.response.data);
+            }
+
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -50,8 +96,11 @@ const Medicine = ({ medicines = [], setShowAddMedicine }) => {
                         Add Medicine
                     </h2>
 
-                    <button type="button" className="btn w-24"
-                        onClick={() => setShowAddMedicine(false)}>
+                    <button
+                        type="button"
+                        className="btn w-24"
+                        onClick={() => setShowAddMedicine(false)}
+                    >
                         Close
                     </button>
 
@@ -173,17 +222,17 @@ const Medicine = ({ medicines = [], setShowAddMedicine }) => {
 
                     </div>
 
-                    {/* Instruction */}
+                    {/* Instructions */}
                     <div className="mb-6">
 
                         <label className={labelStyle}>
-                            Instruction
+                            Instructions
                         </label>
 
                         <input
                             type="text"
-                            name="instruction"
-                            value={medicine.instruction}
+                            name="instructions"
+                            value={medicine.instructions}
                             onChange={handleChange}
                             placeholder="e.g. After meal"
                             className={inputStyle}
@@ -209,14 +258,15 @@ const Medicine = ({ medicines = [], setShowAddMedicine }) => {
 
                     </div>
 
-                    {/* Buttons */}
+                    {/* Save Button */}
                     <div className="flex justify-end gap-3">
 
                         <button
                             type="submit"
-                            className="bg-blue-700 w-full hover:bg-blue-800 text-white px-10 py-3 rounded-lg"
+                            disabled={loading}
+                            className="bg-blue-700 w-full hover:bg-blue-800 disabled:bg-gray-400 text-white px-10 py-3 rounded-lg"
                         >
-                            Save
+                            {loading ? "Saving..." : "Save"}
                         </button>
 
                     </div>

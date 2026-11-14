@@ -39,7 +39,7 @@ class ExaminationMedicineController extends Controller
 
     public function createExaminationMedicine(Request $request){
         $validated = $request->validate([
-            'examination_id' => 'required',
+            'patient_id' => 'required',
             'medicine_id' => 'required',
             'dosage' => 'required',
             'frequency' => 'required',
@@ -49,7 +49,7 @@ class ExaminationMedicineController extends Controller
         ]);
 
         $examinationMedicine = new ExaminationMedicine();
-        $examinationMedicine->examination_id = $request->examination_id;
+        $examinationMedicine->patient_id = $request->patient_id;
         $examinationMedicine->medicine_id = $request->medicine_id;
         $examinationMedicine->dosage = $request->dosage;
         $examinationMedicine->frequency = $request->frequency;

@@ -9,7 +9,7 @@ class ExaminationMedicine extends Model
     protected $table = 'examination_medicine';
 
     protected $fillable = [
-        'examination_id',
+        'patient_id',
         'medicine_id',
         'dosage',
         'frequency',
@@ -19,9 +19,9 @@ class ExaminationMedicine extends Model
         'notes',
     ];
 
-    public function examination()
+    public function patient()
     {
-        return $this->belongsTo(Examination::class, 'examination_id');
+        return $this->belongsTo(User::class, 'patient_id');
     }
 
     public function medicine()

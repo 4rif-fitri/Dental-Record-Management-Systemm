@@ -128,6 +128,7 @@ const Examination = () => {
                 <Medicine
                     medicines={medicines}
                     setShowAddMedicine={setShowAddMedicine}
+                    patientDetails={patientDetails}
                 />
             }
 
