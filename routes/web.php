@@ -150,6 +150,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/date/{date}', [AppointmentController::class, 'getAppointmentsByDate'])->name('getAppointmentsByDate');
         Route::patch('/appointment/booking/{id}/{action}', [AppointmentBookingController::class, 'updateBookingStatus'])->name('updateBookingStatus');
 
+        Route::get('/getWeeklySchedule', [AppointmentBookingController::class, 'getWeeklySchedule'])->name('getWeeklySchedule');
 
         Route::get('/', [AppointmentController::class, 'getAllAppointment'])->name('getAllAppointment');
         Route::get('/{id}', [AppointmentController::class, 'getAppointmentById'])->name('getAppointmentById');
@@ -161,7 +162,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/booking/day', [AppointmentBookingController::class, 'getDailyAppointmentWithStatus']);
 
     Route::prefix('booking')->group(function () {
-        Route::get('/getWeeklySchedule', [AppointmentBookingController::class, 'getWeeklySchedule'])->name('getWeeklySchedule');
         Route::get('/getAppointmentPatient', [AppointmentBookingController::class, 'getAppointmentPatient'])->name('getAppointmentPatient');
 
         Route::get('/', [AppointmentBookingController::class, 'getAllBooking'])->name('getAllBooking');

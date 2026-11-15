@@ -4,7 +4,7 @@ import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 
-const Medicine = ({
+const MedicineModal = ({
     medicines = [], patientDetails, setShowAddMedicine,
     getExaminationMedicine, selectedMedicine }) => {
 
@@ -106,8 +106,8 @@ const Medicine = ({
                 title: "Success!",
                 text: response.data.message ||
                     (selectedMedicine
-                        ? "Medicine updated successfully."
-                        : "Medicine added successfully.")
+                        ? "MedicineModal updated successfully."
+                        : "MedicineModal added successfully.")
             });
 
         } catch (error) {
@@ -133,7 +133,7 @@ const Medicine = ({
                 {/* Header */}
                 <div className="mb-4 flex flex-wrap justify-between items-center">
 
-                    <PageTitle title={selectedMedicine ? "Update Medicine" : "Add Medicine"} />
+                    <PageTitle title={selectedMedicine ? "Update MedicineModal" : "Add MedicineModal"} />
 
                     <button
                         type="button"
@@ -299,8 +299,8 @@ const Medicine = ({
                             {loading
                                 ? "Processing..."
                                 : selectedMedicine
-                                    ? "Update Medicine"
-                                    : "Add Medicine"
+                                    ? "Update MedicineModal"
+                                    : "Add MedicineModal"
                             }
                         </button>
 
@@ -314,4 +314,4 @@ const Medicine = ({
     );
 };
 
-export default Medicine;
+export default MedicineModal;

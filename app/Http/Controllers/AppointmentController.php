@@ -26,13 +26,12 @@ class AppointmentController extends Controller
             ->get()
             ->map(function ($appointment) {
 
-                // Pending atau approved = tidak tersedia
-                // Tiada booking aktif = boleh ditempah semula
-                $appointment->status =
-                    $appointment->active_bookings_count > 0
-                        ? 'booked'
-                        : 'available';
+                // Only override when active booking exists
+                if ($appointment->active_bookings_count > 0) {
+                    $appointment->status = 'booked';
+                }
 
+                // Otherwise preserve original database status
                 return $appointment;
             });
 
@@ -48,7 +47,7 @@ class AppointmentController extends Controller
 
     public function patientBookAppointment()
     {
-        return Inertia::render('patient/BookAppointment');
+        return Inertia::render('patient/Booking');
 
     }
 

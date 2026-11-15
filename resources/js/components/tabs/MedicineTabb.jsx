@@ -35,7 +35,7 @@ const MedicineTab = ({
             await Swal.fire({
                 icon: "success",
                 title: "Deleted!",
-                text: response.data.message || "Medicine deleted successfully.",
+                text: response.data.message || "MedicineModal deleted successfully.",
                 confirmButtonColor: "#3085d6"
             });
 

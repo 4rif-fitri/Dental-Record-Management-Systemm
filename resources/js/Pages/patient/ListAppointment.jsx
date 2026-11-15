@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import MainLayout from "../../layout/mainLayout";
-import AppointmentDetails from "../../components/modal/AppointmentDetails";
+import AppointmentDetailsModal from "../../components/modal/AppointmentDetailsModal.jsx";
 import api from "@/lib/axios.js";
 
 const ListAppointment = () => {
@@ -62,7 +62,7 @@ const ListAppointment = () => {
         <MainLayout>
 
             {showPopup && (
-                <AppointmentDetails
+                <AppointmentDetailsModal
                     setShowPopup={setShowPopup}
                     appointment={selectedAppointment}
                     loadBooking={loadBooking}

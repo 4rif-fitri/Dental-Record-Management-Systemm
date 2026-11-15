@@ -6,7 +6,7 @@ import DentalChart2D from "@/components/tabs/DentalChart2D";
 import PenandaWarna from "@/components/PenandaWarna";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
 import Tretment from "@/components/tabs/Tretment";
-import Medicine from "@/components/modal/Medicine";
+import Medicine from "@/components/modal/MedicineModal";
 import ToothProcedure from "@/components/modal/ToothProcedure";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
@@ -19,7 +19,7 @@ let linkTabs = [
     { text: "patient", label: "Patient Details" },
     { text: "chart", label: "Dental Chart" },
     { text: "3d", label: "3D" },
-    { text: "medicine", label: "Medicine" },
+    { text: "medicine", label: "MedicineModal" },
     { text: "patientConsent", label: "Patient Consent" },
 ];
 

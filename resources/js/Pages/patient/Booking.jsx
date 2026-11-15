@@ -5,37 +5,36 @@ import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
 
-const BookAppointment = () => {
-    const [patientCategory, setPatientCategory] = useState("family");
+const Booking = () => {
 
-    const [formData, setFormData] = useState({
-        staffStudentName: "",
-        patientName: "",
-        staffStudentNo: "",
-        faculty: "",
-        phone: "",
-        email: "",
-    });
-
+    // Selected date and time
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
+
+    // Calendar
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
+    // Appointment data
     const [appointments, setAppointments] = useState([]);
-    const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
 
-    // Time slots follow database format HH:mm
+    // Loading
+    const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Database time slots
     const timeSlots = [
         "08:00",
         "09:00",
         "10:00",
         "11:00",
         "12:00",
+        "13:00",
         "14:00",
         "15:00",
         "16:00",
     ];
 
+    // Current date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -45,12 +44,15 @@ const BookAppointment = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Calendar starts on Monday
+    // Calendar starts Monday
     const startOffset = (firstDay + 6) % 7;
 
-    const weekdays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    const weekdays = [
+        "MON", "TUE", "WED", "THU",
+        "FRI", "SAT", "SUN"
+    ];
 
-    // Format date: YYYY-MM-DD
+    // Format date YYYY-MM-DD
     const formatDate = (date) => {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -59,20 +61,7 @@ const BookAppointment = () => {
         return `${y}-${m}-${d}`;
     };
 
-    // Convert 08:00 to 8:00 AM
-    const formatDisplayTime = (time) => {
-        if (!time) return "";
-
-        const [hour, minute] = time.split(":");
-        const h = Number(hour);
-
-        const period = h >= 12 ? "PM" : "AM";
-        const displayHour = h % 12 || 12;
-
-        return `${displayHour}:${minute} ${period}`;
-    };
-
-    // Normalize time for comparison
+    // Normalize time
     const normalizeTime = (time) => {
         if (!time) return "";
 
@@ -99,29 +88,111 @@ const BookAppointment = () => {
         return `${String(hour).padStart(2, "0")}:${minute}`;
     };
 
-    // Fetch appointments for selected date
-    useEffect(() => {
-        if (!selectedDate) {
+    // Display time
+    const formatDisplayTime = (time) => {
+        if (!time) return "-";
+
+        const normalized = normalizeTime(time);
+        const [hour, minute] = normalized.split(":");
+
+        const h = Number(hour);
+        const period = h >= 12 ? "PM" : "AM";
+        const displayHour = h % 12 || 12;
+
+        return `${displayHour}:${minute} ${period}`;
+    };
+
+    // Extract appointments
+    // Actual API response: Array(9)
+    const extractAppointments = (response) => {
+
+        if (Array.isArray(response.data)) {
+            return response.data;
+        }
+
+        // Fallback if API returns ApiResponse wrapper
+        if (Array.isArray(response.data?.data)) {
+            return response.data.data;
+        }
+
+        return [];
+    };
+
+    // Fetch appointments by date
+    const fetchAppointments = async (date) => {
+
+        if (!date) {
             setAppointments([]);
             return;
         }
 
+        try {
+
+            setIsLoadingAppointments(true);
+
+            const response = await api.get(
+                route("getAppointmentsByDate", {
+                    date: date
+                })
+            );
+
+            const data = extractAppointments(response);
+
+            console.log(
+                "Appointments for",
+                date,
+                data
+            );
+
+            setAppointments(data);
+
+        } catch (error) {
+
+            console.error(
+                "Get appointments error:",
+                error.response?.data ?? error
+            );
+
+            setAppointments([]);
+
+            Swal.fire({
+                title: "Error",
+                text: "Unable to load appointment slots.",
+                icon: "error"
+            });
+
+        } finally {
+
+            setIsLoadingAppointments(false);
+
+        }
+    };
+
+    // Fetch when date changes
+    useEffect(() => {
+
+        setSelectedTime("");
+        setAppointments([]);
+
+        if (!selectedDate) return;
+
         let ignore = false;
 
-        const fetchAppointments = async () => {
+        const loadAppointments = async () => {
+
             try {
+
                 setIsLoadingAppointments(true);
-                setAppointments([]);
-                setSelectedTime("");
 
                 const response = await api.get(
                     route("getAppointmentsByDate", {
-                        date: selectedDate,
+                        date: selectedDate
                     })
                 );
 
+                const data = extractAppointments(response);
+
                 if (!ignore) {
-                    const data = response.data ?? [];
 
                     setAppointments(data);
 
@@ -131,52 +202,71 @@ const BookAppointment = () => {
                         data
                     );
                 }
+
             } catch (error) {
+
                 if (!ignore) {
+
                     console.error(
                         "Get appointments error:",
-                        error.response?.data || error.message
+                        error.response?.data ?? error
                     );
 
                     setAppointments([]);
                 }
+
             } finally {
+
                 if (!ignore) {
                     setIsLoadingAppointments(false);
                 }
+
             }
         };
 
-        fetchAppointments();
+        loadAppointments();
 
         return () => {
             ignore = true;
         };
+
     }, [selectedDate]);
 
     // Find appointment by time
     const getSlotAppointment = (time) => {
+
         return appointments.find((appointment) => {
+
             return (
                 normalizeTime(appointment.time_slot) ===
                 normalizeTime(time)
             );
+
         });
     };
 
-    // Check if appointment can be booked
+    // Check slot availability
     const isSlotAvailable = (time) => {
+
         const appointment = getSlotAppointment(time);
 
-        if (!appointment) {
-            return false;
-        }
+        if (!appointment) return false;
 
-        return appointment.status?.toLowerCase() === "available";
+        const status = appointment.status?.toLowerCase();
+
+        const activeBookings = Number(
+            appointment.active_bookings_count ?? 0
+        );
+
+        return (
+            status === "available" &&
+            activeBookings === 0
+        );
     };
 
-    // Get appointment status
+    // Get slot status
     const getSlotStatus = (time) => {
+
         const appointment = getSlotAppointment(time);
 
         if (!appointment) {
@@ -185,12 +275,20 @@ const BookAppointment = () => {
 
         const status = appointment.status?.toLowerCase();
 
+        const activeBookings = Number(
+            appointment.active_bookings_count ?? 0
+        );
+
+        if (activeBookings > 0 || status === "booked") {
+            return "Booked";
+        }
+
         if (status === "available") {
             return "Available";
         }
 
-        if (status === "booked") {
-            return "Booked";
+        if (status === "unavailable") {
+            return "Unavailable";
         }
 
         return "Unavailable";
@@ -198,54 +296,65 @@ const BookAppointment = () => {
 
     // Handle time selection
     const handleTimeChange = (time) => {
-        const appointment = getSlotAppointment(time);
 
-        if (!appointment || !isSlotAvailable(time)) {
-            return;
-        }
+        if (!isSlotAvailable(time)) return;
 
         setSelectedTime(time);
     };
 
     // Handle date selection
     const handleDateChange = (event) => {
+
         setSelectedDate(event.target.value);
         setSelectedTime("");
     };
 
     // Change month
     const changeMonth = (direction) => {
+
         setCurrentMonth((prev) => {
+
             return new Date(
                 prev.getFullYear(),
                 prev.getMonth() + direction,
                 1
             );
+
         });
     };
 
     // Calendar rendering
     const renderCalendarDays = () => {
+
         const calendarDays = [];
 
+        // Empty calendar cells
         for (let i = 0; i < startOffset; i++) {
+
             calendarDays.push(
                 <div
                     key={`empty-${i}`}
                     className="h-10"
                 />
             );
+
         }
 
+        // Calendar dates
         for (let day = 1; day <= daysInMonth; day++) {
+
             const date = new Date(year, month, day);
+
             const dateString = formatDate(date);
 
             const isPast = date < today;
+
             const isSelected = selectedDate === dateString;
+
             const isToday = formatDate(today) === dateString;
 
             calendarDays.push(
+
                 <button
                     key={day}
                     type="button"
@@ -273,12 +382,15 @@ const BookAppointment = () => {
                 >
                     {day}
                 </button>
+
             );
+
         }
 
         return calendarDays;
     };
 
+    // Selected date display
     const formattedSelectedDate = selectedDate
         ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString(
             "en-MY",
@@ -286,109 +398,177 @@ const BookAppointment = () => {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
-                year: "numeric",
+                year: "numeric"
             }
         )
         : "Please select a date";
 
-    // Submit appointment
-
+    // Submit booking
     const handleSubmit = async (event) => {
+
         event.preventDefault();
 
+        if (isSubmitting) return;
+
         if (!selectedDate || !selectedTime) {
-            Swal.fire(
-                "Warning",
-                "Please select an appointment date and time.",
-                "warning"
-            );
-            return;
-        }
 
-        const appointment = getSlotAppointment(selectedTime);
-
-        if (!appointment || !isSlotAvailable(selectedTime)) {
-            Swal.fire(
-                "Unavailable",
-                "This appointment slot is no longer available.",
-                "error"
-            );
-
-            setSelectedTime("");
-
-            // Refresh appointments
-            setSelectedDate((prev) => {
-                const current = prev;
-                setAppointments([]);
-                return current;
+            Swal.fire({
+                title: "Warning",
+                text: "Please select an appointment date and time.",
+                icon: "warning"
             });
 
             return;
         }
 
+        // Get selected appointment
+        const appointment = getSlotAppointment(selectedTime);
+
+        // Recheck availability
+        if (!appointment || !isSlotAvailable(selectedTime)) {
+
+            await Swal.fire({
+                title: "Unavailable",
+                text: "This appointment slot is no longer available.",
+                icon: "error"
+            });
+
+            setSelectedTime("");
+
+            await fetchAppointments(selectedDate);
+
+            return;
+        }
+
+        // Confirmation
+        const confirmation = await Swal.fire({
+
+            title: "Confirm Appointment?",
+
+            html: `
+                <div>
+                    <p><strong>Date:</strong> ${formattedSelectedDate}</p>
+                    <p><strong>Time:</strong> ${formatDisplayTime(selectedTime)}</p>
+                </div>
+            `,
+
+            icon: "question",
+
+            showCancelButton: true,
+
+            confirmButtonText: "Confirm Booking",
+
+            cancelButtonText: "Cancel",
+
+            confirmButtonColor: "#16a34a",
+
+            cancelButtonColor: "#6b7280",
+
+            reverseButtons: true
+
+        });
+
+        if (!confirmation.isConfirmed) return;
+
         try {
+
+            setIsSubmitting(true);
+
             const response = await api.post(
                 route("createBooking"),
                 {
                     appointment_id: appointment.id,
-                    reason: "Dental appointment",
+                    reason: "Dental appointment"
                 }
             );
 
-            Swal.fire(
-                "Success",
-                "Your appointment booking has been submitted.",
-                "success"
+            console.log(
+                "Booking response:",
+                response.data
             );
 
-            console.log("Booking response:", response.data);
+            await Swal.fire({
+
+                title: "Booking Successful!",
+
+                text: "Your appointment booking has been submitted.",
+
+                icon: "success",
+
+                confirmButtonColor: "#16a34a"
+
+            });
 
             // Reset selected time
             setSelectedTime("");
 
-            // Refresh available slots
-            const refreshResponse = await api.get(
-                route("getAppointmentsByDate", {
-                    date: selectedDate,
-                })
-            );
-
-            setAppointments(refreshResponse.data.data ?? []);
+            // Refresh appointment data
+            await fetchAppointments(selectedDate);
 
         } catch (error) {
+
             console.error(
                 "Create booking error:",
-                error.response?.data || error.message
+                error.response?.data ?? error
             );
 
-            Swal.fire(
-                "Booking Failed",
-                error.response?.data?.message ||
-                "Unable to create appointment booking.",
-                "error"
-            );
+            const message =
+                error.response?.data?.message ??
+                "Unable to create appointment booking.";
+
+            await Swal.fire({
+
+                title: "Booking Failed",
+
+                text: message,
+
+                icon: "error",
+
+                confirmButtonColor: "#dc2626"
+
+            });
+
+            // Refresh slots after failed booking
+            await fetchAppointments(selectedDate);
+
+            setSelectedTime("");
+
+        } finally {
+
+            setIsSubmitting(false);
+
         }
     };
 
-
     return (
+
         <MainLayout>
+
             <div className="mx-auto overflow-hidden rounded-2xl border border-gray-200 bg-white text-black shadow-sm">
 
                 <form
                     onSubmit={handleSubmit}
                     className="p-5 sm:p-8 lg:p-10"
                 >
+
                     {/* Header */}
-                    <div className="border-gray-200">
+                    <div>
+
                         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                             Book Appointment
                         </h2>
+
+                        <p className="mt-2 text-sm text-gray-500">
+                            Select your preferred appointment date and time.
+                        </p>
+
                     </div>
 
+                    {/* Appointment Date & Time */}
                     <section className="pt-8">
 
                         <div className="mb-6">
+
                             <h3 className="text-lg font-bold text-gray-900">
                                 Appointment Date & Time
                                 <span className="ml-1 text-red-500">*</span>
@@ -397,6 +577,7 @@ const BookAppointment = () => {
                             <p className="mt-1 text-sm text-gray-500">
                                 Choose an available date and appointment time.
                             </p>
+
                         </div>
 
                         <div className="grid gap-6 lg:grid-cols-2">
@@ -427,8 +608,11 @@ const BookAppointment = () => {
                                     <button
                                         type="button"
                                         onClick={() => changeMonth(-1)}
+                                        disabled={
+                                            currentMonth.getFullYear() === today.getFullYear() &&
+                                            currentMonth.getMonth() <= today.getMonth()
+                                        }
                                         className="btn btn-sm"
-                                        aria-label="Previous month"
                                     >
                                         Previous
                                     </button>
@@ -438,7 +622,7 @@ const BookAppointment = () => {
                                             "en-US",
                                             {
                                                 month: "long",
-                                                year: "numeric",
+                                                year: "numeric"
                                             }
                                         )}
                                     </h4>
@@ -447,7 +631,6 @@ const BookAppointment = () => {
                                         type="button"
                                         onClick={() => changeMonth(1)}
                                         className="btn btn-sm"
-                                        aria-label="Next month"
                                     >
                                         Next
                                     </button>
@@ -456,14 +639,18 @@ const BookAppointment = () => {
 
                                 {/* Weekdays */}
                                 <div className="mt-4 grid grid-cols-7 gap-1">
+
                                     {weekdays.map((day) => (
+
                                         <div
                                             key={day}
                                             className="py-2 text-center text-[10px] font-semibold text-gray-400 sm:text-xs"
                                         >
                                             {day}
                                         </div>
+
                                     ))}
+
                                 </div>
 
                                 {/* Calendar days */}
@@ -477,6 +664,7 @@ const BookAppointment = () => {
                             <div className="rounded-2xl border border-gray-200 p-4 sm:p-5">
 
                                 <div className="mb-5">
+
                                     <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                                         Selected Date
                                     </p>
@@ -484,6 +672,7 @@ const BookAppointment = () => {
                                     <h4 className="mt-2 text-base font-bold text-gray-900">
                                         {formattedSelectedDate}
                                     </h4>
+
                                 </div>
 
                                 <p className="mb-3 text-sm font-semibold text-gray-700">
@@ -492,17 +681,24 @@ const BookAppointment = () => {
 
                                 {/* Loading */}
                                 {isLoadingAppointments && (
+
                                     <div className="flex items-center justify-center gap-2 py-8 text-sm text-gray-500">
+
                                         <span className="loading loading-spinner loading-sm" />
+
                                         Loading appointments...
+
                                     </div>
+
                                 )}
 
-                                {/* Time slots */}
+                                {/* Time Slots */}
                                 {!isLoadingAppointments && (
+
                                     <div className="grid grid-cols-2 gap-3">
 
                                         {timeSlots.map((time) => {
+
                                             const appointment =
                                                 getSlotAppointment(time);
 
@@ -516,6 +712,7 @@ const BookAppointment = () => {
                                                 getSlotStatus(time);
 
                                             return (
+
                                                 <button
                                                     key={time}
                                                     type="button"
@@ -539,6 +736,7 @@ const BookAppointment = () => {
                                                     }
                                                     `}
                                                 >
+
                                                     <span className="block">
                                                         {formatDisplayTime(time)}
                                                     </span>
@@ -548,29 +746,36 @@ const BookAppointment = () => {
                                                             ? "Select date"
                                                             : status}
                                                     </span>
+
                                                 </button>
+
                                             );
+
                                         })}
 
                                     </div>
+
                                 )}
 
                                 {/* No date */}
                                 {!selectedDate && (
+
                                     <p className="mt-4 text-xs text-amber-600">
                                         Please select an appointment date first.
                                     </p>
+
                                 )}
 
                                 {/* No available slots */}
                                 {selectedDate &&
                                     !isLoadingAppointments &&
                                     !timeSlots.some(isSlotAvailable) && (
+
                                         <p className="mt-4 text-xs text-red-500">
                                             No available time slots for this date.
                                         </p>
-                                    )}
 
+                                    )}
 
                                 {/* Legend */}
                                 <div className="mt-5 flex flex-wrap gap-4 text-xs">
@@ -585,7 +790,7 @@ const BookAppointment = () => {
                                     <div className="flex items-center gap-2">
                                         <span className="h-3 w-3 rounded bg-red-200" />
                                         <span className="text-gray-600">
-                                            Booked
+                                            Booked / Unavailable
                                         </span>
                                     </div>
 
@@ -601,31 +806,40 @@ const BookAppointment = () => {
                             </div>
 
                         </div>
+
                     </section>
 
                     {/* Submit */}
                     <div className="flex flex-col-reverse gap-3 border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
 
-                        <div></div>
+                        <div />
 
                         <button
                             type="submit"
                             disabled={
                                 !selectedDate ||
                                 !selectedTime ||
-                                isLoadingAppointments
+                                isLoadingAppointments ||
+                                isSubmitting
                             }
                             className="btn border-gray-950 bg-gray-950 px-8 text-white hover:border-gray-800 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                            Submit Appointment
+
+                            {isSubmitting
+                                ? "Submitting..."
+                                : "Submit Appointment"}
+
                         </button>
 
                     </div>
 
                 </form>
+
             </div>
+
         </MainLayout>
+
     );
 };
 
-export default BookAppointment;
+export default Booking;

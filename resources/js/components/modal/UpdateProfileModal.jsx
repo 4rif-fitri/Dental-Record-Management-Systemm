@@ -6,7 +6,7 @@ import Showinput from "@/components/atom/Showinput.jsx";
 import SelectInput from "@/components/atom/SelectInput.jsx";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 
-const UpdateProfile = ({ setShowPopup, userProfile, onUpdated}) => {
+const UpdateProfileModal = ({ setShowPopup, userProfile, onUpdated}) => {
     const profile = userProfile?.userProfile;
     const [loading, setLoading] = useState(false);
 
@@ -141,4 +141,4 @@ const UpdateProfile = ({ setShowPopup, userProfile, onUpdated}) => {
     );
 };
 
-export default UpdateProfile;
+export default UpdateProfileModal;

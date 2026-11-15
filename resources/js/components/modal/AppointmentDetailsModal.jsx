@@ -27,7 +27,7 @@ function Showinput({ label, data, isInput, className = "" }) {
     );
 }
 
-const AppointmentDetails = ({setShowPopup,appointment,loadBooking}) => {
+const AppointmentDetailsModal = ({setShowPopup,appointment,loadBooking}) => {
 
     const appointmentData = appointment.appointment;
 
@@ -212,4 +212,4 @@ const AppointmentDetails = ({setShowPopup,appointment,loadBooking}) => {
     );
 };
 
-export default AppointmentDetails;
+export default AppointmentDetailsModal;
