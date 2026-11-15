@@ -88,6 +88,11 @@ class UserController extends Controller
 
     }
 
+    public function pageToothConditions()
+    {
+        return Inertia::render('dentist/ToothConditions');
+    }
+
     public function userProfile()
     {
         return Inertia::render('Profile');

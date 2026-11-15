@@ -8,14 +8,9 @@ use Illuminate\Http\Request;
 
 class ConditionController extends Controller
 {
-    public function getAllCondition(){
+    public function getAllCondition()
+    {
         $conditions = Condition::all();
-
-        return ApiResponse::success(200,$conditions)->toJsonResponse();
-    }
-
-    public function getConditionById($id){
-        $conditions = Condition::where('id', $id)->get();
 
         return ApiResponse::success(
             "Condition list successfully",
@@ -23,20 +18,26 @@ class ConditionController extends Controller
         )->toJsonResponse();
     }
 
-    public function createCondition(Request $request){
+    public function getConditionById($id)
+    {
+        $condition = Condition::findOrFail($id);
+
+        return ApiResponse::success(
+            "Condition successfully retrieved",
+            $condition
+        )->toJsonResponse();
+    }
+
+    public function createCondition(Request $request)
+    {
         $validate = $request->validate([
-            'name' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'condition_type' => ['required', 'string'],
-            'condition_code' => ['required'],
+            'condition_name' => ['required', 'string', 'max:100'],
+            'condition_code' => ['required', 'string', 'max:100'],
+            'color' => ['required', 'string', 'max:100'],
+            'color_code' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
 
-        $condition = new Condition();
-        $condition->condition_name = $validate['name'];
-        $condition->condition_description = $validate['description'];
-        $condition->condition_type = $validate['condition_type'];
-        $condition->condition_code = $validate['condition_code'];
-        $condition->save();
+        $condition = Condition::create($validate);
 
         return ApiResponse::success(
             "New condition successfully created",
@@ -44,34 +45,34 @@ class ConditionController extends Controller
         )->toJsonResponse();
     }
 
-    public function updateCondition(Request $request, $id){
+    public function updateCondition(Request $request, $id)
+    {
         $validate = $request->validate([
-            'name' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'condition_type' => ['required', 'string'],
-            'condition_code' => ['required'],
+            'condition_name' => ['required', 'string', 'max:100'],
+            'condition_code' => ['required', 'string', 'max:100'],
+            'color' => ['required', 'string', 'max:100'],
+            'color_code' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
 
-        $condition = Condition::where('id', $id)->first();
-        $condition->condition_name = $validate['name'];
-        $condition->condition_description = $validate['description'];
-        $condition->condition_type = $validate['condition_type'];
-        $condition->condition_code = $validate['condition_code'];
-        $condition->save();
+        $condition = Condition::findOrFail($id);
+
+        $condition->update($validate);
 
         return ApiResponse::success(
-            "New condition successfully updated",
+            "Condition successfully updated",
             $condition
         )->toJsonResponse();
     }
 
-    public function deleteCondition(Request $request, $id){
+    public function deleteCondition($id)
+    {
+        $condition = Condition::findOrFail($id);
 
-        $response = Condition::destroy($id);
+        $condition->delete();
 
         return ApiResponse::success(
             "Condition successfully deleted",
-            $response
+            $condition
         )->toJsonResponse();
     }
 }
