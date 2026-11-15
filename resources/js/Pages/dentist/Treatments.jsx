@@ -4,6 +4,10 @@ import PageTitle from "@/components/layout/PageTitle.jsx";
 import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
+import TreatmentModal from "@/components/modal/TreatmentModal.jsx";
+import Notreatmentsfound from "@/components/molecules/Treatment/NoTreamentsFound.jsx";
+import Loadingtreatment from "@/components/molecules/Treatment/LoadingTreatment.jsx";
+import ContentTreatment from "@/components/molecules/Treatment/ContentTreatment.jsx";
 
 const initialForm = {
     procedure_name: "",
@@ -283,48 +287,21 @@ const Treatments = () => {
 
                 <PageTitle title={"Treatments"} />
 
-                {/* Toolbar */}
                 <div className="flex flex-col sm:flex-row justify-between gap-3 mt-5 mb-5">
 
-                    {/* Search */}
                     <div className="relative w-full sm:w-80">
 
-                        <input
-                            type="text"
-                            placeholder="Search treatment..."
-                            value={search}
+                        <input type="text" placeholder="Search treatment..." value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                         />
 
                     </div>
-
-                    {/* Add Button */}
-                    <button
-                        type="button"
-                        onClick={handleCreate}
-                        className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition"
-                    >
-                        <span className="text-lg">+</span>
+                    <button type="button" onClick={handleCreate} className="btn btn-primary">
                         Add Treatment
                     </button>
-
                 </div>
 
-                {/* Count */}
-                <div className="flex justify-between items-center mb-3">
-
-                    <p className="text-sm text-gray-500">
-                        Total Treatments:{" "}
-                        <span className="font-semibold text-gray-800">
-                            {procedures.length}
-                        </span>
-                    </p>
-
-                </div>
-
-
-                {/* Table */}
                 <div className="overflow-x-auto border border-gray-200 rounded-lg">
 
                     <table className="w-full text-sm text-left">
@@ -344,98 +321,16 @@ const Treatments = () => {
                         <tbody className="divide-y divide-gray-100">
 
                         {isLoading ? (
-
-                            <tr>
-                                <td colSpan="5" className="py-16 text-center">
-
-                                    <div className="flex flex-col items-center gap-3">
-
-                                        <div className="w-9 h-9 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
-
-                                        <p className="text-sm text-gray-500">
-                                            Loading treatments...
-                                        </p>
-
-                                    </div>
-
-                                </td>
-                            </tr>
-
+                            <Loadingtreatment />
                         ) : filteredProcedures.length === 0 ? (
-
-                            <tr>
-                                <td colSpan="5" className="py-16 text-center">
-
-                                    <p className="font-medium text-gray-700">
-                                        No treatments found
-                                    </p>
-
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        Add a new treatment or try another search.
-                                    </p>
-
-                                </td>
-                            </tr>
-
+                            <Notreatmentsfound />
                         ) : (
-
                             filteredProcedures.map((procedure, index) => (
-
-                                <tr
-                                    key={procedure.id}
-                                    className="hover:bg-gray-50 transition"
-                                >
-
-                                    <td className="px-5 py-4 text-gray-500">
-                                        {index + 1}
-                                    </td>
-
-                                    <td className="px-5 py-4">
-
-                                            <span className="font-medium text-gray-800">
-                                                {procedure.procedure_name}
-                                            </span>
-
-                                    </td>
-
-                                    <td className="px-5 py-4 text-gray-600 max-w-sm">
-                                        {procedure.procedure_description}
-                                    </td>
-
-                                    <td className="px-5 py-4">
-
-                                            <span className={`px-2.5 py-1 rounded-md text-xs font-semibold`}>
-                                                {procedure.procedure_type}
-                                            </span>
-
-                                    </td>
-
-                                    <td className="px-5 py-4">
-
-                                        <div className="flex justify-center gap-2">
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleEdit(procedure)}
-                                                className="px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition"
-                                            >
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDelete(procedure)}
-                                                className="px-3 py-1.5 rounded-md bg-red-50 text-red-600 hover:bg-red-100 text-xs font-medium transition"
-                                            >
-                                                Delete
-                                            </button>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
+                                <ContentTreatment
+                                    index={index}
+                                    procedure={procedure}
+                                    handleEdit={handleEdit} handleDelete={handleDelete}
+                                />
                             ))
 
                         )}
@@ -447,152 +342,16 @@ const Treatments = () => {
                 </div>
 
 
-                {/* Create / Update Modal */}
                 {showModal && (
-
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-
-                        <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden">
-
-                            {/* Header */}
-                            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-
-                                <div>
-
-                                    <h2 className="text-lg font-semibold text-gray-800">
-                                        {selectedProcedure
-                                            ? "Update Treatment"
-                                            : "Create Treatment"}
-                                    </h2>
-
-                                    <p className="text-xs text-gray-500 mt-1">
-                                        Manage dental treatment information.
-                                    </p>
-
-                                </div>
-
-                                <button
-                                    type="button"
-                                    onClick={closeModal}
-                                    className="text-gray-400 hover:text-gray-700 text-2xl"
-                                >
-                                    &times;
-                                </button>
-
-                            </div>
-
-
-                            {/* Form */}
-                            <form onSubmit={handleSubmit}>
-
-                                <div className="p-6 space-y-4">
-
-                                    {/* Name */}
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                            Treatment Name
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="procedure_name"
-                                            value={form.procedure_name}
-                                            onChange={handleChange}
-                                            placeholder="e.g. Dental Filling"
-                                            maxLength={100}
-                                            required
-                                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-
-                                    </div>
-
-                                    {/* Type */}
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                            Treatment Type
-                                        </label>
-
-                                        <select
-                                            name="procedure_type"
-                                            value={form.procedure_type}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                                        >
-
-                                            {procedureTypes.map(type => (
-
-                                                <option
-                                                    key={type}
-                                                    value={type}
-                                                >
-                                                    {type}
-                                                </option>
-
-                                            ))}
-
-                                        </select>
-
-                                    </div>
-
-                                    {/* Description */}
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                            Description
-                                        </label>
-
-                                        <textarea
-                                            name="procedure_description"
-                                            value={form.procedure_description}
-                                            onChange={handleChange}
-                                            placeholder="Describe the dental treatment..."
-                                            maxLength={255}
-                                            rows={3}
-                                            required
-                                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                                        />
-
-                                        <p className="text-xs text-gray-400 text-right mt-1">
-                                            {form.procedure_description.length}/255
-                                        </p>
-
-                                    </div>
-
-
-
-
-
-                                </div>
-
-
-                                {/* Footer */}
-                                <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200">
-
-
-
-                                    <button
-                                        type="submit"
-                                        disabled={isSaving}
-                                        className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium disabled:opacity-50"
-                                    >
-                                        {isSaving
-                                            ? "Saving..."
-                                            : selectedProcedure
-                                                ? "Update Treatment"
-                                                : "Create Treatment"}
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
+                    <TreatmentModal
+                        selectedProcedure={selectedProcedure}
+                        closeModal={closeModal}
+                        handleChange={handleChange}
+                        procedureTypes={procedureTypes}
+                        isSaving={isSaving}
+                        handleSubmit={handleSubmit}
+                        form={form}
+                    />
                 )}
 
             </div>
