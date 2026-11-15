@@ -14,7 +14,10 @@ class QueueController extends Controller
     }
 
     public function getAllQueue(){
-        $queue = Queue::all();
+        $queue = Queue::with('patient')
+            ->whereDate('created_at', today())
+            ->latest()
+            ->get();
 
         return ApiResponse::success(200, $queue)->toJsonResponse();
     }
@@ -57,5 +60,38 @@ class QueueController extends Controller
         $response = Queue::where('id', $id)->delete();
 
         return ApiResponse::success(200, $response)->toJsonResponse();
+    }
+
+    public function callQueue($id)
+    {
+        try {
+
+            $queue = Queue::findOrFail($id);
+
+            if ($queue->status !== 'Waiting') {
+                return response()->json([
+                    'status' => 422,
+                    'message' => 'This queue has already been called or processed.',
+                    'data' => null,
+                ], 422);
+            }
+
+            $queue->status = 'Called';
+            $queue->save();
+
+            return ApiResponse::success(
+                200,
+                $queue
+            )->toJsonResponse();
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Failed to call queue',
+                'error' => $e->getMessage(),
+            ], 500);
+
+        }
     }
 }

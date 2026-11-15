@@ -140,6 +140,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', [QueueController::class, 'getQueueById'])->name('getQueueById');
         Route::post('/store', [QueueController::class, 'createQueue'])->name('createQueue');
         Route::put('/update/{id}', [QueueController::class, 'updateQueue'])->name('updateQueue');
+        Route::put('/call/{id}', [QueueController::class, 'callQueue'])->name('callQueue');
         Route::delete('/delete/{id}', [QueueController::class, 'deleteQueue'])->name('deleteQueue');
     });
 

@@ -1,25 +1,133 @@
-import React, {useEffect} from 'react'
-import QueueTable from '../QueueTable';
 
-const QueueList = ({ setShowPopup }) => {
+import React, { useEffect, useState } from 'react';
+import QueueTable from '../QueueTable';
+import PageTitle from "@/components/layout/PageTitle.jsx";
+import api from "@/lib/axios.js";
+import { route } from "ziggy-js";
+import Swal from "sweetalert2";
+
+const QueueList = ({ setShowPopup, role }) => {
+
+    const [queues, setQueues] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [callingId, setCallingId] = useState(null);
+
+    // Load today's queue
+    const loadQueue = async () => {
+
+        try {
+
+            setIsLoading(true);
+
+            const response = await api.get(
+                route('getAllQueue')
+            );
+
+            const data = response.data ?? [];
+
+            // Sort latest queue first
+            const sortedQueue = [...data].sort(
+                (a, b) =>
+                    new Date(b.created_at) - new Date(a.created_at)
+            );
+
+            setQueues(sortedQueue);
+
+        } catch (error) {
+
+            console.error(
+                "Load queue error:",
+                error.response?.data || error.message
+            );
+
+        } finally {
+
+            setIsLoading(false);
+
+        }
+
+    };
+
+
+    // Call patient
+    const handleCallQueue = async (id) => {
+
+        try {
+
+            setCallingId(id);
+
+            const response = await api.put(
+                route('callQueue', { id })
+            );
+
+            const updatedQueue = response.data;
+
+            // Update queue state without refreshing page
+            setQueues(prev =>
+                prev.map(item =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            status: updatedQueue.status
+                        }
+                        : item
+                )
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Call queue error:",
+                error.response?.data || error.message
+            );
+
+        } finally {
+
+            setCallingId(null);
+
+        }
+
+    };
+
+
+    useEffect(() => {
+        loadQueue();
+    }, []);
+
 
     return (
+
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-base-100">
+
             <div className="rounded-xl bg-white p-6 shadow-xl">
+
                 <div className="mb-4 flex flex-wrap justify-between">
-                    <h2 className="text-xl font-bold">Queue List</h2>
+
+                    <PageTitle title={"Queue List"} />
+
                     <button
                         onClick={() => setShowPopup(false)}
-                        className="btn w-30 h-8"
+                        className="btn btn-neutral"
                     >
                         Close
                     </button>
+
                 </div>
 
-                <QueueTable />
+                <QueueTable
+                    queues={queues}
+                    role={role}
+                    isLoading={isLoading}
+                    callingId={callingId}
+                    onCallQueue={handleCallQueue}
+                />
+
             </div>
+
         </div>
+
     );
+
 };
 
-export default QueueList
+export default QueueList;

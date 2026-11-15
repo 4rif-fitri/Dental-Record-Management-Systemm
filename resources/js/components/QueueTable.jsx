@@ -1,79 +1,175 @@
-import React from 'react'
+
+import React from 'react';
 import { Link } from "@inertiajs/react";
 
-const QueueTable = ({role}) => {
-  return (
-      <div className="space-y-3">
-          <div className="overflow-x-auto text-base-200">
-              <table className="table">
-                  <thead className="text-black text-center">
-                      <tr>
-                          <th>ID</th>
-                          <th>Name</th>
-                          <th>IC/Passport Number</th>
-                          <th>Create At</th>
-                          <th>Status</th>
-                          {role !== "Clinic Staff" && <th>Action</th>}
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <th>1</th>
-                          <td>Lorem ipsum dolor sit amet</td>
-                          <td>106232477896</td>
-                          <td>15:00 PM</td>
-                          <td>
-                              <div className=" badge badge-warning w-full">
-                                  Waiting
-                              </div>
-                          </td>
-                          <td className="flex gap-2">
-                              {role !== "Clinic Staff" && (
-                                  <button className="btn btn-primary font-semibold h-7">
-                                      Call
-                                  </button>
-                              )}
-                              {role !== "Clinic Staff" && (
-                                  <Link
-                                      href="/dentist-examination/1"
-                                      className="btn btn-primary font-semibold h-7"
-                                  >
-                                      View
-                                  </Link>
-                              )}
-                          </td>
-                      </tr>
-                      <tr>
-                          <th>1</th>
-                          <td>Lorem ipsum dolor sit amet</td>
-                          <td>106232477896</td>
-                          <td>15:00 PM</td>
-                          <td>
-                              <div className=" badge badge-success w-full">
-                                  Called
-                              </div>
-                          </td>
-                          <td className="flex gap-2">
-                              {role !== "Clinic Staff" && (
-                                  <button className="btn btn-primary font-semibold h-7">
-                                      Call
-                                  </button>
-                              )}
-                              {role !== "Clinic Staff" && (
-                                  <Link
-                                      to="/patient-examination/1"
-                                      className="btn btn-primary font-semibold h-7"
-                                  >
-                                      View
-                                  </Link>
-                              )}
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  );
-}
+const QueueTable = ({
+                        queues = [],
+                        role,
+                        isLoading,
+                        callingId,
+                        onCallQueue
+                    }) => {
 
-export default QueueTable
+    // Status badge
+    const getStatusBadge = (status) => {
+
+        switch (status) {
+
+            case "Waiting":
+                return "badge-warning";
+
+            case "Called":
+                return "badge-success";
+
+            case "Completed":
+                return "badge-info";
+
+            case "Cancelled":
+                return "badge-error";
+
+            default:
+                return "badge-neutral";
+
+        }
+
+    };
+
+
+    return (
+
+        <div className="space-y-3">
+
+            <div className="overflow-x-auto text-base-200">
+
+                <table className="table">
+
+                    <thead className="text-black text-center">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>IC/Passport Number</th>
+
+                        <th>Create At</th>
+
+                        <th>Status</th>
+
+                        {role !== "dentist" && (
+                            <th>Action</th>
+                        )}
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody className="text-black">
+
+                    {isLoading ? (
+
+                        <tr>
+                            <td
+                                colSpan={role !== "Clinic Staff" ? 6 : 5}
+                                className="text-center py-8"
+                            >
+                                Loading queue...
+                            </td>
+                        </tr>
+
+                    ) : queues.length === 0 ? (
+
+                        <tr>
+                            <td
+                                colSpan={role !== "Clinic Staff" ? 6 : 5}
+                                className="text-center py-8"
+                            >
+                                No queue available today.
+                            </td>
+                        </tr>
+
+                    ) : (
+
+                        queues.map((queue) => (
+
+                            <tr key={queue.id}>
+
+                                <th>
+                                    {queue.id}
+                                </th>
+
+                                <td>
+                                    {queue.patient?.name || "-"}
+                                </td>
+
+                                <td>
+                                    {queue.patient?.ic_passport || "-"}
+                                </td>
+
+                                <td>
+                                    {queue.created_at
+                                        ? new Date(queue.created_at).toLocaleTimeString(
+                                            "en-MY",
+                                            {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: true
+                                            }
+                                        )
+                                        : "-"}
+                                </td>
+
+                                <td>
+
+                                    <div className={`badge w-full ${getStatusBadge(queue.status)}`}>
+                                        {queue.status}
+                                    </div>
+
+                                </td>
+
+
+                                <td className="flex gap-2">
+
+                                    {queue.status === "Waiting" && (
+                                        <button
+                                            onClick={() => onCallQueue(queue.id)}
+                                            className="btn btn-primary font-semibold h-7"
+                                        >
+                                            Call
+                                        </button>
+                                    )}
+
+                                    {role !== "dentist" && (
+                                        <>
+                                            <Link
+                                                href={`/dentist-examination/${queue.patient_id}`}
+                                                className="btn btn-primary font-semibold h-7"
+                                            >
+                                                View
+                                            </Link>
+                                        </>
+                                    )}
+
+                                </td>
+
+                            </tr>
+
+                        ))
+
+                    )}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    );
+
+};
+
+export default QueueTable;
