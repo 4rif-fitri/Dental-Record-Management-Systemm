@@ -4,7 +4,7 @@ import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 import api from '@/lib/axios';
 import Swal from "sweetalert2";
 
-const ToothProcedure = ({
+const ToothRecord = ({
     laodToothFinding,
     patientDetails, setShowToothProcedure,currentTooth,
     setCurrentTooth, conditions,treatment, surfaces
@@ -197,4 +197,4 @@ const ToothProcedure = ({
     );
 };
 
-export default ToothProcedure;
+export default ToothRecord;

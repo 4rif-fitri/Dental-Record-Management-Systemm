@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../layout/mainLayout';
-import RegisterQueue from '../../components/modal/RegisterQueue';
+import RegisterQueueModal from '../../components/modal/RegisterQueueModal.jsx';
 import QueueTable from '../../components/QueueTable';
 import { route } from "ziggy-js";
 import api from "@/lib/axios.js";
@@ -51,7 +51,7 @@ const ListQueue = () => {
         <MainLayout>
 
             {showPopup && (
-                <RegisterQueue
+                <RegisterQueueModal
                     setShowPopup={setShowPopup}
                     onSuccess={loadQueue}
                 />

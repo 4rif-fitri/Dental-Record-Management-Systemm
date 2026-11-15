@@ -11,6 +11,21 @@ use Inertia\Inertia;
 class AppointmentController extends Controller
 {
 
+    public function patientAppointment()
+    {
+        return Inertia::render('patient/Appointments');
+    }
+
+    public function patientBookAppointment()
+    {
+        return Inertia::render('patient/Booking');
+    }
+
+    public function dentistListAppointment()
+    {
+        return Inertia::render('dentist/ListAppointment');
+    }
+
     public function getAppointmentsByDate($date)
     {
         $appointments = Appointment::withCount([
@@ -39,21 +54,6 @@ class AppointmentController extends Controller
             200,
             $appointments
         )->toJsonResponse();
-    }
-
-    public function patientAppointment(){
-        return Inertia::render('patient/ListAppointment');
-    }
-
-    public function patientBookAppointment()
-    {
-        return Inertia::render('patient/Booking');
-
-    }
-
-    public function dentistListAppointment()
-    {
-        return Inertia::render('dentist/ListAppointment');
     }
 
     public function getAllAppointment(){

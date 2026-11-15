@@ -6,7 +6,7 @@ import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
 import { route } from "ziggy-js";
 
-const UpdateToothProcedure = ({
+const UpdateToothRecordModal = ({
     setShowUpdateToothProcedure,
     currentToothFinding,conditions, treatment,
     surfaces, laodToothFinding
@@ -326,4 +326,4 @@ const UpdateToothProcedure = ({
     );
 };
 
-export default UpdateToothProcedure;
+export default UpdateToothRecordModal;

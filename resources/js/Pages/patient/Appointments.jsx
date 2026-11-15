@@ -4,7 +4,7 @@ import MainLayout from "../../layout/mainLayout";
 import AppointmentDetailsModal from "../../components/modal/AppointmentDetailsModal.jsx";
 import api from "@/lib/axios.js";
 
-const ListAppointment = () => {
+const Appointments = () => {
 
     const [appointments, setAppointments] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
@@ -163,4 +163,4 @@ const ListAppointment = () => {
     );
 };
 
-export default ListAppointment;
+export default Appointments;

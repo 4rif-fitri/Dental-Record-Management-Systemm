@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 
-const Photo = ({ showAddPhoto }) => {
+const PhotoModal = ({ showAddPhoto }) => {
 
     const [photo, setPhoto] = useState(null);
     const [notes, setNotes] = useState("");
 
     const fileInputRef = useRef(null);
 
-    // Select Photo
+    // Select PhotoModal
     const handleFile = (file) => {
         if (!file) return;
 
@@ -30,7 +30,7 @@ const Photo = ({ showAddPhoto }) => {
         handleFile(file);
     };
 
-    // Save Photo
+    // Save PhotoModal
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -59,7 +59,7 @@ const Photo = ({ showAddPhoto }) => {
 
                     <form onSubmit={handleSubmit}>
 
-                        {/* Photo Upload */}
+                        {/* PhotoModal Upload */}
                         <div
                             onClick={() => fileInputRef.current.click()}
                             onDragOver={(e) => e.preventDefault()}
@@ -136,4 +136,4 @@ const Photo = ({ showAddPhoto }) => {
     );
 };
 
-export default Photo;
+export default PhotoModal;

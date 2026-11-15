@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PreviewPhoto = ({showPreviewPhoto}) => {
+const PreviewPhotoModal = ({showPreviewPhoto}) => {
 
     if (!showPreviewPhoto) return null;
 
@@ -55,4 +55,4 @@ const PreviewPhoto = ({showPreviewPhoto}) => {
     );
 };
 
-export default PreviewPhoto;
+export default PreviewPhotoModal;

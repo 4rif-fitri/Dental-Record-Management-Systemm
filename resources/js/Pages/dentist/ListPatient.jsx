@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import MainLayout from '../../layout/mainLayout';
-import QueueList from '../../components/modal/QueueList';
+import QueueListModal from '../../components/modal/QueueListModal.jsx';
 import PatientTable from '../../components/PatientList';
 import {route} from "ziggy-js";
 import api from '@/lib/axios';
@@ -41,7 +41,7 @@ const ListPatient = () => {
 
   return (
       <MainLayout>
-          {showPopup && <QueueList setShowPopup={setShowPopup} />}
+          {showPopup && <QueueListModal setShowPopup={setShowPopup} />}
 
           <div className="w-full min-h-[350px] rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
               <div className="mb-2 pb-4 flex items-center justify-between border-b-1 border-gray-300">

@@ -6,7 +6,7 @@ import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
 
-const QueueList = ({ setShowPopup, role }) => {
+const QueueListModal = ({ setShowPopup, role }) => {
 
     const [queues, setQueues] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -122,4 +122,4 @@ const QueueList = ({ setShowPopup, role }) => {
 
 };
 
-export default QueueList;
+export default QueueListModal;

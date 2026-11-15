@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios.js';
 
-const RegisterQueue = ({ setShowPopup, onSuccess }) => {
+const RegisterQueueModal = ({ setShowPopup, onSuccess }) => {
 
     const [keyword, setKeyword] = useState('');
     const [patient, setPatient] = useState(null);
@@ -284,4 +284,4 @@ const RegisterQueue = ({ setShowPopup, onSuccess }) => {
     );
 };
 
-export default RegisterQueue;
+export default RegisterQueueModal;
