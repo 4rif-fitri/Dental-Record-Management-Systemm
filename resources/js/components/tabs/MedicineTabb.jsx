@@ -40,20 +40,12 @@ const MedicineTab = ({
             });
 
         } catch (error) {
-
             console.log(error)
-
-            Swal.fire({
-                icon: "error",
-                title: "Delete Failed!",
-                text: error.response.message || "Unable to delete medicine."
-            });
-
         }
     };
 
     const handleUpdatePatientMedicine = (item) => {
-
+        console.log(item)
         setSelectedMedicine(item);
         setShowAddMedicine(true);
 

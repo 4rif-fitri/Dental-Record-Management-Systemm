@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
 
@@ -7,7 +7,8 @@ const Medicine = ({
                       medicines = [],
                       patientDetails,
                       setShowAddMedicine,
-                      getExaminationMedicine
+                      getExaminationMedicine,
+                      selectedMedicine
                   }) => {
 
     const [medicine, setMedicine] = useState({
@@ -38,6 +39,30 @@ const Medicine = ({
         }));
     };
 
+    useEffect(() => {
+        if (selectedMedicine) {
+            setMedicine({
+                medicine_id: selectedMedicine.medicine_id,
+                dosage: selectedMedicine.dosage,
+                frequency: selectedMedicine.frequency,
+                duration: selectedMedicine.duration,
+                quantity: selectedMedicine.quantity,
+                instructions: selectedMedicine.instructions,
+                notes: selectedMedicine.notes
+            });
+        } else {
+            setMedicine({
+                medicine_id: "",
+                dosage: "",
+                frequency: "",
+                duration: "",
+                quantity: "",
+                instructions: "",
+                notes: ""
+            });
+        }
+    }, [selectedMedicine]);
+
     // Submit medicine
 
     const handleSubmit = async (e) => {
@@ -57,12 +82,23 @@ const Medicine = ({
                 notes: medicine.notes
             };
 
-            console.log("Medicine payload:", payload);
+            let response;
 
-            const response = await api.post(
-                route("createExaminationMedicine"),
-                payload
-            );
+            if (selectedMedicine) {
+                // UPDATE
+                response = await api.put(
+                    route("updateExaminationMedicine", {
+                        id: selectedMedicine.id
+                    }),
+                    payload
+                );
+            } else {
+                // CREATE
+                response = await api.post(
+                    route("createExaminationMedicine"),
+                    payload
+                );
+            }
 
             await getExaminationMedicine();
 
@@ -71,25 +107,21 @@ const Medicine = ({
             await Swal.fire({
                 icon: "success",
                 title: "Success!",
-                text: response.data.message || "Medicine added successfully.",
-                confirmButtonColor: "#3085d6"
+                text: response.data.message ||
+                    (selectedMedicine
+                        ? "Medicine updated successfully."
+                        : "Medicine added successfully.")
             });
 
         } catch (error) {
-
             console.error(error);
 
             Swal.fire({
                 icon: "error",
                 title: "Failed!",
                 text: error.response?.data?.message ||
-                    "Failed to add medicine. Please try again.",
-                confirmButtonColor: "#d33"
+                    "Something went wrong."
             });
-
-            if (error.response) {
-                console.log("Validation errors:", error.response.data);
-            }
 
         } finally {
             setLoading(false);
@@ -105,13 +137,13 @@ const Medicine = ({
                 {/* Header */}
                 <div className="mb-4 flex flex-wrap justify-between items-center">
 
-                    <h2 className="font-bold text-3xl">
-                        Add Medicine
+                    <h2>
+                        {selectedMedicine ? "Update Medicine" : "Add Medicine"}
                     </h2>
 
                     <button
                         type="button"
-                        className="btn w-24"
+                        className="btn btn-neutral w-24"
                         onClick={() => setShowAddMedicine(false)}
                     >
                         Close
@@ -271,15 +303,15 @@ const Medicine = ({
 
                     </div>
 
-                    {/* Save Button */}
                     <div className="flex justify-end gap-3">
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="bg-blue-700 w-full hover:bg-blue-800 disabled:bg-gray-400 text-white px-10 py-3 rounded-lg"
-                        >
-                            {loading ? "Saving..." : "Save"}
+                        <button className={"btn btn-primary"} type="submit" disabled={loading}>
+                            {loading
+                                ? "Processing..."
+                                : selectedMedicine
+                                    ? "Update Medicine"
+                                    : "Add Medicine"
+                            }
                         </button>
 
                     </div>

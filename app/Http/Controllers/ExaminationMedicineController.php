@@ -69,7 +69,7 @@ class ExaminationMedicineController extends Controller
 
     public function updateExaminationMedicine(Request $request, $id){
         $validated = $request->validate([
-            'examination_id' => 'required',
+            'patient_id' => 'required',
             'medicine_id' => 'required',
             'dosage' => 'required',
             'frequency' => 'required',
@@ -78,7 +78,7 @@ class ExaminationMedicineController extends Controller
         ]);
 
         $examinationMedicines = ExaminationMedicine::where('id', $id)->first();
-        $examinationMedicines->examination_id = $request->examination_id;
+        $examinationMedicines->patient_id = $request->patient_id;
         $examinationMedicines->medicine_id = $request->medicine_id;
         $examinationMedicines->dosage = $request->dosage;
         $examinationMedicines->frequency = $request->frequency;
@@ -99,7 +99,7 @@ class ExaminationMedicineController extends Controller
 
         return ApiResponse::success(
             "List of examination medicine",
-
+            $response
         )->toJsonResponse();
     }
 

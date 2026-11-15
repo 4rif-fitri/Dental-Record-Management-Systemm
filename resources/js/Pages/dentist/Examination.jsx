@@ -151,6 +151,7 @@ const Examination = () => {
                     setShowAddMedicine={setShowAddMedicine}
                     patientDetails={patientDetails}
                     getExaminationMedicine={getExaminationMedicine}
+                    selectedMedicine={selectedMedicine}
                 />
             }
 
