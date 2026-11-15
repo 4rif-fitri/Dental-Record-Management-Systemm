@@ -23,29 +23,51 @@ class AppointmentBookingController extends Controller
         return ApiResponse::success(200, $booking)->toJsonResponse();
     }
 
-    public function createBooking(Request $request){
+
+    public function createBooking(Request $request)
+    {
+        // Get logged-in patient ID from session
+        $patientId = session('id');
+
+        if (!$patientId) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Please login before booking an appointment.',
+                'data' => null
+            ], 401);
+        }
+
+        // Validate request
         $validated = $request->validate([
-            'appointment_id' => 'required|exists:appointments,id',
-            'patient_id' => 'required|exists:users,id',
-            'reason' => 'required|string|max:100',
+            'appointment_id' => ['required', 'integer', 'exists:appointments,id'],
+            'reason' => ['nullable', 'string', 'max:255'],
         ]);
 
         try {
 
-            $booking = DB::transaction(function () use ($validated) {
+            $result = DB::transaction(function () use (
+                $validated,
+                $patientId
+            ) {
 
-                $appointment = Appointment::where('id', $validated['appointment_id'])
-                    ->lockForUpdate()
-                    ->firstOrFail();
-
-                if ($appointment->status !== 'available') {
-                    abort(409, 'Appointment is unavailable.');
-                }
-
-                $existingBooking = AppointmentBooking::where(
-                    'appointment_id',
+                // Lock appointment record
+                $appointment = Appointment::where(
+                    'id',
                     $validated['appointment_id']
                 )
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$appointment) {
+                    return [
+                        'conflict' => true,
+                        'message' => 'Appointment not found.'
+                    ];
+                }
+
+                // Check active booking
+                // Pending and Approved cannot be booked again
+                $existingBooking = $appointment->bookings()
                     ->whereIn('status', [
                         'pending',
                         'approved'
@@ -53,43 +75,106 @@ class AppointmentBookingController extends Controller
                     ->exists();
 
                 if ($existingBooking) {
-                    abort(409, 'This appointment already has an active booking.');
+                    return [
+                        'conflict' => true,
+                        'message' => 'This appointment slot is already booked.'
+                    ];
                 }
 
-                $booking = new AppointmentBooking();
+                // Create new booking
+                // Rejected booking does not block a new booking
+                $booking = $appointment->bookings()->create([
+                    'patient_id' => $patientId,
+                    'status' => 'pending',
+                    'reason' => $validated['reason'] ?? null,
+                ]);
 
-                $booking->appointment_id = $validated['appointment_id'];
-                $booking->patient_id = $validated['patient_id'];
-                $booking->status = 'pending';
-                $booking->reason = $validated['reason'];
-
-                $booking->save();
-
+                // Update appointment status
                 $appointment->update([
                     'status' => 'booked'
                 ]);
 
-                return $booking;
-            });
+                return [
+                    'conflict' => false,
+                    'booking' => $booking->load('patient', 'appointment')
+                ];
+            }, 5);
 
+            // If slot already booked
+            if ($result['conflict']) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => $result['message'],
+                    'data' => null
+                ], 422);
+            }
+
+            // Success
             return ApiResponse::success(
-                "Booking created successfully.",
-                $booking
-            )->toJsonResponse();
-
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-
-            return ApiResponse::error(
-                $e->getMessage(),
-                $e->getStatusCode()
+                200,
+                $result['booking']
             )->toJsonResponse();
 
         } catch (\Throwable $e) {
 
-            return ApiResponse::error(
-                $e->getMessage(),
-                500
+            \Log::error('Create Booking Error: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Failed to create appointment booking.',
+                'data' => null
+            ], 500);
+        }
+    }
+
+
+    public function rejectBooking($id)
+    {
+        try {
+
+            DB::transaction(function () use ($id) {
+
+                $booking = AppointmentBooking::findOrFail($id);
+
+                $appointment = Appointment::where(
+                    'id',
+                    $booking->appointment_id
+                )
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                $booking->update([
+                    'status' => 'rejected'
+                ]);
+
+                // Check sama ada masih ada booking aktif
+                $hasActiveBooking = $appointment->bookings()
+                    ->whereIn('status', [
+                        'pending',
+                        'approved'
+                    ])
+                    ->exists();
+
+                // Jika tiada booking aktif, slot available semula
+                $appointment->update([
+                    'status' => $hasActiveBooking
+                        ? 'booked'
+                        : 'available'
+                ]);
+            });
+
+            return ApiResponse::success(
+                200,
+                null
             )->toJsonResponse();
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage(),
+                'data' => null
+            ], 500);
         }
     }
 

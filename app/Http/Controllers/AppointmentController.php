@@ -10,6 +10,38 @@ use Inertia\Inertia;
 
 class AppointmentController extends Controller
 {
+
+    public function getAppointmentsByDate($date)
+    {
+        $appointments = Appointment::withCount([
+            'bookings as active_bookings_count' => function ($query) {
+                $query->whereIn('status', [
+                    'pending',
+                    'approved'
+                ]);
+            }
+        ])
+            ->whereDate('appointment_date', $date)
+            ->orderBy('time_slot')
+            ->get()
+            ->map(function ($appointment) {
+
+                // Pending atau approved = tidak tersedia
+                // Tiada booking aktif = boleh ditempah semula
+                $appointment->status =
+                    $appointment->active_bookings_count > 0
+                        ? 'booked'
+                        : 'available';
+
+                return $appointment;
+            });
+
+        return ApiResponse::success(
+            200,
+            $appointments
+        )->toJsonResponse();
+    }
+
     public function patientAppointment(){
         return Inertia::render('patient/ListAppointment');
     }
