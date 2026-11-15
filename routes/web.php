@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/patient-book-appointment', [AppointmentController::class, 'patientBookAppointment'])->name('patientBookAppointment');
     });
 
-    Route::middleware('role:staff')->group(function () {
+    Route::middleware('role:clinic_staff')->group(function () {
         Route::get('/list-queue', [QueueController::class, 'listQueue'])->name('listQueue');
     });
 
@@ -138,6 +138,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('queue')->group(function () {
+        Route::get('/patient/search', [QueueController::class, 'getQueuePatientSearch'])->name('getQueuePatientSearch');
         Route::get('/', [QueueController::class, 'getAllQueue'])->name('getAllQueue');
         Route::get('/{id}', [QueueController::class, 'getQueueById'])->name('getQueueById');
         Route::post('/store', [QueueController::class, 'createQueue'])->name('createQueue');

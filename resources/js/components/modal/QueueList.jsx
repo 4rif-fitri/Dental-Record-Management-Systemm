@@ -14,7 +14,6 @@ const QueueList = ({ setShowPopup, role }) => {
 
     // Load today's queue
     const loadQueue = async () => {
-
         try {
 
             setIsLoading(true);
@@ -24,8 +23,6 @@ const QueueList = ({ setShowPopup, role }) => {
             );
 
             const data = response.data ?? [];
-
-            // Sort latest queue first
             const sortedQueue = [...data].sort(
                 (a, b) =>
                     new Date(b.created_at) - new Date(a.created_at)
@@ -48,8 +45,6 @@ const QueueList = ({ setShowPopup, role }) => {
 
     };
 
-
-    // Call patient
     const handleCallQueue = async (id) => {
 
         try {
@@ -82,13 +77,10 @@ const QueueList = ({ setShowPopup, role }) => {
             );
 
         } finally {
-
             setCallingId(null);
-
         }
 
     };
-
 
     useEffect(() => {
         loadQueue();

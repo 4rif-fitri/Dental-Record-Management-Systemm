@@ -3,70 +3,41 @@ import React from 'react';
 import { Link } from "@inertiajs/react";
 
 const QueueTable = ({
-                        queues = [],
-                        role,
-                        isLoading,
-                        callingId,
-                        onCallQueue
-                    }) => {
+    queues = [], role, isLoading, callingId, onCallQueue
+}) => {
 
-    // Status badge
     const getStatusBadge = (status) => {
-
         switch (status) {
-
             case "Waiting":
                 return "badge-warning";
-
             case "Called":
                 return "badge-success";
-
             case "Completed":
                 return "badge-info";
-
             case "Cancelled":
                 return "badge-error";
-
             default:
                 return "badge-neutral";
-
         }
-
     };
-
 
     return (
 
         <div className="space-y-3">
-
             <div className="overflow-x-auto text-base-200">
-
                 <table className="table">
-
-                    <thead className="text-black text-center">
-
+                    <thead className="text-black">
                     <tr>
-
                         <th>ID</th>
-
                         <th>Name</th>
-
                         <th>IC/Passport Number</th>
-
                         <th>Create At</th>
-
                         <th>Status</th>
-
-                        {role !== "dentist" && (
-                            <th>Action</th>
-                        )}
-
+                        {role === "dentist" && <th>Action</th> }
                     </tr>
 
                     </thead>
-
-
-                    <tbody className="text-black">
+                        <tbody className="text-black">
 
                     {isLoading ? (
 
@@ -141,7 +112,7 @@ const QueueTable = ({
                                         </button>
                                     )}
 
-                                    {role !== "dentist" && (
+                                    {role === "dentist" && (
                                         <>
                                             <Link
                                                 href={`/dentist-examination/${queue.patient_id}`}
