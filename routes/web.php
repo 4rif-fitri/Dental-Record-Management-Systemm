@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dentist-list-appointment', [AppointmentController::class, 'dentistListAppointment'])->name('dentistListAppointment');
         Route::get('/dentist-list-patient', [UserController::class, 'dentistListPatient'])->name('dentistListPatient');
         Route::get('/tooth-conditions', [UserController::class, 'pageToothConditions'])->name('pageToothConditions');
+        Route::get('/treatments', [UserController::class, 'pageTreatments'])->name('pageTreatments');
         Route::get('/dentist-examination/{id}', [ExaminationController::class, 'pageExamination'])->name('dentistExamination');
     });
 });

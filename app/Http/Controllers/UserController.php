@@ -57,6 +57,11 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+    public function pageTreatments()
+    {
+        return Inertia::render('dentist/Treatments');
+    }
+
     public function getProfileData()
     {
         $userProfileId = session('id');

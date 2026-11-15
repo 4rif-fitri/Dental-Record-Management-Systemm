@@ -9,66 +9,69 @@ use Illuminate\Http\Request;
 use Exception;
 class ProcedureController extends Controller
 {
-    public function getAllProcedure(){
-        $procedures = Procedure::all();
+    public function getAllProcedure()
+    {
+        $procedures = Procedure::latest()->get();
 
-        return ApiResponse::success(200, $procedures)->toJsonResponse();
+        return ApiResponse::success(
+            200,
+            $procedures
+        )->toJsonResponse();
     }
 
-    public function getProcedureById($id){
-        $procedures = Procedure::where('id', $id)->first();
-        return ApiResponse::success(200, $procedures)->toJsonResponse();
+    public function getProcedureById($id)
+    {
+        $procedure = Procedure::findOrFail($id);
+
+        return ApiResponse::success(
+            200,
+            $procedure
+        )->toJsonResponse();
     }
 
-    public function createProcedure(Request $request){
-
-        $validates = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'type' => 'required',
+    public function createProcedure(Request $request)
+    {
+        $validated = $request->validate([
+            'procedure_name' => ['required', 'string', 'max:100'],
+            'procedure_description' => ['required', 'string', 'max:255'],
+            'procedure_type' => ['required', 'string', 'max:100'],
         ]);
 
-        $procedure = new Procedure();
-        $procedure->procedure_name = $request->name;
-        $procedure->procedure_description = $request->description;
-        $procedure->procedure_type = $request->type;
-        $procedure->save();
+        $procedure = Procedure::create($validated);
 
-        return ApiResponse::success(200, $procedure)->toJsonResponse();
+        return ApiResponse::success(
+            200,
+            $procedure
+        )->toJsonResponse();
     }
 
-    public function updateProcedure(Request $request, $id){
-        $validates = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'type' => 'required',
+    public function updateProcedure(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'procedure_name' => ['required', 'string', 'max:100'],
+            'procedure_description' => ['required', 'string', 'max:255'],
+            'procedure_type' => ['required', 'string', 'max:100'],
         ]);
 
-        $procedure = Procedure::where('id', $id)->first();
-        $procedure->procedure_name = $request->name;
-        $procedure->procedure_description = $request->description;
-        $procedure->procedure_type = $request->type;
-        $procedure->save();
+        $procedure = Procedure::findOrFail($id);
 
-        return ApiResponse::success(200, $procedure)->toJsonResponse();
+        $procedure->update($validated);
+
+        return ApiResponse::success(
+            200,
+            $procedure
+        )->toJsonResponse();
     }
 
     public function deleteProcedure($id)
     {
-        try {
-            $procedure = Procedure::findOrFail($id);
-            $procedure->delete();
+        $procedure = Procedure::findOrFail($id);
 
-            return ApiResponse::success(
-                'Procedure deleted successfully',
-                $procedure
-            )->toJsonResponse();
+        $procedure->delete();
 
-        } catch (QueryException $e) {
-            return ApiResponse::error('Cannot delete procedure because it is being used in other records.')->toJsonResponse();
-
-        } catch (Exception $e) {
-            return ApiResponse::error("Something went wrong.")->toJsonResponse();
-        }
+        return ApiResponse::success(
+            200,
+            $procedure
+        )->toJsonResponse();
     }
 }
