@@ -195,4 +195,60 @@ class UserController extends Controller
         )->toJsonResponse();
     }
 
+    public function saveSignature(Request $request, $id)
+    {
+        try {
+
+            $request->validate([
+                'signature' => 'required|string|max:12000000',
+            ]);
+
+            $signature = $request->signature;
+
+            // Pastikan format Base64 ialah PNG
+            if (!preg_match('/^data:image\/png;base64,/', $signature)) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => 'Invalid signature format',
+                    'data' => null,
+                ], 422);
+            }
+
+            // Validate Base64 content
+            $base64 = substr(
+                $signature,
+                strlen('data:image/png;base64,')
+            );
+
+            if (base64_decode($base64, true) === false) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => 'Invalid Base64 data',
+                    'data' => null,
+                ], 422);
+            }
+
+            $patient = User::findOrFail($id);
+
+            $patient->update([
+                'consent_sign_url' => $signature,
+            ]);
+
+            return ApiResponse::success('Success', $patient)->toJsonResponse();
+
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            throw $e;
+
+        } catch (\Exception $e) {
+
+            return ApiResponse::error(
+                "Invalid signature",
+                $e->getMessage()
+            )->toJsonResponse();
+
+        }
+    }
+
 }

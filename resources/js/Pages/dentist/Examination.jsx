@@ -42,6 +42,7 @@ const Examination = () => {
     const [currentToothFinding, setCurrentToothFinding] = useState(null);
     const [selectedMedicine, setSelectedMedicine] = useState(null);
 
+    const [isLoading, setIsLoading] = useState(true);
 
     const laodToothFinding = async () => {
         try {
@@ -50,8 +51,6 @@ const Examination = () => {
             const response = await api.get(
                 route("getFindingByPatientId", { id })
             );
-
-            console.log(response)
 
             setToothFinding(response.data);
 
@@ -68,8 +67,6 @@ const Examination = () => {
                 route('getExaminationMedicineByPatientId', { id })
             );
 
-            console.log("Examination Medicine:", response.data);
-
             setExaminationMedicine(response.data ?? []);
 
         } catch (error) {
@@ -82,6 +79,8 @@ const Examination = () => {
 
     const fetchData = async () => {
         try {
+            setIsLoading(true);
+
             const id = window.location.pathname.split('/').pop();
 
             const [
@@ -93,7 +92,6 @@ const Examination = () => {
                 toothFindingResponse,
                 toothResponse,
                 examinationMedicineResponse
-
             ] = await Promise.all([
 
                 api.get(route('getPatientById', { id })),
@@ -111,13 +109,22 @@ const Examination = () => {
             setConditions(conditionResponse.data);
             setTreatment(procedureResponse.data);
             setSurfaces(surfaceResponse.data);
-            setMedicines(medicineResponse.data)
-            setToothFinding(toothFindingResponse.data)
-            setTooth(toothResponse.data)
-            setExaminationMedicine(examinationMedicineResponse.data ?? [])
+            setMedicines(medicineResponse.data);
+            setToothFinding(toothFindingResponse.data);
+            setTooth(toothResponse.data);
+            setExaminationMedicine(examinationMedicineResponse.data ?? []);
 
         } catch (error) {
-            console.log(error);
+
+            console.error(
+                "Error fetching examination data:",
+                error.response?.data || error.message
+            );
+
+        } finally {
+
+            setIsLoading(false);
+
         }
     };
 
@@ -132,10 +139,7 @@ const Examination = () => {
             return;
         }
 
-        console.log("Selected tooth:", selectedTooth);
-
         setCurrentTooth(selectedTooth);
-
         setShowToothProcedure(true);
     };
 
@@ -145,6 +149,24 @@ const Examination = () => {
 
     return (
         <MainLayout>
+
+            {isLoading && (
+                <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
+
+                    {/* Spinner */}
+                    <div className="w-14 h-14 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+
+                    <h2 className="mt-5 text-lg font-semibold text-gray-800">
+                        Loading Examination
+                    </h2>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                        Please wait while we prepare patient information...
+                    </p>
+
+                </div>
+            )}
+
             {showAddMedicine &&
                 <Medicine
                     medicines={medicines}
@@ -207,8 +229,6 @@ const Examination = () => {
                             />
                         }
 
-                        {activeTab === "patientConsent" && <ConsentTab />}
-
                         {activeTab === "medicine" &&
                             <MedicineTab
                                 examinationMedicine={examinationMedicine}
@@ -217,6 +237,14 @@ const Examination = () => {
                                 getExaminationMedicine={getExaminationMedicine}
                             />
                         }
+
+                        {activeTab === "patientConsent" &&
+                            <ConsentTab
+                                patientDetails={patientDetails}
+                                setPatientDetails={setPatientDetails}
+                            />
+                        }
+
                     </div>
 
                     {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('profile_image', 255)->nullable();
             $table->string('email', 255)->unique()->nullable();
             $table->string('password');
+            $table->text('consent_sign_url')->nullable();
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

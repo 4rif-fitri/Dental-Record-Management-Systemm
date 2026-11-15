@@ -4,12 +4,8 @@ import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
 
 const Medicine = ({
-                      medicines = [],
-                      patientDetails,
-                      setShowAddMedicine,
-                      getExaminationMedicine,
-                      selectedMedicine
-                  }) => {
+    medicines = [], patientDetails, setShowAddMedicine,
+    getExaminationMedicine, selectedMedicine }) => {
 
     const [medicine, setMedicine] = useState({
         medicine_id: "",
@@ -128,7 +124,6 @@ const Medicine = ({
         }
     };
 
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-black">
 
@@ -153,20 +148,18 @@ const Medicine = ({
 
                 <form onSubmit={handleSubmit}>
 
-                    {/* Medicine Selection */}
                     <div className="mb-6">
 
                         <label className={labelStyle}>
                             Medicine
                         </label>
 
-                        <select
-                            name="medicine_id"
+                        <select name="medicine_id"
                             value={medicine.medicine_id}
                             onChange={handleChange}
                             className={inputStyle}
-                            required
-                        >
+                            required>
+
                             <option value="">
                                 Select Medicine
                             </option>
@@ -184,7 +177,6 @@ const Medicine = ({
 
                     </div>
 
-                    {/* Dosage and Frequency */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
 
                         <div>
@@ -225,7 +217,6 @@ const Medicine = ({
 
                     </div>
 
-                    {/* Duration and Quantity */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
 
                         <div>
