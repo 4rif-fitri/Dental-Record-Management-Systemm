@@ -10,10 +10,10 @@ import Medicine from "@/components/modal/Medicine";
 import ToothProcedure from "@/components/modal/ToothProcedure";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
-import MedicineTabb from "@/components/tabs/MedicineTabb.jsx";
 import UpdateToothProcedure from "@/components/modal/UpdateToothProcedure.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
+import MedicineTab from "@/components/tabs/MedicineTabb.jsx";
 
 let linkTabs = [
     { text: "patient", label: "Patient Details" },
@@ -40,6 +40,7 @@ const Examination = () => {
 
     const [currentTooth, setCurrentTooth] = useState(null);
     const [currentToothFinding, setCurrentToothFinding] = useState(null);
+    const [selectedMedicine, setSelectedMedicine] = useState(null);
 
 
     const laodToothFinding = async () => {
@@ -58,6 +59,26 @@ const Examination = () => {
             console.log(error);
         }
     }
+
+    const getExaminationMedicine = async () => {
+        try {
+            const id = window.location.pathname.split('/').pop();
+
+            const response = await api.get(
+                route('getExaminationMedicineByPatientId', { id })
+            );
+
+            console.log("Examination Medicine:", response.data);
+
+            setExaminationMedicine(response.data ?? []);
+
+        } catch (error) {
+            console.error(
+                "Error loading medicine:",
+                error.response?.data || error.message
+            );
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -129,6 +150,7 @@ const Examination = () => {
                     medicines={medicines}
                     setShowAddMedicine={setShowAddMedicine}
                     patientDetails={patientDetails}
+                    getExaminationMedicine={getExaminationMedicine}
                 />
             }
 
@@ -187,9 +209,11 @@ const Examination = () => {
                         {activeTab === "patientConsent" && <ConsentTab />}
 
                         {activeTab === "medicine" &&
-                            <MedicineTabb
+                            <MedicineTab
                                 examinationMedicine={examinationMedicine}
                                 setShowAddMedicine={setShowAddMedicine}
+                                setSelectedMedicine={setSelectedMedicine}
+                                getExaminationMedicine={getExaminationMedicine}
                             />
                         }
                     </div>

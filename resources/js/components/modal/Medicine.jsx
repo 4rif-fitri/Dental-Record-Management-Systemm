@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
 import api from "@/lib/axios.js";
-import { route } from "ziggy-js";
+import Swal from "sweetalert2";
 
 const Medicine = ({
                       medicines = [],
                       patientDetails,
                       setShowAddMedicine,
-                      loadExaminationMedicine
+                      getExaminationMedicine
                   }) => {
 
     const [medicine, setMedicine] = useState({
@@ -39,6 +39,7 @@ const Medicine = ({
     };
 
     // Submit medicine
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -59,21 +60,32 @@ const Medicine = ({
             console.log("Medicine payload:", payload);
 
             const response = await api.post(
-                route("createExamination"),
+                route("createExaminationMedicine"),
                 payload
             );
 
-            console.log("Medicine saved:", response.data);
-
-            if (loadExaminationMedicine) {
-                await loadExaminationMedicine();
-            }
+            await getExaminationMedicine();
 
             setShowAddMedicine(false);
 
+            await Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: response.data.message || "Medicine added successfully.",
+                confirmButtonColor: "#3085d6"
+            });
+
         } catch (error) {
 
-            console.log("Save medicine error:", error);
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "Failed!",
+                text: error.response?.data?.message ||
+                    "Failed to add medicine. Please try again.",
+                confirmButtonColor: "#d33"
+            });
 
             if (error.response) {
                 console.log("Validation errors:", error.response.data);
@@ -83,6 +95,7 @@ const Medicine = ({
             setLoading(false);
         }
     };
+
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-black">

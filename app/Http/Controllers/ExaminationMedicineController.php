@@ -99,7 +99,7 @@ class ExaminationMedicineController extends Controller
 
         return ApiResponse::success(
             "List of examination medicine",
-            $response
+
         )->toJsonResponse();
     }
 

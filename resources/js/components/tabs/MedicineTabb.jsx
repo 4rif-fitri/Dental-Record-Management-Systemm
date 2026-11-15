@@ -1,10 +1,63 @@
 
 import React from 'react';
+import api from "@/lib/axios.js";
+import {route} from "ziggy-js";
+import Swal from "sweetalert2";
 
 const MedicineTab = ({
-                         examinationMedicine = [],
-                         setShowAddMedicine
-                     }) => {
+    examinationMedicine = [], setShowAddMedicine,
+    setSelectedMedicine, getExaminationMedicine
+}) => {
+
+    const handleDeletePatientMedicine = async (id) => {
+
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This medicine will be permanently deleted!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel"
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+
+            const response = await api.delete(
+                route("deleteExaminationMedicine", id)
+            );
+
+            await getExaminationMedicine();
+
+            await Swal.fire({
+                icon: "success",
+                title: "Deleted!",
+                text: response.data.message || "Medicine deleted successfully.",
+                confirmButtonColor: "#3085d6"
+            });
+
+        } catch (error) {
+
+            console.log(error)
+
+            Swal.fire({
+                icon: "error",
+                title: "Delete Failed!",
+                text: error.response.message || "Unable to delete medicine."
+            });
+
+        }
+    };
+
+    const handleUpdatePatientMedicine = (item) => {
+
+        setSelectedMedicine(item);
+        setShowAddMedicine(true);
+
+    };
 
     return (
         <div>
@@ -16,7 +69,10 @@ const MedicineTab = ({
                 </h1>
 
                 <button
-                    onClick={() => setShowAddMedicine(true)}
+                    onClick={() => {
+                        setSelectedMedicine(null);
+                        setShowAddMedicine(true);
+                    }}
                     className="btn btn-primary w-40"
                 >
                     Add Medicine
@@ -24,15 +80,15 @@ const MedicineTab = ({
 
             </div>
 
-            {/* Table */}
             <div className="w-full overflow-x-auto border border-gray-300 rounded-lg">
 
                 <table className="w-full text-sm text-left">
 
-                    <thead className="bg-gray-100 ">
+                    <thead className="bg-gray-100">
                     <tr>
                         <th className="px-4 py-3">No.</th>
                         <th className="px-4 py-3">Medicine</th>
+                        <th className="px-4 py-3">Quantity</th>
                         <th className="px-4 py-3">Notes</th>
                         <th className="px-4 py-3 text-center">Action</th>
                     </tr>
@@ -57,17 +113,24 @@ const MedicineTab = ({
                                     {item.medicine?.name ?? "-"}
                                 </td>
 
+                                <td className="px-4 py-3 font-medium">
+                                    {item.quantity ?? "-"}
+                                </td>
+
                                 <td className="px-4 py-3">
                                     {item.notes ?? "-"}
                                 </td>
 
                                 <td className="px-4 py-3">
+
                                     <div className="flex justify-center gap-3">
 
                                         <button
                                             type="button"
                                             title="Edit"
-                                            onClick={() => console.log("Edit:", item)}
+                                            onClick={() =>
+                                                handleUpdatePatientMedicine(item)
+                                            }
                                             className="text-blue-600 hover:text-blue-800"
                                         >
                                             <i className="fa-solid fa-pencil"></i>
@@ -76,13 +139,16 @@ const MedicineTab = ({
                                         <button
                                             type="button"
                                             title="Delete"
-                                            onClick={() => console.log("Delete ID:", item.id)}
+                                            onClick={() =>
+                                                handleDeletePatientMedicine(item.id)
+                                            }
                                             className="text-red-600 hover:text-red-800"
                                         >
                                             <i className="fa-solid fa-trash"></i>
                                         </button>
 
                                     </div>
+
                                 </td>
 
                             </tr>
@@ -93,7 +159,7 @@ const MedicineTab = ({
 
                         <tr>
                             <td
-                                colSpan="9"
+                                colSpan="5"
                                 className="text-center py-8 text-gray-500"
                             >
                                 No medicine prescribed yet.
