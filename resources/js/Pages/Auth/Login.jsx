@@ -4,14 +4,21 @@ import { route } from "ziggy-js";
 import { useForm } from "@inertiajs/react";
 
 const Login = () => {
-    const { data, setData, post, processing, errors } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors
+    } = useForm({
+
         username: "",
         password: "",
+
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         post(route("userLogin"));
     };
 
@@ -21,10 +28,6 @@ const Login = () => {
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
                     Sign In
                 </h2>
-
-                <p className="text-sm text-gray-500 mt-2">
-                    Welcome back! Please sign in to your account.
-                </p>
             </div>
 
             <form className="grid gap-5" onSubmit={handleSubmit}>
