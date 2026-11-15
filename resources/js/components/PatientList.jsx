@@ -40,8 +40,8 @@ const PatientTable = ({role = "Dentist", datas = []}) => {
 
   return (
       <div className="overflow-x-auto text-black">
-          <table className="table">
-              <thead className="text-black">
+          <table className="table rounded border-">
+              <thead className="text-black bg-gray-100">
                   <tr>
                       <th>ID</th>
                       <th>Name</th>

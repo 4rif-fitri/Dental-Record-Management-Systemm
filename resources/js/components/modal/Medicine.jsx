@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
+import PageTitle from "@/components/layout/PageTitle.jsx";
 
 const Medicine = ({
     medicines = [], patientDetails, setShowAddMedicine,
@@ -132,9 +133,7 @@ const Medicine = ({
                 {/* Header */}
                 <div className="mb-4 flex flex-wrap justify-between items-center">
 
-                    <h2>
-                        {selectedMedicine ? "Update Medicine" : "Add Medicine"}
-                    </h2>
+                    <PageTitle title={selectedMedicine ? "Update Medicine" : "Add Medicine"} />
 
                     <button
                         type="button"

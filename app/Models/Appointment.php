@@ -29,9 +29,6 @@ class Appointment extends Model
 
     public function bookings()
     {
-        return $this->hasMany(
-            AppointmentBooking::class,
-            'appointment_id'
-        );
+        return $this->hasMany(AppointmentBooking::class, 'appointment_id');
     }
 }

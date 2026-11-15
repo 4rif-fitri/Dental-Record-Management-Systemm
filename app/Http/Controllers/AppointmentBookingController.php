@@ -23,6 +23,19 @@ class AppointmentBookingController extends Controller
         return ApiResponse::success(200, $booking)->toJsonResponse();
     }
 
+    public function getAppointmentPatient()
+    {
+        $patient_id = session()->get('id');
+
+        $response = AppointmentBooking::where("patient_id", $patient_id)
+            ->with("appointment")
+            ->get();
+
+        return ApiResponse::success(
+            "",
+            $response
+        )->toJsonResponse();
+    }
 
     public function createBooking(Request $request)
     {
@@ -178,30 +191,29 @@ class AppointmentBookingController extends Controller
         }
     }
 
-    public function updateBooking(Request $request, $id){
+    public function updateBooking(Request $request, $id)
+    {
         $validated = $request->validate([
-            'appointment_id' => 'required',
-            'patient_id' => 'required',
-            'status' => 'required',
-            'reason' => 'required',
+            'status' => 'required|in:approved,rejected,cancelled',
         ]);
 
-        $booking = AppointmentBooking::where('id', $id)->first();
-        $booking->appointment_id = $request->appointment_id;
-        $booking->patient_id = $request->patient_id;
-        $booking->status = $request->status;
-        $booking->reason = $request->reason;
+        $booking = AppointmentBooking::findOrFail($id);
+
+        if (
+            $validated['status'] === 'cancelled' &&
+            $booking->status !== 'pending'
+        ) {
+            return ApiResponse::error(
+                "Only pending appointments can be cancelled."
+            )->toJsonResponse();
+        }
+
+        $booking->status = $validated['status'];
         $booking->save();
 
-        return ApiResponse::success(200, $booking)->toJsonResponse();
-    }
-
-    public function deleteBooking($id){
-        $response = AppointmentBooking::destroy($id);
-
         return ApiResponse::success(
-            "Booking deleted successfully.",
-            $response
+            "Booking updated successfully.",
+            $booking
         )->toJsonResponse();
     }
 
