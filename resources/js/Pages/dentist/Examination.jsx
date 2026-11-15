@@ -153,7 +153,6 @@ const Examination = () => {
             {isLoading && (
                 <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
 
-                    {/* Spinner */}
                     <div className="w-14 h-14 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
 
                     <h2 className="mt-5 text-lg font-semibold text-gray-800">

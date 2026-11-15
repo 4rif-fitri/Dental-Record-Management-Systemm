@@ -97,6 +97,13 @@ const Login = () => {
                     {processing ? "Signing In..." : "Sign In"}
                 </button>
             </form>
+
+            <p className="text-sm text-gray-500 mt-2 flex justify-center gap-1">
+                Dont have account?
+                <a href={route("register")} className="text-sm text-gray-700 hover:underline">
+                    Click Here
+                </a>
+            </p>
         </AuthLayout>
     );
 };

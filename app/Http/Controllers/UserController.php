@@ -37,6 +37,36 @@ class UserController extends Controller
         return redirect()->route('dashboard');
     }
 
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'ic_passport' => 'required|string|max:30|unique:users,ic_passport',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Create patient account
+        $user = User::create([
+            'name' => $validated['name'],
+            'ic_passport' => $validated['ic_passport'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'patient',
+        ]);
+
+        return ApiResponse::success(
+            "Account created successfully.",
+            [
+                'id' => $user->id,
+                'name' => $user->name,
+                'ic_passport' => $user->ic_passport,
+                'email' => $user->email,
+                'role' => $user->role,
+            ]
+        )->toJsonResponse();
+    }
+
     public function index(){
         if (session('role') === 'patient') {
             return redirect()->route('patientAppointment');

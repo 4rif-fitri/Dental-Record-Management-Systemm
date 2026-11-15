@@ -38,6 +38,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [UserController::class, 'showForgotPasswordPage'])->name('forgotPassword');
 
     Route::post('/login', [UserController::class, 'login'])->name('userLogin');
+    Route::post('/register', [UserController::class, 'register'])->name('userregister');
 });
 
 /*

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('student_staff_id', 20)->unique()->nullable();
             $table->string('ic_passport', 20)->unique();
             $table->string('name', 100);
-            $table->string('gender', 10);
+            $table->string('gender', 10)->nullable();;
             $table->string('phone_number', 15)->nullable();
             $table->string('role', 15)->default('student');
             $table->string('profile_image', 255)->nullable();

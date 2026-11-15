@@ -29,8 +29,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             {
                 title: "Patient",
                 items: [
-                    { label: "Appointment List", link: "/patient-appointment" },
                     { label: "Appointment Form", link: "/patient-book-appointment" },
+                    { label: "Appointment List", link: "/patient-appointment" },
                     { label: "My Profile", link: "/user-profile" },
                 ],
             },
