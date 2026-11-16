@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tooth_findings_id')->constrained('tooth_findings')->onDelete('restrict');
             $table->foreignId('surface_id')->constrained('surfaces')->onDelete('restrict');
+            $table->foreignId('surface_condition_id')->constrained('surface_condition')->onDelete('restrict');
             $table->timestamps();
         });
     }

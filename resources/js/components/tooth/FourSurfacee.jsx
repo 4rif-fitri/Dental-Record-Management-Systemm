@@ -3,6 +3,18 @@ import "./InteractivePolygon.css";
 
 const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
 
+    const SpanOptions = () => {
+        return (
+            <span className={"border"}>
+                <select className={"w-full p-1"}>
+                    <option>asd</option>
+                    <option>asd</option>
+                    <option>asd</option>
+                </select>
+            </span>
+        )
+    }
+
     const selected = currentTooth?.selected_surfaces || [];
 
     const areas = [
@@ -17,28 +29,42 @@ const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
     };
 
     return (
-        <div className={`container scale-${skala}`}>
+        <div className={"w-full h-full grid grid-cols-3 grid-cols-3 items-center"}>
+            <span></span>
+            <SpanOptions />
+            <span></span>
 
-            <svg className="shapes" viewBox="0 0 300 300">
+            <SpanOptions />
+            <span className={"flex items-center justify-center "}>
+                <div className={`container scale-${skala}`}>
 
-                {areas.map((area) => (
-                    <polygon
-                        key={area.name}
-                        className={`area ${
-                            selected.includes(area.name) ? "active" : ""
-                        }`}
-                        points={area.points}
-                        onClick={() => handleSelect(area.name)}
-                    />
-                ))}
+                <svg className="shapes" viewBox="0 0 300 300">
 
-            </svg>
+                    {areas.map((area) => (
+                        <polygon
+                            key={area.name}
+                            className={`area ${
+                                selected.includes(area.name) ? "active" : ""
+                            }`}
+                            points={area.points}
+                            // onClick={() => handleSelect(area.name)}
+                        />
+                    ))}
 
-            <div className="content top-content"></div>
-            <div className="content left-content"></div>
-            <div className="content right-content"></div>
-            <div className="content bottom-content"></div>
+                </svg>
 
+                <div className="content top-content"></div>
+                <div className="content left-content"></div>
+                <div className="content right-content"></div>
+                <div className="content bottom-content"></div>
+
+            </div>
+            </span>
+            <SpanOptions />
+
+            <span></span>
+            <SpanOptions />
+            <span></span>
         </div>
     );
 };
