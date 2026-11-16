@@ -1,5 +1,5 @@
 import React from "react";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 
 const ToothConditionModal = ({
     selectedCondition, colorPresets, handleCustomColor,

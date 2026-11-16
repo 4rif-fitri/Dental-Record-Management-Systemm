@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 
 const MedicineModal = ({
     medicines = [], patientDetails, setShowAddMedicine,

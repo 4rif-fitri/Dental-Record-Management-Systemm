@@ -1,7 +1,7 @@
-import Sidebar from "../components/layout/Sidebar";
-import { Header } from "../components/layout/Header";
 import { useState } from "react";
-import {Footer} from "../components/layout/Footer";
+import Sidebar from "@/components/atom/Sidebar.jsx";
+import {Header} from "@/components/atom/Header.jsx";
+import {Footer} from "@/components/atom/Footer.jsx";
 
 const MainLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);

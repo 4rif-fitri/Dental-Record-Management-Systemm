@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import MainLayout from '../../layout/mainLayout';
 import QueueListModal from '../../components/modal/QueueListModal.jsx';
-import PatientTable from '../../components/PatientList';
+import PatientTable from '../../components/molecules/Patient/PatientList.jsx';
 import {route} from "ziggy-js";
 import api from '@/lib/axios';
 

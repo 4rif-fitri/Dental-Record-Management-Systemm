@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import QueueTable from '../QueueTable';
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import QueueTable from '../molecules/Queue/QueueTable.jsx';
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";

@@ -3,9 +3,9 @@ import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
 import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 import api from '@/lib/axios';
 import Swal from "sweetalert2";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 
-const ToothRecord = ({
+const ToothRecordModal = ({
     laodToothFinding,
     patientDetails, setShowToothProcedure,currentTooth,
     setCurrentTooth, conditions,treatment, surfaces,
@@ -226,4 +226,4 @@ const ToothRecord = ({
     );
 };
 
-export default ToothRecord;
+export default ToothRecordModal;

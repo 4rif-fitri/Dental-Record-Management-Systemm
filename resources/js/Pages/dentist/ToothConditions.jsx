@@ -1,14 +1,14 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import MainLayout from "@/layout/MainLayout.jsx";
-import PageTitle from "@/components/layout/PageTitle.jsx";
-import api from "@/lib/axios.js";
-import { route } from "ziggy-js";
-import Swal from "sweetalert2";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import ToothConditionModal from "@/components/modal/ToothConditionModal.jsx";
 import NoConditionsFound from "@/components/molecules/ToothCondition/NoConditionsFound.jsx";
 import LoadingCondition from "@/components/molecules/ToothCondition/LoadingCondition.jsx";
 import ContentCondition from "@/components/molecules/ToothCondition/ContentCondition.jsx";
+import api from "@/lib/axios.js";
+import { route } from "ziggy-js";
+import Swal from "sweetalert2";
 
 const colorPresets = [
     { name: "Red", color: "bg-red-500", hex: "#EF4444" },

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../layout/mainLayout';
 import RegisterQueueModal from '../../components/modal/RegisterQueueModal.jsx';
-import QueueTable from '../../components/QueueTable';
+import QueueTable from '../../components/molecules/Queue/QueueTable.jsx';
 import { route } from "ziggy-js";
 import api from "@/lib/axios.js";
 

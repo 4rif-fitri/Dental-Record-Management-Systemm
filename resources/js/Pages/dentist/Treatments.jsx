@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MainLayout from "@/layout/MainLayout.jsx";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import TreatmentModal from "@/components/modal/TreatmentModal.jsx";
 import Notreatmentsfound from "@/components/molecules/Treatment/NoTreamentsFound.jsx";
 import Loadingtreatment from "@/components/molecules/Treatment/LoadingTreatment.jsx";
