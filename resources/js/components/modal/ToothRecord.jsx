@@ -3,6 +3,7 @@ import FiveSurfacee from "@/components/tooth/FiveSurfacee.jsx";
 import FourSurfacee from "@/components/tooth/FourSurfacee.jsx";
 import api from '@/lib/axios';
 import Swal from "sweetalert2";
+import PageTitle from "@/components/layout/PageTitle.jsx";
 
 const ToothRecord = ({
     laodToothFinding,
@@ -75,6 +76,12 @@ const ToothRecord = ({
     const handleSurfaceSelect = (surface_id, condition_id) => {
         setSelectedSurface(prevState => {
 
+            if (condition_id === "") {
+                return prevState.filter(
+                    item => item.surface_id !== Number(surface_id)
+                );
+            }
+
             const existing = prevState.find(
                 item => item.surface_id === Number(surface_id)
             );
@@ -111,9 +118,8 @@ const ToothRecord = ({
 
             <div className="w-[95vw] lg:w-[75vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
                 <div className="mb-4 flex flex-wrap justify-between items-center">
-                    <h2 className="font-bold text-3xl">
-                        Tooth Treatment
-                    </h2>
+                    <PageTitle title={"Tooth Record"} />
+
                     <button onClick={hanleCloseModal} className="btn bg-black text-white w-24">
                         Close
                     </button>
@@ -136,6 +142,7 @@ const ToothRecord = ({
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
                                 surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurface}
                             />
                         ) : (
                             <FourSurfacee
@@ -143,6 +150,7 @@ const ToothRecord = ({
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
                                 surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurface}
                             />
                         )}
 

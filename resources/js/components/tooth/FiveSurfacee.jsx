@@ -1,31 +1,7 @@
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FiveSurfacee = ({ onSelect, currentTooth, skala, surfaceCondition }) => {
-
-    console.log(surfaceCondition)
-
-    const SpanOptions = ({ surface_id }) => {
-        return (
-            <select
-                onChange={(e) => onSelect(surface_id, e.target.value)}
-                className="select"
-                defaultValue=""
-            >
-                <option value="" disabled>
-                    Pick a color
-                </option>
-
-                {surfaceCondition.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.condition_name}
-                    </option>
-                ))}
-            </select>
-        );
-    };
-
-    const selected = currentTooth?.selected_surfaces || [];
+const FiveSurfacee = ({ onSelect, currentTooth, skala, surfaceCondition, selectedSurface }) => {
 
     const areas = [
         { name: "Buccal", points: "0,0 400,0 195,150 105,150" },

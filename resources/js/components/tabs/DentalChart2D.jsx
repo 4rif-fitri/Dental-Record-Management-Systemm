@@ -46,6 +46,14 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
         )[0] || null;
 
+        let id = latestFinding?.tooth?.tooth_number;
+
+        const element = document.getElementById(`tooth-${id}`);
+
+        if (element) {
+            element.innerText = latestFinding?.condition.condition_code
+        }
+
         const ToothComponent =
             ["Central Incisor", "Lateral Incisor", "Canine"]
                 .includes(tooth.tooth_name)
@@ -109,7 +117,7 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
     const renderDualNumber = (upperNumbers, lowerNumbers) => {
         return upperNumbers.map((number, index) => (
             <span key={number} className="grid grid-rows-2 font-semibold">
-            <p className="flex justify-center items-start border border-t-0 border-l-0 border-r-0">
+            <p className="flex justify-center items-start border-t-0 border-l-0 border-r-0 mb-7.5">
                 {number}
             </p>
 
@@ -121,13 +129,31 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
     };
 
     return (
-        <div className="grid grid-cols-[repeat(16,minmax(0,1fr))] grid-rows-5 gap-0">
+        <div className="grid grid-cols-[repeat(16,minmax(0,1fr))] gap-1">
 
             <span></span>
             <span></span>
             <span></span>
 
             {renderNumber(primaryNumbers)}
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+            <span id={`tooth-55`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-54`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-53`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-52`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-51`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-61`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-62`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-63`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-64`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-65`} className={"flex h-7 justify-center border"}></span>
 
             <span></span>
             <span></span>
@@ -146,7 +172,41 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
             {renderQuadrant("permanent", 1)}
             {renderQuadrant("permanent", 2)}
 
+            <span id={`tooth-18`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-17`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-16`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-15`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-14`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-13`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-12`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-11`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-21`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-22`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-23`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-24`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-25`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-26`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-27`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-28`} className={"flex h-7 justify-center border"}></span>
+
             {renderDualNumber(upperPermanent, lowerPermanent)}
+
+            <span id={`tooth-48`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-47`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-46`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-45`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-44`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-43`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-42`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-41`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-31`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-32`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-33`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-34`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-35`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-36`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-37`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-38`} className={"flex h-7 justify-center border"}></span>
 
             {renderQuadrant("permanent", 3)}
             {renderQuadrant("permanent", 4)}
@@ -157,6 +217,24 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
 
             {renderQuadrant("primary", 7)}
             {renderQuadrant("primary", 8)}
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+            <span id={`tooth-85`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-84`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-83`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-82`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-81`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-71`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-72`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-73`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-74`} className={"flex h-7 justify-center border"}></span>
+            <span id={`tooth-75`} className={"flex h-7 justify-center border"}></span>
 
             <span></span>
             <span></span>

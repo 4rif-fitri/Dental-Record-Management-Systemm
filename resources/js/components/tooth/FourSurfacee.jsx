@@ -1,48 +1,36 @@
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition}) => {
+const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition, selectedSurface}) => {
 
-    const SpanOptions = ({ surface_id }) => {
-        return (
-            <select
-                onChange={(e) => onSelect(surface_id, e.target.value)}
-                className="select"
-                defaultValue=""
-            >
-                <option value="" disabled>
-                    Pick a color
-                </option>
+    const areas = [
+        { id: 2, name: "Incisal", points: "0,0 300,0 195,150 105,150" },
+        { id: 5, name: "Mesial", points: "0,0 105,150 0,300" },
+        { id: 6, name: "Distal", points: "300,0 300,300 195,150" },
+        { id: 3, name: "Lingual", points: "0,300 300,300 195,150 105,150" },
+    ];
 
+    return (
+        <div className={"w-full h-full grid grid-cols-3 grid-cols-3 items-center"}>
+            <span></span>
+            <select className="select" onChange={(e) => onSelect(2, e.target.value)}>
+                <option value="">Pick a color</option>
                 {surfaceCondition.map((item) => (
                     <option key={item.id} value={item.id}>
                         {item.condition_name}
                     </option>
                 ))}
             </select>
-        );
-    };
-
-    const selected = currentTooth?.selected_surfaces || [];
-
-    const areas = [
-        { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
-        { name: "Mesial", points: "0,0 105,150 0,300" },
-        { name: "Distal", points: "300,0 300,300 195,150" },
-        { name: "Lingual", points: "0,300 300,300 195,150 105,150" },
-    ];
-
-    const handleSelect = (name) => {
-        onSelect?.(name);
-    };
-
-    return (
-        <div className={"w-full h-full grid grid-cols-3 grid-cols-3 items-center"}>
-            <span></span>
-            <SpanOptions surface_id={2} />
             <span></span>
 
-            <SpanOptions surface_id={5} />
+            <select className="select" onChange={(e) => onSelect(5, e.target.value)}>
+                <option value="">Pick a color</option>
+                {surfaceCondition.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.condition_name}
+                    </option>
+                ))}
+            </select>
             <span className={"flex items-center justify-center "}>
                 <div className={`container scale-${skala}`}>
 
@@ -50,12 +38,15 @@ const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition}) => {
 
                     {areas.map((area) => (
                         <polygon
-                            key={area.name}
+                            key={area.id}
                             className={`area ${
-                                selected.includes(area.name) ? "active" : ""
+                                selectedSurface.some(
+                                    item => Number(item.surface_id) === area.id
+                                )
+                                    ? "active"
+                                    : ""
                             }`}
                             points={area.points}
-                            // onClick={() => handleSelect(area.name)}
                         />
                     ))}
 
@@ -68,11 +59,26 @@ const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition}) => {
 
             </div>
             </span>
-            <SpanOptions surface_id={6} />
+            <select className="select" onChange={(e) => onSelect(6, e.target.value)}>
+                <option value="">Pick a color</option>
+                {surfaceCondition.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.condition_name}
+                    </option>
+                ))}
+            </select>
 
             <span></span>
-            <SpanOptions surface_id={3} />
+            <select className="select" onChange={(e) => onSelect(3, e.target.value)}>
+                <option value="">Pick a color</option>
+                {surfaceCondition.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.condition_name}
+                    </option>
+                ))}
+            </select>
             <span></span>
+
         </div>
     );
 };
