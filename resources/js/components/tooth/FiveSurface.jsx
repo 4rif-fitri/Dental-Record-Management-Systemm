@@ -1,12 +1,7 @@
 import React from 'react';
 import "./InteractivePolygon.css";
 
-const FiveSurface = ({
-                         onSelect,
-                         toothNumber,
-                         currentTooth = null,
-                         selectedSurfaces = []
-                     }) => {
+const FiveSurface = ({onSelect,toothNumber,currentTooth = null,selectedSurfaces = []}) => {
 
     const areas = [
         { name: "Buccal", points: "0,0 300,0 195,150 105,150" },

@@ -6,6 +6,7 @@ import BoxFourSurfacee from "./tooth/box/BoxFourSurfacee";
 const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
 
     const handleViewDetail = () => {
+        console.log(procedure)
         setShowUpdateToothProcedure(true)
         setCurrentToothFinding(procedure)
     }

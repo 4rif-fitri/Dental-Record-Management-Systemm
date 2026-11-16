@@ -44,7 +44,8 @@ class ToothFindingController extends Controller
                 'tooth',
                 'condition',
                 'procedure',
-                'surfaces.surface'
+                'surfaces.surface',
+                'surfaces.surfaceCondition'
             ])
             ->get();
 
@@ -129,43 +130,73 @@ class ToothFindingController extends Controller
     public function updateFinding(Request $request, $id)
     {
         $validate = $request->validate([
+
             'condition_id' => 'required|exists:condition,id',
+
             'procedure_id' => 'required|exists:procedure,id',
+
             'finding_description' => 'nullable|string',
+
             'selectedSurfaceIds' => 'required|array|min:1',
-            'selectedSurfaceIds.*' => 'required|exists:surfaces,id',
+
+            'selectedSurfaceIds.*.surface_id' =>
+                'required|exists:surfaces,id',
+
+            'selectedSurfaceIds.*.surface_condition_id' =>
+                'required|exists:surface_conditions,id',
+
         ]);
 
         try {
 
             DB::transaction(function () use ($validate, $id) {
 
+                // Find existing tooth finding
                 $toothFinding = ToothFinding::findOrFail($id);
 
+                // Update main tooth finding
                 $toothFinding->update([
+
                     'condition_id' => $validate['condition_id'],
+
                     'procedure_id' => $validate['procedure_id'],
-                    'finding_description' => $validate['finding_description'] ?? null,
+
+                    'finding_description' =>
+                        $validate['finding_description'] ?? '',
+
                 ]);
 
-                ToothSurface::where('tooth_findings_id', $toothFinding->id)->delete();
+                // Delete existing surfaces
+                ToothSurface::where(
+                    'tooth_findings_id',
+                    $toothFinding->id
+                )->delete();
 
-                foreach ($validate['selectedSurfaceIds'] as $surfaceId) {
+                // Insert updated surfaces and conditions
+                foreach ($validate['selectedSurfaceIds'] as $surface) {
 
                     ToothSurface::create([
+
                         'tooth_findings_id' => $toothFinding->id,
-                        'surface_id' => $surfaceId,
+
+                        'surface_id' => $surface['surface_id'],
+
+                        'surface_condition_id' =>
+                            $surface['surface_condition_id'],
+
                     ]);
 
                 }
 
             });
 
+            // Get updated finding
             $toothFinding = ToothFinding::with([
                 'tooth',
                 'condition',
                 'procedure',
-                'surfaces.surface'
+                'surfaces.surface',
+                'surfaces.surfaceCondition'
             ])->findOrFail($id);
 
             return ApiResponse::success(

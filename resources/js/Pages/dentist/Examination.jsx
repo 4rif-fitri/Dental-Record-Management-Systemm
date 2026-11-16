@@ -204,6 +204,7 @@ const Examination = () => {
                     treatment={treatment}
                     surfaces={surfaces}
                     laodToothFinding={laodToothFinding}
+                    surfaceCondition={surfaceCondition}
                 />
             }
 

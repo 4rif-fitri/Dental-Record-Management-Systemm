@@ -9,8 +9,10 @@ import { route } from "ziggy-js";
 const UpdateToothRecordModal = ({
     setShowUpdateToothProcedure,
     currentToothFinding,conditions, treatment,
-    surfaces, laodToothFinding
+    surfaces, laodToothFinding, surfaceCondition
 }) => {
+
+    console.log(surfaceCondition)
 
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
@@ -84,32 +86,64 @@ const UpdateToothRecordModal = ({
         setNotes(currentToothFinding.finding_description || "");
 
         setSelectedSurfaces(
-            (currentToothFinding.surfaces || []).map(
-                item => item.surface?.surface_name
-            ).filter(Boolean)
+            (currentToothFinding.surfaces || []).map(item => ({
+                surface_id: item.surface_id,
+                surface_name: item.surface?.surface_name,
+                surface_condition_id: item.surface_condition_id,
+                surface_condition: item.surface_condition
+            }))
         );
 
     }, [currentToothFinding, conditions, treatment]);
 
-    const handleSurfaceSelect = (surface) => {
+    const handleSurfaceSelect = (surfaceId, conditionId) => {
 
         setSelectedSurfaces(prev => {
 
-            return prev.includes(surface)
-                ? prev.filter(item => item !== surface)
-                : [...prev, surface];
+            // Remove surface if user selects empty option
+            if (!conditionId) {
+                return prev.filter(
+                    item => Number(item.surface_id) !== Number(surfaceId)
+                );
+            }
+
+            const selectedCondition = surfaceCondition.find(
+                item => Number(item.id) === Number(conditionId)
+            );
+
+            const selectedSurface = surfaces.find(
+                item => Number(item.id) === Number(surfaceId)
+            );
+
+            const newData = {
+                surface_id: Number(surfaceId),
+                surface_name: selectedSurface?.surface_name,
+                surface_condition_id: Number(conditionId),
+                surface_condition: selectedCondition
+            };
+
+            const exists = prev.some(
+                item => Number(item.surface_id) === Number(surfaceId)
+            );
+
+            if (exists) {
+                return prev.map(item =>
+                    Number(item.surface_id) === Number(surfaceId)
+                        ? newData
+                        : item
+                );
+            }
+
+            return [...prev, newData];
 
         });
 
     };
 
-    const selectedSurfaceIds = selectedSurfaces.map(name => {
-
-        return surfaces.find(
-            surface => surface.surface_name === name
-        )?.id;
-
-    }).filter(Boolean);
+    const selectedSurfaceIds = selectedSurfaces.map(item => ({
+        surface_id: item.surface_id,
+        surface_condition_id: item.surface_condition_id
+    }));
 
     const handleCloseModal = () => {
         setShowUpdateToothProcedure(false);
@@ -135,8 +169,12 @@ const UpdateToothRecordModal = ({
             const jsonData = {
                 condition_id: selectedCondition.id,
                 procedure_id: selectedTreatment.id,
-                finding_description: notes,
-                selectedSurfaceIds: selectedSurfaceIds
+                finding_description: notes ?? "",
+
+                selectedSurfaceIds: selectedSurfaces.map(item => ({
+                    surface_id: item.surface_id,
+                    surface_condition_id: item.surface_condition_id
+                }))
             };
 
             const response = await api.put(
@@ -222,12 +260,16 @@ const UpdateToothRecordModal = ({
                                 currentTooth={{...tooth, selected_surfaces: selectedSurfaces}}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurfaces}
                             />
                         ) : (
                             <FourSurfacee
                                 currentTooth={{...tooth,selected_surfaces: selectedSurfaces}}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurfaces}
                             />
                         )}
 
