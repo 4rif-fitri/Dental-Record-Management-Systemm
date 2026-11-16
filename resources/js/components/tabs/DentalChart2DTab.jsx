@@ -4,7 +4,7 @@ import FourSurface from '../tooth/FourSurface';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios.js';
 
-const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,currentTooth }) => {
+const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding,currentTooth }) => {
     console.log(toothFinding)
 
     const [teeth, setTeeth] = useState([]);
@@ -249,4 +249,4 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,cu
     );
 };
 
-export default DentalChart2D;
+export default DentalChart2DTab;

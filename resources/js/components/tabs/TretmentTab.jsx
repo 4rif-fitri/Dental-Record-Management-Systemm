@@ -1,7 +1,7 @@
 import BoxCondition from "../molecules/Examination/BoxCondition.jsx";
 import api from "@/lib/axios.js";
 
-const Tretment = ({
+const TretmentTab = ({
     toothFinding = [], laodToothFinding,
     setShowUpdateToothProcedure, setCurrentToothFinding }) => {
 
@@ -52,4 +52,4 @@ const Tretment = ({
     );
 };
 
-export default Tretment;
+export default TretmentTab;
