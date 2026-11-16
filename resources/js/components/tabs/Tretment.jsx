@@ -1,4 +1,4 @@
-import BoxCondition from "../BoxCondition";
+import BoxCondition from "../molecules/Examination/BoxCondition.jsx";
 import api from "@/lib/axios.js";
 
 const Tretment = ({

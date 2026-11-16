@@ -94,8 +94,7 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
         return [...findings].sort((a, b) => {
 
-            const dateCompare =
-                new Date(b.created_at) - new Date(a.created_at);
+            const dateCompare = new Date(b.created_at) - new Date(a.created_at);
 
             return dateCompare || Number(b.id) - Number(a.id);
 
@@ -135,49 +134,7 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
 
     return (
         <>
-            <div className="flex gap-3 justify-around">
-
-                <div className="flex gap-3 p-1">
-
-                    <button onClick={() => setSelectedDentition("primary")}
-                        className={`p-2 rounded border
-                        ${selectedDentition === "primary" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Primary
-                    </button>
-
-                    <button onClick={() => setSelectedDentition("permanent")}
-                        className={`p-2 rounded border
-                        ${selectedDentition === "permanent" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Permanent
-                    </button>
-
-                </div>
-
-                <div className="flex gap-3 p-1">
-
-                    <button onClick={() => setSelectedJaw("upper")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "upper" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Upper
-                    </button>
-
-                    <button onClick={() => setSelectedJaw("lower")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "lower" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Lower
-                    </button>
-
-                    <button onClick={() => setSelectedJaw("all")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "all" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        All
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div className="h-150 gap-0 bg-black overflow-hidden">
+            <div className="h-120 gap-0 bg-black overflow-hidden">
 
                 <Canvas
                     key={selectedDentition}
@@ -267,6 +224,44 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                     })}
 
                 </Canvas>
+
+            </div>
+            <div className="flex flex-wrap gap-4">
+
+                <div className="flex items-center gap-3 p-1">
+
+                    <label className="font-semibold">
+                        Dentition:
+                    </label>
+
+                    <select
+                        className="select select-bordered w-full max-w-xs"
+                        value={selectedDentition}
+                        onChange={(e) => setSelectedDentition(e.target.value)}
+                    >
+                        <option value="primary">Primary</option>
+                        <option value="permanent">Permanent</option>
+                    </select>
+
+                </div>
+
+                <div className="flex items-center gap-3 p-1">
+
+                    <label className="font-semibold">
+                        Jaw:
+                    </label>
+
+                    <select
+                        className="select select-bordered w-full max-w-xs"
+                        value={selectedJaw}
+                        onChange={(e) => setSelectedJaw(e.target.value)}
+                    >
+                        <option value="upper">Upper</option>
+                        <option value="lower">Lower</option>
+                        <option value="all">All</option>
+                    </select>
+
+                </div>
 
             </div>
         </>

@@ -3,7 +3,6 @@ import MainLayout from "../../layout/mainLayout";
 import PatientDetails from "@/components/tabs/PatientDetailsTab";
 import ConsentTab from "@/components/tabs/ConsentTab";
 import DentalChart2D from "@/components/tabs/DentalChart2D";
-import PenandaWarna from "@/components/PenandaWarna";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
 import Tretment from "@/components/tabs/Tretment";
 import Medicine from "@/components/modal/MedicineModal";
@@ -11,9 +10,10 @@ import ToothProcedure from "@/components/modal/ToothRecord";
 import PageTitle from "@/components/layout/PageTitle.jsx";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
 import UpdateToothProcedure from "@/components/modal/UpdateToothRecordModal.jsx";
+import MedicineTab from "@/components/tabs/MedicineTabb.jsx";
+import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
-import MedicineTab from "@/components/tabs/MedicineTabb.jsx";
 
 let linkTabs = [
     { text: "patient", label: "Patient Details" },
@@ -43,6 +43,8 @@ const Examination = () => {
     const [currentToothFinding, setCurrentToothFinding] = useState(null);
     const [selectedMedicine, setSelectedMedicine] = useState(null);
 
+    const [activeFilter, setActiveFilter] = useState("ALL");
+
     const [isLoading, setIsLoading] = useState(true);
 
     const laodToothFinding = async () => {
@@ -59,6 +61,12 @@ const Examination = () => {
             console.log(error);
         }
     }
+
+    const filteredToothFinding = activeFilter === "ALL"
+        ? toothFinding
+        : toothFinding.filter(
+            item => item.status === activeFilter
+        );
 
     const getExaminationMedicine = async () => {
         try {
@@ -214,6 +222,27 @@ const Examination = () => {
                 <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
                    <TabsHeader setActiveTab={setActiveTab} linkTabs={linkTabs} activeTab={activeTab} />
 
+                    {(activeTab === "chart" || activeTab === "3d") && (
+                        <div className="flex items-center gap-3 mt-3 border-t pt-3">
+
+                            <label className="font-semibold">
+                                Filter:
+                            </label>
+
+                            <select
+                                className="select select-bordered w-full max-w-xs"
+                                value={activeFilter}
+                                onChange={(e) => setActiveFilter(e.target.value)}
+                            >
+                                <option value="ALL">All Status</option>
+                                <option value="Planning">Planning</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+
+                        </div>
+                    )}
+
                     <div className="w-full h-auto bg-white rounded mt-2">
                         {activeTab === "patient" &&
                             <PatientDetails
@@ -226,13 +255,13 @@ const Examination = () => {
                                 setShowToothProcedure={setShowToothProcedure}
                                 setCurrentTooth={setCurrentTooth}
                                 currentTooth={currentTooth}
-                                toothFinding={toothFinding}
+                                toothFinding={filteredToothFinding}
                             />
                         }
 
                         {activeTab === "3d" &&
                             <DentalChart3D
-                                toothFinding={toothFinding}
+                                toothFinding={filteredToothFinding}
                                 onSelect={handleToothSelect}
                             />
                         }
@@ -261,7 +290,7 @@ const Examination = () => {
 
                 {activeTab === "chart" || activeTab === "3d" ?
                     <Tretment
-                        toothFinding={toothFinding}
+                        toothFinding={filteredToothFinding}
                         laodToothFinding={laodToothFinding}
                         setShowUpdateToothProcedure={setShowUpdateToothProcedure}
                         setCurrentToothFinding={setCurrentToothFinding}

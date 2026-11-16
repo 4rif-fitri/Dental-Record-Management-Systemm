@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MainLayout from "@/layout/MainLayout.jsx";
 import PageTitle from "@/components/layout/PageTitle.jsx";
-import api from "@/lib/axios.js";
-import { route } from "ziggy-js";
-import Swal from "sweetalert2";
 import TreatmentModal from "@/components/modal/TreatmentModal.jsx";
 import Notreatmentsfound from "@/components/molecules/Treatment/NoTreamentsFound.jsx";
 import Loadingtreatment from "@/components/molecules/Treatment/LoadingTreatment.jsx";
 import ContentTreatment from "@/components/molecules/Treatment/ContentTreatment.jsx";
+import api from "@/lib/axios.js";
+import { route } from "ziggy-js";
+import Swal from "sweetalert2";
 
 const initialForm = {
     procedure_name: "",

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import BoxFiveSurface from "./tooth/box/BoxFiveSurfacee";
-import BoxFourSurfacee from "./tooth/box/BoxFourSurfacee";
+import BoxFiveSurface from "../../tooth/box/BoxFiveSurfacee";
+import BoxFourSurfacee from "../../tooth/box/BoxFourSurfacee";
 
 const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
 
