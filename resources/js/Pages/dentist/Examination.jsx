@@ -33,6 +33,7 @@ const Examination = () => {
     const [toothFinding, setToothFinding] = useState([]);
     const [tooth, setTooth] = useState([]);
     const [examinationMedicine, setExaminationMedicine] = useState([])
+    const [surfaceCondition, setSurfaceCondition] = useState([])
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
@@ -91,7 +92,10 @@ const Examination = () => {
                 medicineResponse,
                 toothFindingResponse,
                 toothResponse,
-                examinationMedicineResponse
+                examinationMedicineResponse,
+                surfaceConditionResponse,
+
+
             ] = await Promise.all([
 
                 api.get(route('getPatientById', { id })),
@@ -102,6 +106,7 @@ const Examination = () => {
                 api.get(route('getFindingByPatientId', { id })),
                 api.get(route('getAllTooth')),
                 api.get(route('getExaminationMedicineByPatientId', { id })),
+                api.get(route('getAllSurfaceCondition')),
 
             ]);
 
@@ -113,6 +118,7 @@ const Examination = () => {
             setToothFinding(toothFindingResponse.data);
             setTooth(toothResponse.data);
             setExaminationMedicine(examinationMedicineResponse.data ?? []);
+            setSurfaceCondition(surfaceConditionResponse.data)
 
         } catch (error) {
 
@@ -186,6 +192,7 @@ const Examination = () => {
                     surfaces={surfaces}
                     patientDetails={patientDetails}
                     laodToothFinding={laodToothFinding}
+                    surfaceCondition={surfaceCondition}
                 />
             }
 
@@ -217,6 +224,7 @@ const Examination = () => {
                             <DentalChart2D
                                 setShowToothProcedure={setShowToothProcedure}
                                 setCurrentTooth={setCurrentTooth}
+                                currentTooth={currentTooth}
                                 toothFinding={toothFinding}
                             />
                         }

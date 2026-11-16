@@ -1,19 +1,20 @@
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
-
-    const SpanOptions = () => {
+const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition}) => {
+    console.log(surfaceCondition)
+    const SpanOptions = ({ surface_id }) => {
         return (
-            <span className={"border"}>
-                <select className={"w-full p-1"}>
-                    <option>asd</option>
-                    <option>asd</option>
-                    <option>asd</option>
-                </select>
-            </span>
-        )
-    }
+            <select onChange={(e) => onSelect(surface_id, e.target.value)}
+                    className="select"
+            >
+                <option disabled selected>Pick a color</option>
+                <option>Crimson</option>
+                <option>Amber</option>
+                <option>Velvet</option>
+            </select>
+        );
+    };
 
     const selected = currentTooth?.selected_surfaces || [];
 
@@ -31,10 +32,10 @@ const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
     return (
         <div className={"w-full h-full grid grid-cols-3 grid-cols-3 items-center"}>
             <span></span>
-            <SpanOptions />
+            <SpanOptions surface_id={2} />
             <span></span>
 
-            <SpanOptions />
+            <SpanOptions surface_id={5} />
             <span className={"flex items-center justify-center "}>
                 <div className={`container scale-${skala}`}>
 
@@ -60,10 +61,10 @@ const FourSurfacee = ({ onSelect, currentTooth , skala}) => {
 
             </div>
             </span>
-            <SpanOptions />
+            <SpanOptions surface_id={6} />
 
             <span></span>
-            <SpanOptions />
+            <SpanOptions surface_id={3} />
             <span></span>
         </div>
     );

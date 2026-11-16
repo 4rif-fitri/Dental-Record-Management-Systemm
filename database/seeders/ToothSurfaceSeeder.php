@@ -13,12 +13,14 @@ class ToothSurfaceSeeder extends Seeder
             [
                 'tooth_findings_id' => 1,
                 'surface_id' => 5,
+                'surface_condition_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'tooth_findings_id' => 1,
                 'surface_id' => 1,
+                'surface_condition_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

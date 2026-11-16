@@ -7,9 +7,11 @@ import Swal from "sweetalert2";
 const ToothRecord = ({
     laodToothFinding,
     patientDetails, setShowToothProcedure,currentTooth,
-    setCurrentTooth, conditions,treatment, surfaces
+    setCurrentTooth, conditions,treatment, surfaces,
+    surfaceCondition
 }) => {
 
+    const [selectedSurface, setSelectedSurface] = useState([]);
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
     const [notes, setNotes] = useState("");
@@ -29,7 +31,7 @@ const ToothRecord = ({
             condition_id: selectedCondition.id,
             tooth_id: currentTooth.id,
             status: "Planning",
-            selectedSurfaceIds: selectedSurfaceIds,
+            selected_surfaces: selectedSurface,
             finding_description: notes
         };
 
@@ -64,26 +66,31 @@ const ToothRecord = ({
         setShowToothProcedure(false);
     };
 
-    const handleSurfaceSelect = (surface) => {
-        setCurrentTooth(prev => {
-            if (!prev) return prev;
+    const handleSurfaceSelect = (surface_id, condition_id) => {
+        setSelectedSurface(prevState => {
+            const existing = prevState.find(item => item.surface === surface);
 
-            const selected = prev.selected_surfaces || [];
+            if (existing) {
+                return prevState.map(item =>
+                    item.surface === surface
+                        ? { ...item, conditionName }
+                        : item
+                );
+            }
 
-            const updated = selected.includes(surface)
-                ? selected.filter(item => item !== surface)
-                : [...selected, surface];
-
-            return {
-                ...prev,
-                selected_surfaces: updated
-            };
+            return [
+                ...prevState,
+                {
+                    surface,
+                    conditionName
+                }
+            ];
         });
     };
 
     useEffect(()=>{
-        console.log(currentTooth)
-    },[currentTooth])
+        console.log(selectedSurface)
+    },[selectedSurface])
 
     if (!currentTooth) return null;
 
@@ -116,12 +123,14 @@ const ToothRecord = ({
                                 currentTooth={currentTooth}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
                             />
                         ) : (
                             <FourSurfacee
                                 currentTooth={currentTooth}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
                             />
                         )}
 

@@ -1,21 +1,18 @@
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FiveSurfacee = ({ onSelect, currentTooth, skala }) => {
+const FiveSurfacee = ({ onSelect, currentTooth, skala, surfaceCondition }) => {
 
-    const SpanOptions = ({ surface }) => {
+    const SpanOptions = ({ surface_id }) => {
         return (
-            <span className="border">
-            <select
-                defaultValue="None"
-                onChange={(e) => onSelect(surface, e.target.value)}
-                className="w-full p-1"
+            <select onChange={(e) => onSelect(surface_id, e.target.value)}
+                className="select"
             >
-                <option value="None">None</option>
-                <option value="condition1">Condition 1</option>
-                <option value="condition2">Condition 2</option>
+                <option disabled selected>Pick a color</option>
+                <option>Crimson</option>
+                <option>Amber</option>
+                <option>Velvet</option>
             </select>
-        </span>
         );
     };
 
@@ -31,10 +28,10 @@ const FiveSurfacee = ({ onSelect, currentTooth, skala }) => {
     return (
         <div className={"w-full h-full grid grid-cols-3 grid-cols-3 items-center"}>
             <span></span>
-            <SpanOptions surface={"Buccal"} />
+            <SpanOptions surface_id={7} />
             <span></span>
 
-            <SpanOptions surface={"Mesial"} />
+            <SpanOptions surface_id={5} />
             <span className={"flex items-center justify-center "}>
                 <div className={`container  scale-${skala}`}>
 
@@ -69,11 +66,11 @@ const FiveSurfacee = ({ onSelect, currentTooth, skala }) => {
             />
         </div>
             </span>
-            <SpanOptions surface={"Distal"} />
+            <SpanOptions surface_id={6} />
 
             <span></span>
-            <SpanOptions surface={"Lingual"} />
-            <SpanOptions surface={"Occlusal"} />
+            <SpanOptions surface_id={1} />
+            <SpanOptions surface_id={4} />
         </div>
     );
 };

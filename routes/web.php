@@ -15,6 +15,7 @@ use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\AppointmentBookingController;
 use App\Http\Controllers\ExaminationMedicineController;
 use App\Http\Controllers\ToothSurfaceController;
+use App\Http\Controllers\SurfaceConditionController;
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -207,6 +208,11 @@ Route::middleware('auth')->group(function () {
         Route::put('update/{id}', [ToothFindingController::class, 'updateFinding'])->name('updateFinding');
         Route::put('update/status/{id}', [ToothFindingController::class, 'updateFindingStatus'])->name('updateFindingStatus');
         Route::delete('delete/{id}', [ToothFindingController::class, 'deleteFinding'])->name('deleteFinding');
+    });
+
+    Route::prefix('surfaceCondition')->group(function () {
+        Route::get('/',[SurfaceConditionController::class, 'getAllSurfaceCondition'])->name('getAllSurfaceCondition');
+
     });
 
 });

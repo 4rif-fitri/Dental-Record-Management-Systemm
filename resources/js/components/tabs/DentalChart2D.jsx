@@ -4,7 +4,7 @@ import FourSurface from '../tooth/FourSurface';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios.js';
 
-const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding }) => {
+const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding,currentTooth }) => {
     console.log(toothFinding)
 
     const [teeth, setTeeth] = useState([]);
@@ -26,21 +26,12 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
     }, []);
 
     const handleClickSurface = (tooth, surface) => {
-        setCurrentTooth(prev => {
-            const existing =
-                prev?.tooth_number === tooth.tooth_number
-                    ? prev.selected_surfaces || []
-                    : [];
+        const updatedTooth = {
+            ...tooth,
+            selected_surfaces: []
+        };
 
-            const updated = existing.includes(surface)
-                ? existing.filter(item => item !== surface)
-                : [...existing, surface];
-
-            return {
-                ...tooth,
-                selected_surfaces: updated
-            };
-        });
+        setCurrentTooth(updatedTooth);
 
         setShowToothProcedure(true);
     };
@@ -67,7 +58,7 @@ const DentalChart2D = ({ setShowToothProcedure, setCurrentTooth, toothFinding })
                 toothNumber={tooth.tooth_number}
                 currentTooth={latestFinding}
                 onSelect={(surface) =>
-                    handleClickSurface(tooth, surface)
+                    handleClickSurface(tooth, "")
                 }
             />
         );
