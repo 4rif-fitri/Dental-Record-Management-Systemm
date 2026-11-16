@@ -12,8 +12,6 @@ const UpdateToothRecordModal = ({
     surfaces, laodToothFinding, surfaceCondition
 }) => {
 
-    console.log(surfaceCondition)
-
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
     const [selectedSurfaces, setSelectedSurfaces] = useState([]);
@@ -220,7 +218,7 @@ const UpdateToothRecordModal = ({
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 text-black">
 
-            <div className="w-[95vw] lg:w-[75vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
+            <div className="w-[95vw] lg:w-[50vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
 
                 <div className="mb-4 flex flex-wrap justify-between items-center">
                     <h2 className="font-bold text-3xl">
@@ -235,21 +233,33 @@ const UpdateToothRecordModal = ({
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
 
-                    <div className="border-2 border-gray-300 p-2">
-
-                        <div className="relative flex justify-center items-center h-60 bg-gray-100">
-
+                    <div className="p-2 flex gap-2 flex-col w-full">
+                        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+                            <table className="table">
+                                <tbody>
+                                <tr>
+                                    <td>Tooth Name</td>
+                                    <td>{currentToothFinding.tooth.tooth_name}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Number</td>
+                                    <td>{currentToothFinding.tooth.tooth_number}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Type</td>
+                                    <td>{currentToothFinding.tooth.tooth_type}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Jaw</td>
+                                    <td>{currentToothFinding.tooth.jaw}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Quadrant</td>
+                                    <td>{currentToothFinding.tooth.quadrant}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div className={"grid grid-cols-2 mt-2 gap-2"}>
-                            <button type="button" className={"btn btn-outline"}>
-                                Surface
-                            </button>
-                            <button type="button" className={"btn btn-outline"}>
-                                Cross Section
-                            </button>
-                        </div>
-
                     </div>
 
 
@@ -280,7 +290,7 @@ const UpdateToothRecordModal = ({
 
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">
-                        <div className={"grid grid-cols-1 md:grid-cols-2 gap-4"}>
+                        <div className={"grid grid-cols-1 md:grid-cols-1 gap-4"}>
                             <div>
                                 <label className="text-2xl font-medium">Condition</label>
                                 <select name="condition"
@@ -299,7 +309,7 @@ const UpdateToothRecordModal = ({
                                     </option>
                                     {conditions.map((data) => (
                                         <option key={data.id} value={data.id}>
-                                            {data.condition_name}
+                                            {data.condition_code} - {data.condition_name}
                                         </option>
                                     ))}
 

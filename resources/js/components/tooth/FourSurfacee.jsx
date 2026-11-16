@@ -2,13 +2,7 @@
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FourSurfacee = ({
-                          onSelect,
-                          currentTooth,
-                          skala,
-                          surfaceCondition,
-                          selectedSurface = []
-                      }) => {
+const FourSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurface = []}) => {
 
     const areas = [
         { id: 2, name: "Incisal", points: "0,0 300,0 195,150 105,150" },
@@ -21,47 +15,53 @@ const FourSurfacee = ({
 
         <div className="w-full h-full grid grid-cols-3 items-center">
 
-            <span></span>
+            <span className={"font-semibold"}>Surfce Condition</span>
 
             {/* Incisal - ID 2 */}
-            <select
-                className="select"
-                value={
-                    selectedSurface.find(
-                        item => Number(item.surface_id) === 2
-                    )?.surface_condition_id ?? ""
-                }
-                onChange={(e) => onSelect(2, e.target.value)}
-            >
-                <option value="">Pick a color</option>
+            <div>
+                <h1>Incisal</h1>
+                <select
+                    className="select"
+                    value={
+                        selectedSurface.find(
+                            item => Number(item.surface_id) === 2
+                        )?.surface_condition_id ?? ""
+                    }
+                    onChange={(e) => onSelect(2, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
 
-                {surfaceCondition.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.condition_name}
-                    </option>
-                ))}
-            </select>
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <span></span>
 
             {/* Mesial - ID 5 */}
-            <select
-                className="select"
-                value={
-                    selectedSurface.find(
-                        item => Number(item.surface_id) === 5
-                    )?.surface_condition_id ?? ""
-                }
-                onChange={(e) => onSelect(5, e.target.value)}
-            >
-                <option value="">Pick a color</option>
+            <div>
+                <h1>Mesial</h1>
+                <select
+                    className="select"
+                    value={
+                        selectedSurface.find(
+                            item => Number(item.surface_id) === 5
+                        )?.surface_condition_id ?? ""
+                    }
+                    onChange={(e) => onSelect(5, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
 
-                {surfaceCondition.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.condition_name}
-                    </option>
-                ))}
-            </select>
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             {/* Tooth diagram */}
             <span className="flex items-center justify-center">
@@ -97,44 +97,44 @@ const FourSurfacee = ({
             </span>
 
             {/* Distal - ID 6 */}
-            <select
-                className="select"
-                value={
-                    selectedSurface.find(
-                        item => Number(item.surface_id) === 6
-                    )?.surface_condition_id ?? ""
-                }
-                onChange={(e) => onSelect(6, e.target.value)}
-            >
-                <option value="">Pick a color</option>
+            <div>
+                <h1>Distal</h1>
+                <select
+                    className="select"
+                    value={
+                        selectedSurface.find(
+                            item => Number(item.surface_id) === 6
+                        )?.surface_condition_id ?? ""
+                    }
+                    onChange={(e) => onSelect(6, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
 
-                {surfaceCondition.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.condition_name}
-                    </option>
-                ))}
-            </select>
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <span></span>
 
             {/* Lingual - ID 3 */}
-            <select
-                className="select"
-                value={
-                    selectedSurface.find(
-                        item => Number(item.surface_id) === 3
-                    )?.surface_condition_id ?? ""
-                }
-                onChange={(e) => onSelect(3, e.target.value)}
-            >
-                <option value="">Pick a color</option>
+            <div>
+                <h1>Lingual</h1>
+                <select className="select"
+                    value={selectedSurface.find(item => Number(item.surface_id) === 3 )?.surface_condition_id ?? ""}
+                    onChange={(e) => onSelect(3, e.target.value)}>
 
-                {surfaceCondition.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.condition_name}
-                    </option>
-                ))}
-            </select>
+                    <option value="">Pick a color</option>
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}Q
+                </select>
+            </div>
 
             <span></span>
 

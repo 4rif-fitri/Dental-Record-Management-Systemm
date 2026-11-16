@@ -3,10 +3,7 @@ import { route } from 'ziggy-js';
 import Swal from 'sweetalert2';
 import api from "@/lib/axios.js";
 
-const ConsentTab = ({
-                        patientDetails,
-                        setPatientDetails
-                    }) => {
+const ConsentTab = ({patientDetails,setPatientDetails}) => {
 
     const canvasRef = useRef(null);
 

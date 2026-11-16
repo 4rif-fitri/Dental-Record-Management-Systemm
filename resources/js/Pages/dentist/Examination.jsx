@@ -213,6 +213,7 @@ const Examination = () => {
                     surfaces={surfaces}
                     laodToothFinding={laodToothFinding}
                     surfaceCondition={surfaceCondition}
+                    currentTooth={currentTooth}
                 />
             }
 
