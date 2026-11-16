@@ -2,16 +2,23 @@ import React from "react";
 import "./InteractivePolygon.css";
 
 const FourSurfacee = ({ onSelect, currentTooth , skala, surfaceCondition}) => {
-    console.log(surfaceCondition)
+
     const SpanOptions = ({ surface_id }) => {
         return (
-            <select onChange={(e) => onSelect(surface_id, e.target.value)}
-                    className="select"
+            <select
+                onChange={(e) => onSelect(surface_id, e.target.value)}
+                className="select"
+                defaultValue=""
             >
-                <option disabled selected>Pick a color</option>
-                <option>Crimson</option>
-                <option>Amber</option>
-                <option>Velvet</option>
+                <option value="" disabled>
+                    Pick a color
+                </option>
+
+                {surfaceCondition.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.condition_name}
+                    </option>
+                ))}
             </select>
         );
     };

@@ -31,9 +31,11 @@ const ToothRecord = ({
             condition_id: selectedCondition.id,
             tooth_id: currentTooth.id,
             status: "Planning",
-            selected_surfaces: selectedSurface,
+            selectedSurfaceIds: selectedSurface,
             finding_description: notes
         };
+
+        console.log(jsonData)
 
         try {
             const response = await api.post(
@@ -52,6 +54,10 @@ const ToothRecord = ({
 
         } catch (error) {
 
+            console.log("STATUS:", error.response?.status);
+            console.log("VALIDATION ERRORS:", error.response?.data?.errors);
+            console.log("FULL RESPONSE:", error.response?.data);
+
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -68,12 +74,18 @@ const ToothRecord = ({
 
     const handleSurfaceSelect = (surface_id, condition_id) => {
         setSelectedSurface(prevState => {
-            const existing = prevState.find(item => item.surface === surface);
+
+            const existing = prevState.find(
+                item => item.surface_id === Number(surface_id)
+            );
 
             if (existing) {
                 return prevState.map(item =>
-                    item.surface === surface
-                        ? { ...item, conditionName }
+                    item.surface_id === Number(surface_id)
+                        ? {
+                            ...item,
+                            surface_condition_id: Number(condition_id)
+                        }
                         : item
                 );
             }
@@ -81,8 +93,8 @@ const ToothRecord = ({
             return [
                 ...prevState,
                 {
-                    surface,
-                    conditionName
+                    surface_id: Number(surface_id),
+                    surface_condition_id: Number(condition_id)
                 }
             ];
         });
