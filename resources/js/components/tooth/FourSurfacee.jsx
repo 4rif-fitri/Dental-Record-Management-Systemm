@@ -15,7 +15,7 @@ const FourSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
 
         <div className="w-full h-full grid grid-cols-3 items-center">
 
-            <span className={"font-semibold"}>Surfce Condition</span>
+            <span></span>
 
             {/* Incisal - ID 2 */}
             <div>

@@ -222,7 +222,7 @@ const UpdateToothRecordModal = ({
 
                 <div className="mb-4 flex flex-wrap justify-between items-center">
                     <h2 className="font-bold text-3xl">
-                        Update Tooth Treatment
+                        Update Tooth Record
                     </h2>
                     <button type="button" onClick={handleCloseModal}
                         className="btn bg-black text-white w-24">
@@ -231,7 +231,9 @@ const UpdateToothRecordModal = ({
                 </div>
 
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 mb-8">
+                    <h1 className={"font-semibold"}>Tooth Detail</h1>
+                    <h1 className={"font-semibold"}>Surface Condition</h1>
 
                     <div className="p-2 flex gap-2 flex-col w-full">
                         <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
@@ -292,9 +294,9 @@ const UpdateToothRecordModal = ({
                     <div className="flex flex-col gap-2">
                         <div className={"grid grid-cols-1 md:grid-cols-1 gap-4"}>
                             <div>
-                                <label className="text-2xl font-medium">Condition</label>
+                                <label className="text-2xl font-medium">Tooth Condition</label>
                                 <select name="condition"
-                                    className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    className="w-full select"
                                     value={selectedCondition.id ?? ""}
                                     onChange={(e) => {
                                         const id = e.target.value;
@@ -319,7 +321,7 @@ const UpdateToothRecordModal = ({
                             <div>
                                 <label className="text-2xl font-medium">Treatment</label>
                                 <select name="treatment"
-                                    className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    className="w-full select"
                                     value={selectedTreatment.id ?? ""}
                                     onChange={(e) => {
                                         const id = e.target.value;
