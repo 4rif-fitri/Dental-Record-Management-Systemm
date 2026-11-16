@@ -10,7 +10,7 @@ import ToothProcedure from "@/components/modal/ToothRecordModal";
 import PageTitle from "@/components/atom/PageTitle";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
 import UpdateToothProcedure from "@/components/modal/UpdateToothRecordModal.jsx";
-import MedicineTab from "@/components/tabs/MedicineTabb.jsx";
+import MedicineTab from "@/components/tabs/MedicineTab.jsx";
 import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
