@@ -152,16 +152,11 @@ const MedicineTab = ({
                         ))
 
                     ) : (
-
                         <tr>
-                            <td
-                                colSpan="5"
-                                className="text-center py-8 text-gray-500"
-                            >
+                            <td colSpan="5" className="text-center py-8 text-gray-500">
                                 No medicine prescribed yet.
                             </td>
                         </tr>
-
                     )}
 
                     </tbody>

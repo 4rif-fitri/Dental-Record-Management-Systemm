@@ -140,13 +140,8 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
         <>
             <div className="h-120 gap-0 bg-black overflow-hidden">
 
-                <Canvas
-                    key={selectedDentition}
-                    camera={{ position: [0, 0.25, 0.75] }}
-                >
-
+                <Canvas key={selectedDentition} camera={{ position: [0, 0.25, 0.75] }}>
                     <ambientLight intensity={2} />
-
                     <OrbitControls />
 
                     {selectedJaw !== "lower" && (

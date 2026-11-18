@@ -13,32 +13,20 @@ export default function Tooth({
     const { scene } = useGLTF(model);
     const [selected, setSelected] = useState(false);
 
-    console.log(scene)
-
     const defaultColor = "";
 
     useEffect(() => {
 
         scene.traverse((child) => {
-
             if (!child.isMesh) return;
-
-            const materials = Array.isArray(child.material)
-                ? child.material
-                : [child.material];
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
 
             materials.forEach((material) => {
 
-                console.log("Material:", material.name);
-
-                if (material.name === "L") {
-                    material.color.set("#000000");
-                }
+                material.color.set(conditionColor);
 
             });
-
         });
-
     }, [scene]);
 
     const handleClick = (event) => {
