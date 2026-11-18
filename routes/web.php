@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    Route::middleware('role:clinic_staff')->group(function () {
+    Route::middleware('role:clinicStaff')->group(function () {
         Route::get('/list-queue', [QueueController::class, 'listQueue'])->name('listQueue');
     });
 

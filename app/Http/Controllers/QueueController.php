@@ -201,7 +201,7 @@ class QueueController extends Controller
 
             $queue = Queue::findOrFail($id);
 
-            if ($queue->status !== 'Waiting') {
+            if ($queue->status !== 'waiting') {
                 return response()->json([
                     'status' => 422,
                     'message' => 'This queue has already been called or processed.',

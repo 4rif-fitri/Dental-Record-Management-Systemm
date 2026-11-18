@@ -1,10 +1,12 @@
 
 import React from 'react';
-import { Link } from "@inertiajs/react";
+import {Link, usePage} from "@inertiajs/react";
 
 const QueueTable = ({
     queues = [], role, isLoading, callingId, onCallQueue
 }) => {
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const getStatusBadge = (status) => {
         switch (status) {
@@ -33,7 +35,7 @@ const QueueTable = ({
                         <th>IC/Passport Number</th>
                         <th>Create At</th>
                         <th>Status</th>
-                        {role === "dentist" && <th>Action</th> }
+                        {currentRole === "dentist" && <th>Action</th>}
                     </tr>
 
                     </thead>
@@ -43,7 +45,7 @@ const QueueTable = ({
 
                         <tr>
                             <td
-                                colSpan={role !== "Clinic Staff" ? 6 : 5}
+                                colSpan={currentRole !== "Clinic Staff" ? 6 : 5}
                                 className="text-center py-8"
                             >
                                 Loading queue...
@@ -54,7 +56,7 @@ const QueueTable = ({
 
                         <tr>
                             <td
-                                colSpan={role !== "Clinic Staff" ? 6 : 5}
+                                colSpan={role !== "clinicStaff" ? 6 : 5}
                                 className="text-center py-8"
                             >
                                 No queue available today.
@@ -103,7 +105,7 @@ const QueueTable = ({
 
                                 <td className="flex gap-2">
 
-                                    {queue.status === "Waiting" && (
+                                    {queue.status === "waiting" && (
                                         <button
                                             onClick={() => onCallQueue(queue.id)}
                                             className="btn btn-primary font-semibold h-7"
@@ -112,7 +114,7 @@ const QueueTable = ({
                                         </button>
                                     )}
 
-                                    {role === "dentist" && (
+                                    {currentRole === "dentist" && (
                                         <>
                                             <Link
                                                 href={`/dentist-examination/${queue.patient_id}`}

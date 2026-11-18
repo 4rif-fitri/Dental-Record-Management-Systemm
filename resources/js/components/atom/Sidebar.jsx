@@ -40,7 +40,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             },
         ],
 
-        clinic_staff: [
+        clinicStaff: [
             {
                 title: "Clinic Staff",
                 items: [

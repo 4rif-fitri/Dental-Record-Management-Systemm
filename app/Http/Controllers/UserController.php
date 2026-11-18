@@ -72,7 +72,7 @@ class UserController extends Controller
             return redirect()->route('patientAppointment');
         }else if(session('role') === 'dentist'){
             return redirect()->route('dentistListAppointment');
-        }else if(session('role') === 'clinic_staff'){
+        }else if(session('role') === 'clinicStaff'){
             return redirect()->route('listQueue');
         }
     }
