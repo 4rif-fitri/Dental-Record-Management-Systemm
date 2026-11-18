@@ -94,16 +94,10 @@ const QueueListModal = ({ setShowPopup, role }) => {
             <div className="rounded-xl bg-white p-6 shadow-xl">
 
                 <div className="mb-4 flex flex-wrap justify-between">
-
                     <PageTitle title={"Queue List"} />
-
-                    <button
-                        onClick={() => setShowPopup(false)}
-                        className="btn btn-neutral"
-                    >
+                    <button onClick={() => setShowPopup(false)} className="btn btn-neutral">
                         Close
                     </button>
-
                 </div>
 
                 <QueueTable

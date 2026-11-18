@@ -360,7 +360,7 @@ const UpdateToothRecordModal = ({
                             type="button"
                             disabled={loading}
                             onClick={handleDelete}
-                            className="w-full mt-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xl disabled:opacity-50"
+                            className="btn btn-error"
                         >
                             Delete
                         </button>
@@ -368,7 +368,7 @@ const UpdateToothRecordModal = ({
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full mt-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xl disabled:opacity-50"
+                            className="btn btn-primary"
                         >
                             {loading ? "Updating..." : "Update"}
                         </button>

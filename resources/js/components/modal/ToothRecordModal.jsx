@@ -240,7 +240,7 @@ const ToothRecordModal = ({
 
                     </div>
 
-                    <button type="submit" className="w-full mt-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xl">
+                    <button type="submit" className="btn btn-pr">
                         Save
                     </button>
 

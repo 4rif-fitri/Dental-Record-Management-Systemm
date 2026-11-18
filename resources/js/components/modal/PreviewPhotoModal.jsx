@@ -9,27 +9,18 @@ const PreviewPhotoModal = ({showPreviewPhoto}) => {
 
             <div className="w-[95vw] sm:w-[80vw] lg:w-[40vw] max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 sm:p-10 shadow-xl">
 
-                {/* Header */}
                 <div className="flex justify-between items-center mb-6">
-
                     <h2 className="font-bold text-3xl">
                         Preview Photo
                     </h2>
-
-                    <button
-                        onClick={() => setShowPreviewPhoto(false)}
-                        className="btn"
-                    >
+                    <button onClick={() => setShowPreviewPhoto(false)}className="btn">
                         Close
                     </button>
-
                 </div>
 
-                {/* Image */}
                 <div className="w-full h-[350px] border-2 border-gray-300 flex justify-center items-center overflow-hidden">
 
-                        <img
-                            src={photo.preview || photo}
+                        <img src={photo.preview || photo}
                             alt="Dental Record"
                             className="w-full h-full object-contain"
                         />

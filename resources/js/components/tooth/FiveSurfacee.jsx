@@ -4,20 +4,28 @@ import "./InteractivePolygon.css";
 
 const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurface = []}) => {
 
-    const areas = [
-        { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
-        { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
-        { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
-        { id: 3, name: "Lingual", points: "0,300 300,300 195,180 105,180" },
-    ];
+    let areas
+    if(currentTooth.jaw === "upper"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 1, name: "Palatal", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }else if(currentTooth.jaw === "lower"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 3, name: "Lingual", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }
 
     return (
 
         <div className="w-full h-full grid grid-cols-3 gap-2 items-center">
-
             <span></span>
 
-            {/* Buccal - ID 7 */}
             <div>
                 <h1>Buccal</h1>
                 <select className="select"
@@ -35,16 +43,11 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
 
             <span></span>
 
-            {/* Mesial - ID 5 */}
             <div>
                 <h1>Mesial</h1>
                 <select
                     className="select"
-                    value={
-                        selectedSurface.find(
-                            item => Number(item.surface_id) === 5
-                        )?.surface_condition_id ?? ""
-                    }
+                    value={selectedSurface.find(item => Number(item.surface_id) === 5 )?.surface_condition_id ?? ""}
                     onChange={(e) => onSelect(5, e.target.value)}
                 >
                     <option value="">Pick a color</option>
@@ -67,14 +70,7 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
                         {areas.map((area) => (
                             <polygon
                                 key={area.id}
-                                className={`area ${
-                                    selectedSurface.some(
-                                        item =>
-                                            Number(item.surface_id) === area.id
-                                    )
-                                        ? "active"
-                                        : ""
-                                }`}
+                                className={`area ${selectedSurface.some(item => Number(item.surface_id) === area.id) ? "active" : "" }`}
                                 points={area.points}
                             />
                         ))}
@@ -87,21 +83,12 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
                     <div className="content bottom-content"></div>
 
                     {/* Occlusal - ID 4 */}
-                    <div
-                        className={`center ${
-                            selectedSurface.some(
-                                item => Number(item.surface_id) === 4
-                            )
-                                ? "active"
-                                : ""
-                        }`}
-                    />
+                    <div className={`center ${selectedSurface.some(item => Number(item.surface_id) === 4) ? "active" : "" }`} />
 
                 </div>
 
             </span>
 
-            {/* Distal - ID 6 */}
             <div>
                 <h1>Distal</h1>
                 <select
@@ -125,29 +112,41 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
 
             <span></span>
 
-            {/* Lingual - ID 3 */}
-            <div>
-                <h1>Lingual</h1>
-                <select
-                    className="select"
-                    value={
-                        selectedSurface.find(
-                            item => Number(item.surface_id) === 3
-                        )?.surface_condition_id ?? ""
-                    }
-                    onChange={(e) => onSelect(3, e.target.value)}
-                >
-                    <option value="">Pick a color</option>
+            {currentTooth.jaw === "upper" ?
+                <div>
+                    <h1>Palatal</h1>
+                    <select
+                        className="select"
+                        value={selectedSurface.find(item => Number(item.surface_id) === 1 )?.surface_condition_id ?? ""}
+                        onChange={(e) => onSelect(1, e.target.value)}>
+                        <option value="">Pick a color</option>
 
-                    {surfaceCondition.map((item) => (
-                        <option key={item.id} value={item.id}>
-                            {item.condition_code} - {item.condition_name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+                        {surfaceCondition.map((item) => (
+                            <option key={item.id} value={item.id}>
+                                {item.condition_code} - {item.condition_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                :
+                <div>
+                    <h1>Lingual</h1>
+                    <select
+                        className="select"
+                        value={selectedSurface.find(item => Number(item.surface_id) === 3 )?.surface_condition_id ?? ""}
+                        onChange={(e) => onSelect(3, e.target.value)}>
+                        <option value="">Pick a color</option>
 
-            {/* Center / Occlusal - ID 4 */}
+                        {surfaceCondition.map((item) => (
+                            <option key={item.id} value={item.id}>
+                                {item.condition_code} - {item.condition_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            }
+
+
             <div>
                 <h1>Occlusal</h1>
                 <select
