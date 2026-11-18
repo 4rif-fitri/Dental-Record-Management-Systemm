@@ -63,7 +63,7 @@ const MedicineTab = ({
                     Medicine
                 </h1>
 
-                {currentRole === "dentist" ?? <>
+                {currentRole === "dentist" && <>
                     <button onClick={() => {setSelectedMedicine(null); setShowAddMedicine(true);}}
                         className="btn btn-primary w-40">
                         Add Medicine
@@ -82,7 +82,7 @@ const MedicineTab = ({
                         <th className="px-4 py-3">Medicine</th>
                         <th className="px-4 py-3">Quantity</th>
                         <th className="px-4 py-3">Notes</th>
-                        {currentRole === "dentist" ?? <>
+                        {currentRole === "dentist" && <>
                             <th className="px-4 py-3 text-center">Action</th>
                         </>}
                     </tr>
@@ -115,7 +115,7 @@ const MedicineTab = ({
                                     {item.notes ?? "-"}
                                 </td>
 
-                                {currentRole === "dentist" ?? <>
+                                {currentRole === "dentist" && <>
                                     <td className="px-4 py-3">
 
                                         <div className="flex justify-center gap-3">

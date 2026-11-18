@@ -7,9 +7,8 @@ import {usePage} from "@inertiajs/react";
 const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
     const { auth } = usePage().props;
     const currentRole = auth?.user?.role;
-
+    console.log(currentRole)
     const handleViewDetail = () => {
-        console.log(procedure)
         setShowUpdateToothProcedure(true)
         setCurrentToothFinding(procedure)
     }
@@ -59,7 +58,7 @@ const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProc
 
                 </div>
             </div>
-            {currentRole === "dentist" ?? <>
+            {currentRole === "dentist" && <>
                 <div className="grid grid-cols-2 gap-2 p-1">
                     <div></div>
 
