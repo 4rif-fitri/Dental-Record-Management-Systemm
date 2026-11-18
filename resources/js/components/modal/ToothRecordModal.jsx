@@ -56,11 +56,6 @@ const ToothRecordModal = ({
             hanleCloseModal();
 
         } catch (error) {
-
-            console.log("STATUS:", error.response?.status);
-            console.log("VALIDATION ERRORS:", error.response?.data?.errors);
-            console.log("FULL RESPONSE:", error.response?.data);
-
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -108,10 +103,6 @@ const ToothRecordModal = ({
             ];
         });
     };
-
-    useEffect(()=>{
-        console.log(selectedSurface)
-    },[selectedSurface])
 
     if (!currentTooth) return null;
 

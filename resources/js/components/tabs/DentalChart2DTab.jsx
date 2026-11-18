@@ -208,15 +208,15 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
             <span id={`tooth-37`} className={"flex h-7 justify-center border"}></span>
             <span id={`tooth-38`} className={"flex h-7 justify-center border"}></span>
 
-            {renderQuadrant("permanent", 3)}
             {renderQuadrant("permanent", 4)}
+            {renderQuadrant("permanent", 3)}
 
             <span></span>
             <span></span>
             <span></span>
 
-            {renderQuadrant("primary", 7)}
             {renderQuadrant("primary", 8)}
+            {renderQuadrant("primary", 7)}
 
             <span></span>
             <span></span>

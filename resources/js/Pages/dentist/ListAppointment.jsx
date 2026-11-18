@@ -55,7 +55,6 @@ const ListAppointment = () => {
                 { params: { date: formatDate(weekStart) } }
             );
 
-            console.log(response)
             setDaysFromApi(response.data.days || []);
 
         } catch (error) {

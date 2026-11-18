@@ -18,8 +18,6 @@ const ListQueue = () => {
 
             const response = await api.get(route('getAllQueue'));
 
-            console.log("Queue response:", response.data);
-
             // Actual array is inside response.data.data
             const data = response.data ?? [];
 

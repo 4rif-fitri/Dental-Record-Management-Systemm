@@ -49,8 +49,6 @@ const Register = () => {
                 formData
             );
 
-            console.log("Register:", response.data);
-
             await Swal.fire({
                 title: "Registration Successful!",
                 text: "Your account has been created successfully.",

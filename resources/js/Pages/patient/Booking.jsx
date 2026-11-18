@@ -138,12 +138,6 @@ const Booking = () => {
 
             const data = extractAppointments(response);
 
-            console.log(
-                "Appointments for",
-                date,
-                data
-            );
-
             setAppointments(data);
 
         } catch (error) {
@@ -193,14 +187,7 @@ const Booking = () => {
                 const data = extractAppointments(response);
 
                 if (!ignore) {
-
                     setAppointments(data);
-
-                    console.log(
-                        "Appointments for",
-                        selectedDate,
-                        data
-                    );
                 }
 
             } catch (error) {

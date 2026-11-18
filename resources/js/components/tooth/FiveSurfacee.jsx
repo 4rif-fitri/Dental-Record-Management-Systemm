@@ -4,8 +4,6 @@ import "./InteractivePolygon.css";
 
 const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurface = []}) => {
 
-    console.log({surfaceCondition})
-
     const areas = [
         { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
         { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
