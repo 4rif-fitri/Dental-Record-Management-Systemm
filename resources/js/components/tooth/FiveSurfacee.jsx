@@ -8,7 +8,7 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
     if(currentTooth.jaw === "upper"){
         areas = [
             { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
-            { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
+            { id: 5, name: "Mesial", points: "0,0 150,150 0,300" },
             { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
             { id: 1, name: "Palatal", points: "0,300 300,300 195,180 105,180" },
         ];
@@ -145,7 +145,6 @@ const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurf
                     </select>
                 </div>
             }
-
 
             <div>
                 <h1>Occlusal</h1>

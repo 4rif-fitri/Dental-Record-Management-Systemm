@@ -11,12 +11,22 @@ const BoxFiveSurface = ({ currentTooth = {}, skala }) => {
         (item) => item.surface?.surface_name
     );
 
-    const areas = [
-        { name: "Buccal", points: "0,0 400,0 195,150 105,150" },
-        { name: "Mesial", points: "0,0 150,170 0,300" },
-        { name: "Distal", points: "300,0 300,300 170,150" },
-        { name: "Lingual", points: "0,300 300,300 195,180 105,180" },
-    ];
+    let areas
+    if(currentTooth.tooth.jaw === "upper"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,150 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 1, name: "Palatal", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }else if(currentTooth.tooth.jaw === "lower"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 3, name: "Lingual", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }
 
     return (
         <div className={`container scale-${skala}`}>

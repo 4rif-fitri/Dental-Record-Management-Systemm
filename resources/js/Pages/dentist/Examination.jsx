@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
 import PatientDetails from "@/components/tabs/PatientDetailsTab";
-import ConsentTab from "@/components/tabs/ConsentTab";
 import DentalChart2D from "@/components/tabs/DentalChart2DTab";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
 import Tretment from "@/components/tabs/TretmentTab";
@@ -15,22 +14,19 @@ import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
 import {usePage} from "@inertiajs/react";
-
+import LoadingPage from "@/components/atom/LoadingPage.jsx";
 
 const Examination = () => {
-
     const { auth } = usePage().props;
     const currentRole = auth?.user?.role;
 
     let linkTabs
-
     if(currentRole === "Dentist"){
         linkTabs = [
             { text: "patient", label: "Patient Details" },
             { text: "chart", label: "Dental Chart" },
             { text: "3d", label: "3D" },
             { text: "medicine", label: "MedicineModal" },
-            // { text: "patientConsent", label: "Patient Consent" },
         ];
 
     }else{
@@ -38,7 +34,6 @@ const Examination = () => {
             { text: "chart", label: "Dental Chart" },
             { text: "3d", label: "3D" },
             { text: "medicine", label: "MedicineModal" },
-            // { text: "patientConsent", label: "Patient Consent" },
         ];
     }
 
@@ -182,21 +177,7 @@ const Examination = () => {
     return (
         <MainLayout>
 
-            {isLoading && (
-                <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
-
-                    <div className="w-14 h-14 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-
-                    <h2 className="mt-5 text-lg font-semibold text-gray-800">
-                        Loading Examination
-                    </h2>
-
-                    <p className="mt-2 text-sm text-gray-500">
-                        Please wait while we prepare patient information...
-                    </p>
-
-                </div>
-            )}
+            {isLoading && <LoadingPage />}
 
             {showAddMedicine &&
                 <Medicine

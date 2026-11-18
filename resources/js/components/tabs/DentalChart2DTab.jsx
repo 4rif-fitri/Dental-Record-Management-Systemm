@@ -15,8 +15,6 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
         const getAllTooth = async () => {
             try {
                 const response = await api.get(route('getAllTooth'));
-                console.log(response)
-
                 setTeeth(response.data);
 
             } catch (error) {
@@ -40,23 +38,90 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
         }
     };
 
+    // const renderTooth = (tooth) => {
+    //
+    //     const findings = toothFinding?.filter(
+    //         item => Number(item.tooth_id) === Number(tooth.id)
+    //     ) || [];
+    //     console.log(findings)
+    //
+    //     const latestFinding = findings.sort(
+    //         (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    //     )[0] || null;
+    //
+    //
+    //     let id = latestFinding?.tooth?.tooth_number;
+    //
+    //     const element = document.getElementById(`tooth-${id}`);
+    //
+    //     if (element) {
+    //         element.innerText = latestFinding?.condition.condition_code
+    //     }
+    //
+    //     const ToothComponent =
+    //         ["Central Incisor", "Lateral Incisor", "Canine"]
+    //             .includes(tooth.tooth_name)
+    //             ? FourSurface
+    //             : FiveSurface;
+    //
+    //     return (
+    //         <ToothComponent
+    //             key={tooth.tooth_number}
+    //             toothNumber={tooth.tooth_number}
+    //             currentTooth={latestFinding}
+    //             onSelect={(surface) =>
+    //                 handleClickSurface(tooth, "")
+    //             }
+    //         />
+    //     );
+    // };
+
+
     const renderTooth = (tooth) => {
 
         const findings = toothFinding?.filter(
             item => Number(item.tooth_id) === Number(tooth.id)
         ) || [];
 
-        const latestFinding = findings.sort(
+        // Latest finding first
+        const sortedFindings = [...findings].sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        )[0] || null;
+        );
+
+        const latestFinding = sortedFindings[0] || null;
+
+        // Combine surfaces from all findings
+        const surfaceMap = new Map();
 
         let id = latestFinding?.tooth?.tooth_number;
 
         const element = document.getElementById(`tooth-${id}`);
 
         if (element) {
-            element.innerText = latestFinding?.condition.condition_code
+            element.innerText = latestFinding?.condition.condition_code;
         }
+        sortedFindings.forEach(finding => {
+
+            finding.surfaces?.forEach(surface => {
+
+                const surfaceId = Number(surface.surface_id);
+
+                // Keep the latest finding if the same surface exists
+                if (!surfaceMap.has(surfaceId)) {
+                    surfaceMap.set(surfaceId, {
+                        surface_id: surfaceId,
+                        surface_condition_id: surface.surface_condition_id,
+                        surface_condition: surface.surface_condition,
+                        finding_id: finding.id,
+                        condition: finding.condition
+                    });
+                }
+
+            });
+
+        });
+
+        const selectedSurfaces = Array.from(surfaceMap.values());
 
         const ToothComponent =
             ["Central Incisor", "Lateral Incisor", "Canine"]
@@ -69,9 +134,9 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
                 key={tooth.tooth_number}
                 toothNumber={tooth.tooth_number}
                 currentTooth={latestFinding}
-                onSelect={(surface) =>
-                    handleClickSurface(tooth, "")
-                }
+                selectedSurfaces={selectedSurfaces}
+                findings={findings}
+                onSelect={(surface) => handleClickSurface(tooth, surface)}
             />
         );
     };

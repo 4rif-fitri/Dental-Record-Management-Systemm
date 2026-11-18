@@ -12,10 +12,10 @@ const BoxFourSurfacee = ({ currentTooth = {}, skala }) => {
     const conditionColor = currentTooth.condition?.color_code || "#ffffff";
 
     const areas = [
-        { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
+        { name: "Labial", points: "0,0 300,0 195,150 105,150" },
         { name: "Mesial", points: "0,0 105,150 0,300" },
         { name: "Distal", points: "300,0 300,300 195,150" },
-        { name: "Lingual", points: "0,300 300,300 195,150 105,150" },
+        { name: "Palatal", points: "0,300 300,300 195,150 105,150" },
     ];
 
     return (
