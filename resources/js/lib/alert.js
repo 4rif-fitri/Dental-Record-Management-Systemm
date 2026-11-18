@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export const AlertSuccess = async (message, title = "Success") => {
+export const alertSuccess = async (message, title = "Success") => {
     return await Swal.fire({
         "icon": "success",
         "title": title,
@@ -8,7 +8,7 @@ export const AlertSuccess = async (message, title = "Success") => {
     })
 }
 
-export const AlertError = async (message, title = "Error") => {
+export const alertError = async (message, title = "Error") => {
     return await Swal.fire({
         "icon": "error",
         "title": title,

@@ -9,6 +9,7 @@ import ContentCondition from "@/components/molecules/ToothCondition/ContentCondi
 import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
+import {alertError, alertSuccess} from "@/lib/alert.js";
 
 const colorPresets = [
     { name: "Red", color: "bg-red-500", hex: "#EF4444" },
@@ -311,13 +312,7 @@ const ToothConditions = () => {
                 error.response?.data || error.message
             );
 
-            Swal.fire({
-                icon: "error",
-                title: "Delete failed",
-                text: error.response?.data?.message ||
-                    "Unable to delete condition.",
-            });
-
+            alertError(error.response?.data?.message || "Unable to delete condition.")
         }
 
     };
@@ -332,51 +327,26 @@ const ToothConditions = () => {
 
                 <div className="flex flex-col sm:flex-row justify-between gap-3 mt-5 mb-5">
 
-                    <div className="relative w-full sm:w-80">
+                    <div className="relative w-full">
 
                         <input
                             type="text"
                             placeholder="Search condition..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pl-10 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                         />
-
-                        <svg
-                            className="absolute left-3 top-3 w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="m21 21-4.3-4.3m1.3-5.2a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                            />
-                        </svg>
 
                     </div>
 
                     <button
                         type="button"
                         onClick={handleCreate}
-                        className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition"
+                        className="btn btn-primary"
                     >
                         <span className="text-lg">+</span>
                         Add Condition
                     </button>
-
-                </div>
-
-                <div className="flex justify-between items-center mb-3">
-
-                    <p className="text-sm text-gray-500">
-                        Total Conditions:{" "}
-                        <span className="font-semibold text-gray-800">
-                            {conditions.length}
-                        </span>
-                    </p>
 
                 </div>
 

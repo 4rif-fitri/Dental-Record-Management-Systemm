@@ -37,9 +37,8 @@ const Profile = () => {
 
                         <div className={"flex justify-end"}>
                             <button type="button"
-                                    className="btn min-h-10 rounded-lg border-gray-950 bg-gray-950 px-4 text-white hover:border-gray-800 hover:bg-gray-800"
+                                    className="btn btn-primary"
                                     onClick={() => setShowPopup(true)}>
-                                <i className="fa-solid fa-pencil"></i>
                                 Edit Profile
                             </button>
                         </div>

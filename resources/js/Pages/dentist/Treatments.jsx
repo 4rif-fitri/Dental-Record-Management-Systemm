@@ -289,7 +289,7 @@ const Treatments = () => {
 
                 <div className="flex flex-col sm:flex-row justify-between gap-3 mt-5 mb-5">
 
-                    <div className="relative w-full sm:w-80">
+                    <div className="relative w-full">
 
                         <input type="text" placeholder="Search treatment..." value={search}
                             onChange={(e) => setSearch(e.target.value)}
