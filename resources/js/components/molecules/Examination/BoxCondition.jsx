@@ -2,8 +2,11 @@
 import React from 'react';
 import BoxFiveSurface from "../../tooth/box/BoxFiveSurfacee";
 import BoxFourSurfacee from "../../tooth/box/BoxFourSurfacee";
+import {usePage} from "@inertiajs/react";
 
 const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const handleViewDetail = () => {
         console.log(procedure)
@@ -56,61 +59,62 @@ const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProc
 
                 </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-2 p-1">
-                <div></div>
-
-                <button
-                    type="button"
-                    className="btn btn-outline"
-                    onClick={handleViewDetail}
-                >
-                    View Detail
-                </button>
-            </div>
-
-            {procedure.status === "Planning" && (
+            {currentRole === "dentist" ?? <>
                 <div className="grid grid-cols-2 gap-2 p-1">
                     <div></div>
 
                     <button
                         type="button"
-                        className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}
+                        className="btn btn-outline"
+                        onClick={handleViewDetail}
                     >
-                        In Progress
+                        View Detail
                     </button>
                 </div>
-            )}
 
-            {procedure.status === "In Progress" && (
-                <div className="grid grid-cols-2 gap-2 p-1">
+                {procedure.status === "Planning" && (
+                    <div className="grid grid-cols-2 gap-2 p-1">
+                        <div></div>
 
-                    <button type="button" className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "Planning")}>
-                        Planning
-                    </button>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => updateProcedureStatus(procedure.id, "In Progress")}
+                        >
+                            In Progress
+                        </button>
+                    </div>
+                )}
 
-                    <button type="button" className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "Completed")}>
-                        Completed
-                    </button>
+                {procedure.status === "In Progress" && (
+                    <div className="grid grid-cols-2 gap-2 p-1">
 
-                </div>
-            )}
+                        <button type="button" className="btn btn-primary"
+                            onClick={() => updateProcedureStatus(procedure.id, "Planning")}>
+                            Planning
+                        </button>
 
-            {procedure.status === "Completed" && (
-                <div className="grid grid-cols-2 gap-2 p-1">
+                        <button type="button" className="btn btn-primary"
+                            onClick={() => updateProcedureStatus(procedure.id, "Completed")}>
+                            Completed
+                        </button>
 
-                    <button type="button" className="btn btn-primary"
-                        onClick={() => updateProcedureStatus(procedure.id, "In Progress")}>
-                        In Progress
-                    </button>
+                    </div>
+                )}
 
-                    <div></div>
+                {procedure.status === "Completed" && (
+                    <div className="grid grid-cols-2 gap-2 p-1">
 
-                </div>
-            )}
+                        <button type="button" className="btn btn-primary"
+                            onClick={() => updateProcedureStatus(procedure.id, "In Progress")}>
+                            In Progress
+                        </button>
+
+                        <div></div>
+
+                    </div>
+                )}
+            </> }
 
         </div>
     );

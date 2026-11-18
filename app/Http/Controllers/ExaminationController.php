@@ -15,7 +15,7 @@ class ExaminationController extends Controller
             ->where('id', $id)->first();
 
         if(!$user){
-            return to_route('dentistListPatient');
+            return Inertia::render('patient/Examination');
         }else{
             return Inertia::render('dentist/Examination');
         }

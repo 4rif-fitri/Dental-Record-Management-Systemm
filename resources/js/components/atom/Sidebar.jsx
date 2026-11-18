@@ -23,15 +23,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const { auth } = usePage().props;
 
     const role = auth?.user?.role;
+    let id = auth?.user?.id;
 
     const menuGroups = {
         patient: [
             {
                 title: "Patient",
                 items: [
+                    { label: "Patient Consent ", link: `/patient-Cconsent` },
                     { label: "Appointment Form", link: "/patient-book-appointment" },
                     { label: "Appointment List", link: "/patient-appointment" },
+                    { label: "My examination ", link: `/patient-examination/${id}` },
                     { label: "My Profile", link: "/user-profile" },
+
                 ],
             },
         ],

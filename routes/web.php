@@ -61,11 +61,14 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:patient')->group(function () {
         Route::get('/patient-appointment', [AppointmentController::class, 'patientAppointment'])->name('patientAppointment');
         Route::get('/patient-book-appointment', [AppointmentController::class, 'patientBookAppointment'])->name('patientBookAppointment');
+        Route::get('/patient-examination/{id}', [ExaminationController::class, 'pageExamination'])->name('patientExamination');
+
     });
 
     Route::middleware('role:clinic_staff')->group(function () {
         Route::get('/list-queue', [QueueController::class, 'listQueue'])->name('listQueue');
     });
+
 
     Route::middleware('role:dentist')->group(function () {
         Route::get('/dentist-list-appointment', [AppointmentController::class, 'dentistListAppointment'])->name('dentistListAppointment');

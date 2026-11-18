@@ -14,17 +14,35 @@ import MedicineTab from "@/components/tabs/MedicineTab.jsx";
 import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
+import {usePage} from "@inertiajs/react";
 
-let linkTabs = [
-    { text: "patient", label: "Patient Details" },
-    { text: "chart", label: "Dental Chart" },
-    { text: "3d", label: "3D" },
-    { text: "medicine", label: "MedicineModal" },
-    { text: "patientConsent", label: "Patient Consent" },
-];
 
 const Examination = () => {
-    const [activeTab, setActiveTab] = useState("patient");
+
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
+
+    let linkTabs
+
+    if(currentRole === "Dentist"){
+        linkTabs = [
+            { text: "patient", label: "Patient Details" },
+            { text: "chart", label: "Dental Chart" },
+            { text: "3d", label: "3D" },
+            { text: "medicine", label: "MedicineModal" },
+            // { text: "patientConsent", label: "Patient Consent" },
+        ];
+
+    }else{
+        linkTabs = [
+            { text: "chart", label: "Dental Chart" },
+            { text: "3d", label: "3D" },
+            { text: "medicine", label: "MedicineModal" },
+            // { text: "patientConsent", label: "Patient Consent" },
+        ];
+    }
+
+    const [activeTab, setActiveTab] = useState(currentRole === "Dentist" ? "patient" : "chart");
     const [patientDetails, setPatientDetails] = useState("");
     const [conditions, setConditions] = useState([]);
     const [treatment, setTreatment] = useState([]);

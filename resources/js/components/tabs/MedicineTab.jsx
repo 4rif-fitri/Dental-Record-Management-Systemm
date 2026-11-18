@@ -3,11 +3,14 @@ import React from 'react';
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
 import Swal from "sweetalert2";
+import {usePage} from "@inertiajs/react";
 
 const MedicineTab = ({
     examinationMedicine = [], setShowAddMedicine,
     setSelectedMedicine, getExaminationMedicine
 }) => {
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const handleDeletePatientMedicine = async (id) => {
 
@@ -60,15 +63,12 @@ const MedicineTab = ({
                     Medicine
                 </h1>
 
-                <button
-                    onClick={() => {
-                        setSelectedMedicine(null);
-                        setShowAddMedicine(true);
-                    }}
-                    className="btn btn-primary w-40"
-                >
-                    Add Medicine
-                </button>
+                {currentRole === "dentist" ?? <>
+                    <button onClick={() => {setSelectedMedicine(null); setShowAddMedicine(true);}}
+                        className="btn btn-primary w-40">
+                        Add Medicine
+                    </button>
+                </>}
 
             </div>
 
