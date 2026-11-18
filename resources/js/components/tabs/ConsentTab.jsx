@@ -11,7 +11,6 @@ const ConsentTab = ({patientDetails,setPatientDetails}) => {
     const [hasSignature, setHasSignature] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    // Initialize canvas
     useEffect(() => {
 
         const canvas = canvasRef.current;
@@ -144,8 +143,6 @@ const ConsentTab = ({patientDetails,setPatientDetails}) => {
 
     };
 
-
-    // Save signature to database
     const handleSaveSignature = async () => {
 
         try {
@@ -228,80 +225,25 @@ const ConsentTab = ({patientDetails,setPatientDetails}) => {
 
         <div className="w-full">
 
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-
-                <h1 className="text-xl font-semibold">
-                    Patient Consent
-                </h1>
-
-                <div className="flex gap-2">
-
-                    <button
-                        type="button"
-                        onClick={clearSignature}
-                        className="px-4 py-2 border rounded-lg hover:bg-gray-100"
-                    >
-                        Clear
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={handleSaveSignature}
-                        disabled={isSaving || !hasSignature}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg
-                        hover:bg-blue-700 disabled:opacity-50"
-                    >
-                        {isSaving ? 'Saving...' : 'Save Signature'}
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            {/* Patient Information */}
-            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-
-                <p>
-                    <strong>Patient Name:</strong>{' '}
-                    {patientDetails?.name || '-'}
-                </p>
-
-                <p>
-                    <strong>IC / Passport:</strong>{' '}
-                    {patientDetails?.ic_passport || '-'}
-                </p>
-
-            </div>
-
-
-            {/* Consent Statement */}
             <div className="border rounded-lg p-4 mb-4">
-
                 <h2 className="font-semibold mb-2">
                     Consent Statement
                 </h2>
-
                 <p className="text-sm text-gray-600 leading-6">
                     I hereby give my consent to undergo the dental
                     examination and treatment explained by the dentist.
                     I acknowledge that the procedures, possible risks
                     and benefits have been explained to me.
                 </p>
-
             </div>
 
 
-            {/* Signature Canvas */}
             <div>
-
                 <label className="block font-medium mb-2">
                     Patient Signature
                 </label>
 
                 <div className="border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-
                     <canvas
                         ref={canvasRef}
                         className="w-full h-52 bg-white cursor-crosshair touch-none"
@@ -317,9 +259,20 @@ const ConsentTab = ({patientDetails,setPatientDetails}) => {
 
                 </div>
 
-                <p className="text-xs text-gray-500 mt-2">
-                    Sign inside the box using your mouse or touchscreen.
-                </p>
+                <div className="flex justify-between items-center mt-4">
+                    <div className="flex gap-2">
+                        <button type="button" onClick={clearSignature}
+                                className="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                            Clear
+                        </button>
+                        <button type="button" onClick={handleSaveSignature}
+                                disabled={isSaving || !hasSignature}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg
+                        hover:bg-blue-700 disabled:opacity-50">
+                            {isSaving ? 'Saving...' : 'Save Signature'}
+                        </button>
+                    </div>
+                </div>
 
             </div>
 

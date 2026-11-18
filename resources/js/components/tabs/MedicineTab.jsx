@@ -82,7 +82,9 @@ const MedicineTab = ({
                         <th className="px-4 py-3">Medicine</th>
                         <th className="px-4 py-3">Quantity</th>
                         <th className="px-4 py-3">Notes</th>
-                        <th className="px-4 py-3 text-center">Action</th>
+                        {currentRole === "dentist" ?? <>
+                            <th className="px-4 py-3 text-center">Action</th>
+                        </>}
                     </tr>
                     </thead>
 
@@ -113,35 +115,37 @@ const MedicineTab = ({
                                     {item.notes ?? "-"}
                                 </td>
 
-                                <td className="px-4 py-3">
+                                {currentRole === "dentist" ?? <>
+                                    <td className="px-4 py-3">
 
-                                    <div className="flex justify-center gap-3">
+                                        <div className="flex justify-center gap-3">
 
-                                        <button
-                                            type="button"
-                                            title="Edit"
-                                            onClick={() =>
-                                                handleUpdatePatientMedicine(item)
-                                            }
-                                            className="text-blue-600 hover:text-blue-800"
-                                        >
-                                            <i className="fa-solid fa-pencil"></i>
-                                        </button>
+                                            <button
+                                                type="button"
+                                                title="Edit"
+                                                onClick={() =>
+                                                    handleUpdatePatientMedicine(item)
+                                                }
+                                                className="text-blue-600 hover:text-blue-800"
+                                            >
+                                                <i className="fa-solid fa-pencil"></i>
+                                            </button>
 
-                                        <button
-                                            type="button"
-                                            title="Delete"
-                                            onClick={() =>
-                                                handleDeletePatientMedicine(item.id)
-                                            }
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                                            <button
+                                                type="button"
+                                                title="Delete"
+                                                onClick={() =>
+                                                    handleDeletePatientMedicine(item.id)
+                                                }
+                                                className="text-red-600 hover:text-red-800"
+                                            >
+                                                <i className="fa-solid fa-trash"></i>
+                                            </button>
 
-                                    </div>
+                                        </div>
 
-                                </td>
+                                    </td>
+                                </>}
 
                             </tr>
 

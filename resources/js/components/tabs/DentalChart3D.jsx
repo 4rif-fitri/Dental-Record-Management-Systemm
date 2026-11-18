@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Tooth from '../tooth/Tooth';
 import Mouth from '../tooth/Mouth';
+import {usePage} from "@inertiajs/react";
 
 const toothModels = import.meta.glob("../../assets/*.glb", {
     eager: true,
@@ -80,6 +81,9 @@ const primaryTeeth = [
 ];
 
 const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
+
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const [selectedJaw, setSelectedJaw] = useState("all");
     const [selectedDentition, setSelectedDentition] = useState("permanent");
@@ -213,7 +217,7 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                                 model={tooth.model}
                                 position={[0, -0.175, 0]}
                                 rotation={[0, 0, 0]}
-                                onSelect={onSelect}
+                                {...(currentRole === "dentist" ? { onSelect } : {})}
                                 finding={finding}
                                 conditionColor={
                                     finding?.condition?.color_code || null
@@ -251,8 +255,7 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                         Jaw:
                     </label>
 
-                    <select
-                        className="select select-bordered w-full max-w-xs"
+                    <select className="select select-bordered w-full max-w-xs"
                         value={selectedJaw}
                         onChange={(e) => setSelectedJaw(e.target.value)}
                     >

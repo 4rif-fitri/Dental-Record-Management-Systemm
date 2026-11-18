@@ -3,9 +3,11 @@ import FiveSurface from '../tooth/FiveSurface';
 import FourSurface from '../tooth/FourSurface';
 import { route } from 'ziggy-js';
 import api from '@/lib/axios.js';
+import {usePage} from "@inertiajs/react";
 
 const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding,currentTooth }) => {
-    console.log(toothFinding)
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const [teeth, setTeeth] = useState([]);
 
@@ -33,7 +35,9 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
 
         setCurrentTooth(updatedTooth);
 
-        setShowToothProcedure(true);
+        if(currentRole === "dentist"){
+            setShowToothProcedure(true);
+        }
     };
 
     const renderTooth = (tooth) => {

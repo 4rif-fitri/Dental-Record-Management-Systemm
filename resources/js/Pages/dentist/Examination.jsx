@@ -294,13 +294,6 @@ const Examination = () => {
                             />
                         }
 
-                        {activeTab === "patientConsent" &&
-                            <ConsentTab
-                                patientDetails={patientDetails}
-                                setPatientDetails={setPatientDetails}
-                            />
-                        }
-
                     </div>
 
                     {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }

@@ -1,15 +1,10 @@
 import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
-import PatientDetails from "@/components/tabs/PatientDetailsTab";
-import ConsentTab from "@/components/tabs/ConsentTab";
 import DentalChart2D from "@/components/tabs/DentalChart2DTab";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
 import Tretment from "@/components/tabs/TretmentTab";
-import Medicine from "@/components/modal/MedicineModal";
-import ToothProcedure from "@/components/modal/ToothRecordModal";
 import PageTitle from "@/components/atom/PageTitle";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
-import UpdateToothProcedure from "@/components/modal/UpdateToothRecordModal.jsx";
 import MedicineTab from "@/components/tabs/MedicineTab.jsx";
 import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
@@ -29,23 +24,12 @@ const Examination = () => {
     ];
 
     const [activeTab,setActiveTab] = useState("chart");
-    const [patientDetails,setPatientDetails] = useState("");
     const [conditions, setConditions] = useState([]);
-    const [treatment, setTreatment] = useState([]);
-    const [surfaces, setSurfaces] = useState([]);
-    const [medicines, setMedicines] = useState([]);
     const [toothFinding, setToothFinding] = useState([]);
     const [tooth, setTooth] = useState([]);
     const [examinationMedicine, setExaminationMedicine] = useState([])
-    const [surfaceCondition, setSurfaceCondition] = useState([])
-
-    const [showToothProcedure, setShowToothProcedure] = useState(false);
-    const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
-    const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     const [currentTooth, setCurrentTooth] = useState(null);
-    const [currentToothFinding, setCurrentToothFinding] = useState(null);
-    const [selectedMedicine, setSelectedMedicine] = useState(null);
 
     const [activeFilter, setActiveFilter] = useState("ALL");
 
@@ -75,18 +59,12 @@ const Examination = () => {
     const getExaminationMedicine = async () => {
         try {
             const id = window.location.pathname.split('/').pop();
-
-            const response = await api.get(
-                route('getExaminationMedicineByPatientId', { id })
-            );
+            const response = await api.get(route('getExaminationMedicineByPatientId', { id }));
 
             setExaminationMedicine(response.data ?? []);
 
         } catch (error) {
-            console.error(
-                "Error loading medicine:",
-                error.response?.data || error.message
-            );
+            console.error(error.message);
         }
     };
 
@@ -97,40 +75,24 @@ const Examination = () => {
             const id = window.location.pathname.split('/').pop();
 
             const [
-                patientResponse,
                 conditionResponse,
-                procedureResponse,
-                surfaceResponse,
-                medicineResponse,
                 toothFindingResponse,
                 toothResponse,
                 examinationMedicineResponse,
-                surfaceConditionResponse,
-
 
             ] = await Promise.all([
 
-                api.get(route('getPatientById', { id })),
                 api.get(route('getAllCondition')),
-                api.get(route('getAllProcedure')),
-                api.get(route('getAllSurface')),
-                api.get(route('getAllMedicine')),
                 api.get(route('getFindingByPatientId', { id })),
                 api.get(route('getAllTooth')),
                 api.get(route('getExaminationMedicineByPatientId', { id })),
-                api.get(route('getAllSurfaceCondition')),
 
             ]);
 
-            setPatientDetails(patientResponse.data);
             setConditions(conditionResponse.data);
-            setTreatment(procedureResponse.data);
-            setSurfaces(surfaceResponse.data);
-            setMedicines(medicineResponse.data);
             setToothFinding(toothFindingResponse.data);
             setTooth(toothResponse.data);
             setExaminationMedicine(examinationMedicineResponse.data ?? []);
-            setSurfaceCondition(surfaceConditionResponse.data)
 
         } catch (error) {
 
@@ -156,7 +118,6 @@ const Examination = () => {
         }
 
         setCurrentTooth(selectedTooth);
-        setShowToothProcedure(true);
     };
 
     useEffect(() => {
@@ -181,23 +142,6 @@ const Examination = () => {
 
                 </div>
             )}
-
-            {showAddMedicine && <></>}
-
-            {showToothProcedure && <></>}
-
-            {showUpdateToothProcedure &&
-                <UpdateToothProcedure
-                    setShowUpdateToothProcedure={setShowUpdateToothProcedure}
-                    currentToothFinding={currentToothFinding}
-                    conditions={conditions}
-                    treatment={treatment}
-                    surfaces={surfaces}
-                    laodToothFinding={laodToothFinding}
-                    surfaceCondition={surfaceCondition}
-                    currentTooth={currentTooth}
-                />
-            }
 
             <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
@@ -227,11 +171,6 @@ const Examination = () => {
                     )}
 
                     <div className="w-full h-auto bg-white rounded mt-2">
-                        {activeTab === "patient" &&
-                            <PatientDetails
-                                patientDetails={patientDetails}
-                            />
-                        }
 
                         {activeTab === "chart" &&
                             <DentalChart2D
@@ -255,13 +194,6 @@ const Examination = () => {
                                 setShowAddMedicine={setShowAddMedicine}
                                 setSelectedMedicine={setSelectedMedicine}
                                 getExaminationMedicine={getExaminationMedicine}
-                            />
-                        }
-
-                        {activeTab === "patientConsent" &&
-                            <ConsentTab
-                                patientDetails={patientDetails}
-                                setPatientDetails={setPatientDetails}
                             />
                         }
 

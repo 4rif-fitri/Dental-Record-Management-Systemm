@@ -10,6 +10,11 @@ use Inertia\Inertia;
 
 class ExaminationController extends Controller
 {
+
+    public function pagePatientConsent(){
+        return Inertia::render('patient/Consent');
+    }
+
     public function pageExamination($id){
         $user = User::where('role', 'patient')
             ->where('id', $id)->first();

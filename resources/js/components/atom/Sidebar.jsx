@@ -30,9 +30,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             {
                 title: "Patient",
                 items: [
-                    { label: "Patient Consent ", link: `/patient-Cconsent` },
                     { label: "Appointment Form", link: "/patient-book-appointment" },
                     { label: "Appointment List", link: "/patient-appointment" },
+                    { label: "Patient Consent ", link: `/patient-consent` },
                     { label: "My examination ", link: `/patient-examination/${id}` },
                     { label: "My Profile", link: "/user-profile" },
 
