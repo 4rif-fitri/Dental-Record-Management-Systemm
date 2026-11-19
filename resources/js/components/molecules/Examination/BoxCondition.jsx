@@ -7,7 +7,6 @@ import {usePage} from "@inertiajs/react";
 const BoxCondition = ({ procedure, updateProcedureStatus, setShowUpdateToothProcedure, setCurrentToothFinding }) => {
     const { auth } = usePage().props;
     const currentRole = auth?.user?.role;
-    console.log(currentRole)
     const handleViewDetail = () => {
         setShowUpdateToothProcedure(true)
         setCurrentToothFinding(procedure)
