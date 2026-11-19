@@ -16,6 +16,8 @@ const Examination = () => {
 
     const { auth } = usePage().props;
     const currentRole = auth?.user?.role;
+    const id = auth?.user?.id;
+
 
     let linkTabs = [
         { text: "chart", label: "Dental Chart" },
@@ -28,6 +30,11 @@ const Examination = () => {
     const [toothFinding, setToothFinding] = useState([]);
     const [tooth, setTooth] = useState([]);
     const [examinationMedicine, setExaminationMedicine] = useState([])
+    const [currentToothFinding, setCurrentToothFinding] = useState(null);
+    const [showToothProcedure, setShowToothProcedure] = useState(false);
+    const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
+    const [showAddMedicine, setShowAddMedicine] = useState(false);
+    const [selectedMedicine, setSelectedMedicine] = useState(null);
 
     const [currentTooth, setCurrentTooth] = useState(null);
 
@@ -37,8 +44,6 @@ const Examination = () => {
 
     const laodToothFinding = async () => {
         try {
-            const id = window.location.pathname.split('/').pop();
-
             const response = await api.get(
                 route("getFindingByPatientId", { id })
             );
@@ -58,7 +63,6 @@ const Examination = () => {
 
     const getExaminationMedicine = async () => {
         try {
-            const id = window.location.pathname.split('/').pop();
             const response = await api.get(route('getExaminationMedicineByPatientId', { id }));
 
             setExaminationMedicine(response.data ?? []);
@@ -72,7 +76,6 @@ const Examination = () => {
         try {
             setIsLoading(true);
 
-            const id = window.location.pathname.split('/').pop();
 
             const [
                 conditionResponse,

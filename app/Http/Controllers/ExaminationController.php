@@ -15,15 +15,12 @@ class ExaminationController extends Controller
         return Inertia::render('patient/Consent');
     }
 
-    public function pageExamination($id){
-        $user = User::where('role', 'patient')
-            ->where('id', $id)->first();
+    public function pagePatientExamination(){
+        return Inertia::render('patient/Examination');
+    }
 
-        if(!$user){
-            return Inertia::render('patient/Examination');
-        }else{
-            return Inertia::render('dentist/Examination');
-        }
+    public function pageExamination($id){
+        return Inertia::render('dentist/Examination');
     }
 
     public function getAllExaminations()
