@@ -13,6 +13,50 @@ const toothModels = import.meta.glob("../../assets/*.glb", {
     import: "default",
 });
 
+const getToothName = (number) => {
+
+    const digit = Number(String(number).slice(-1));
+    const quadrant = Number(String(number)[0]);
+
+    const permanentNames = {
+        1: "Central Incisor",
+        2: "Lateral Incisor",
+        3: "Canine",
+        4: "First Premolar",
+        5: "Second Premolar",
+        6: "First Molar",
+        7: "Second Molar",
+        8: "Third Molar"
+    };
+
+    const primaryNames = {
+        1: "Central Incisor",
+        2: "Lateral Incisor",
+        3: "Canine",
+        4: "First Molar",
+        5: "Second Molar"
+    };
+
+    const positions = {
+        1: "Upper Right",
+        2: "Upper Left",
+        3: "Lower Left",
+        4: "Lower Right",
+        5: "Upper Right",
+        6: "Upper Left",
+        7: "Lower Left",
+        8: "Lower Right"
+    };
+
+    const isPrimary = quadrant >= 5;
+
+    const name = isPrimary
+        ? primaryNames[digit]
+        : permanentNames[digit];
+
+    return `${positions[quadrant]} ${name || "Tooth"}`;
+};
+
 const CameraFocus = ({ controlsRef, focusPoint }) => {
 
     const { camera } = useThree();
@@ -95,7 +139,6 @@ const DentalChart3D = ({ toothFinding = [] }) => {
     const [selectedJaw, setSelectedJaw] = useState("all");
     const [selectedDentition, setSelectedDentition] = useState("permanent");
 
-    // Selected tooth
     const [selectedTooth, setSelectedTooth] = useState(null);
 
     const [focusPoint, setFocusPoint] = useState(null);
@@ -103,9 +146,6 @@ const DentalChart3D = ({ toothFinding = [] }) => {
     const [hoveredTooth, setHoveredTooth] = useState(null);
     const [clickedToothInfo, setClickedToothInfo] = useState(null);
     const displayedTooth = hoveredTooth || clickedToothInfo;
-    // =====================================
-    // Render individual tooth
-    // =====================================
 
     const renderTooth = (tooth) => {
 
@@ -201,20 +241,12 @@ const DentalChart3D = ({ toothFinding = [] }) => {
 
     };
 
-    // =====================================
-    // Filter dentition
-    // =====================================
-
     const selectedTeeth =
         selectedDentition === "primary"
             ? primaryTeeth
             : selectedDentition === "permanent"
                 ? permanentTeeth
                 : [...permanentTeeth, ...primaryTeeth];
-
-    // =====================================
-    // Filter jaw
-    // =====================================
 
     const filteredTeeth = selectedTeeth.filter(tooth => {
 
@@ -239,74 +271,63 @@ const DentalChart3D = ({ toothFinding = [] }) => {
         selectedDentition === "permanent" ||
         selectedDentition === "all";
 
-    // =====================================
-    // Render
-    // =====================================
 
     return (
         <>
             <div className="h-120 gap-0 bg-[#0f172a] overflow-hidden relative">
                 {displayedTooth && (
-                    <div className="
-        absolute top-3 left-3 z-20
-        w-72 rounded-xl
-        border border-teal-600
-        bg-slate-900/95
-        p-3 shadow-xl
-        pointer-events-none
-    ">
-
+                    <div className="absolute top-3 left-3 z-20 w-72 rounded-xl border border-teal-600 bg-slate-900/95 p-3 shadow-xl pointer-events-none">
                         <div className="text-teal-400 font-bold text-sm">
                             FDI #{displayedTooth.toothNumber}
                         </div>
 
-                        <div className="text-white font-semibold text-sm mt-1">
+                        <div className="text-white font-semibold text-base mt-1">
+                            {getToothName(displayedTooth.toothNumber)}
+                        </div>
+
+                        <div className="text-slate-400 text-xs mt-1">
+                            {Number(String(displayedTooth.toothNumber)[0]) >= 5
+                                ? "Primary"
+                                : "Permanent"}
+                        </div>
+
+                        <div className="flex justify-between text-xs mt-2">
+                            <span className="text-slate-300">
+                                Condition
+                            </span>
+                            <span className="font-semibold"
+                                style={{color: displayedTooth.finding?.condition?.color_code || "#94a3b8" }}>
+                                {displayedTooth.finding?.condition?.condition_name || "No Record"}
+                            </span>
+                        </div>
+
+                        <div className="text-white font-semibold text-sm mt-3">
                             Surface Conditions
                         </div>
 
                         <div className="border-t border-slate-700 mt-2 pt-2 space-y-2">
-
                             {displayedTooth.surfaces?.length > 0 ? (
-
                                 displayedTooth.surfaces.map(surface => (
-
-                                    <div
-                                        key={surface.surface_id}
-                                        className="flex justify-between text-xs"
-                                    >
-                        <span className="text-slate-300">
-                            {surface.surface_name}
-                        </span>
-
-                                        <span
-                                            className="font-semibold"
-                                            style={{
-                                                color: surface.condition?.color_code || "#94a3b8"
-                                            }}
-                                        >
-                            {surface.surface_condition?.condition_name || "Unknown"}
-                        </span>
-
+                                    <div key={surface.surface_id} className="flex justify-between text-xs">
+                                        <span className="text-slate-300">
+                                            {surface.surface_name}
+                                        </span>
+                                        <span className="font-semibold"
+                                            style={{color: surface.condition?.color_code || "#94a3b8"}}>
+                                            {surface.surface_condition?.condition_name || "Unknown"}
+                                        </span>
                                     </div>
-
                                 ))
-
                             ) : (
-
                                 <div className="text-slate-400 text-xs">
                                     No surface records found
                                 </div>
-
                             )}
-
                         </div>
-
                     </div>
                 )}
-                <Canvas
-                    key={selectedDentition}
-                    camera={{ position: [0, 0.25, 0.75] }}
-                >
+
+                <Canvas key={selectedDentition} camera={{ position: [0, 0.25, 0.75] }}>
 
                     <ambientLight intensity={2} />
 

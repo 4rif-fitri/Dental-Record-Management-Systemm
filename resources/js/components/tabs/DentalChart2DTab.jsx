@@ -38,45 +38,6 @@ const DentalChart2DTab = ({ setShowToothProcedure, setCurrentTooth, toothFinding
         }
     };
 
-    // const renderTooth = (tooth) => {
-    //
-    //     const findings = toothFinding?.filter(
-    //         item => Number(item.tooth_id) === Number(tooth.id)
-    //     ) || [];
-    //     console.log(findings)
-    //
-    //     const latestFinding = findings.sort(
-    //         (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    //     )[0] || null;
-    //
-    //
-    //     let id = latestFinding?.tooth?.tooth_number;
-    //
-    //     const element = document.getElementById(`tooth-${id}`);
-    //
-    //     if (element) {
-    //         element.innerText = latestFinding?.condition.condition_code
-    //     }
-    //
-    //     const ToothComponent =
-    //         ["Central Incisor", "Lateral Incisor", "Canine"]
-    //             .includes(tooth.tooth_name)
-    //             ? FourSurface
-    //             : FiveSurface;
-    //
-    //     return (
-    //         <ToothComponent
-    //             key={tooth.tooth_number}
-    //             toothNumber={tooth.tooth_number}
-    //             currentTooth={latestFinding}
-    //             onSelect={(surface) =>
-    //                 handleClickSurface(tooth, "")
-    //             }
-    //         />
-    //     );
-    // };
-
-
     const renderTooth = (tooth) => {
 
         const findings = toothFinding?.filter(
