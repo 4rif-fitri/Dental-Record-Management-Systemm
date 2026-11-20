@@ -67,7 +67,7 @@ const Login = () => {
                         </label>
 
                         <a
-                            href={route("forgotPassword")}
+                            href={route("password.forgot.page")}
                             className="text-sm text-gray-700 hover:underline"
                         >
                             Forgot password?

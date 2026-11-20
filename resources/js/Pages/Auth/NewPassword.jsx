@@ -1,142 +1,147 @@
-import React, { useState } from 'react'
-import AuthLayout from "../../layout/AuthLayout";
+
+import React, { useState } from "react";
+import { router, usePage } from "@inertiajs/react";
+import AuthLayout from "@/layout/AuthLayout.jsx";
+
+import api from "@/lib/axios.js";
 
 const NewPassword = () => {
+    const { email, pin } = usePage().props;
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [submitted, setSubmitted] = useState(false);
-    const [error, setError] = useState("");
 
-    const handleSubmit = (e) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
         setError("");
-        setSubmitted(false);
-
-        if (password.length < 8) {
-            setError("Password must contain at least 8 characters.");
-            return;
-        }
+        setSuccess("");
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+            setError("Password confirmation does not match.");
+            setLoading(false);
             return;
         }
 
-        setSubmitted(true);
+        try {
+            const response = await api.post(
+                "/api/auth/reset-password",
+                {
+                    email,
+                    pin,
+                    password,
+                    password_confirmation: confirmPassword,
+                }
+            );
+
+            setSuccess(
+                response.message || "Password reset successfully."
+            );
+
+            setPassword("");
+            setConfirmPassword("");
+
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                err.response?.data?.errors?.password?.[0] ||
+                "Unable to reset password."
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <AuthLayout>
-            {/* Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl">
-                    Change Password
-                </h1>
+            <div className="w-full max-w-md mx-auto">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900">
+                        Create New Password
+                    </h1>
 
-                <p className="mt-2 text-sm text-gray-500">
-                    Create a new password for your account.
-                </p>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="grid gap-5">
-                {/* New Password */}
-                <fieldset className="fieldset">
-                    <label
-                        htmlFor="password"
-                        className="fieldset-legend text-sm font-medium text-gray-950"
-                    >
-                        New Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setSubmitted(false);
-                            setError("");
-                        }}
-                        className="input input-bordered w-full border-gray-200 bg-white focus:border-gray-400 focus:outline-none"
-                        placeholder="Enter new password"
-                        autoComplete="new-password"
-                        minLength={8}
-                        required
-                    />
-
-                    <p className="text-xs text-gray-400 mt-1">
-                        Password must contain at least 8 characters.
+                    <p className="text-gray-500 mt-2">
+                        Enter your new password below.
                     </p>
-                </fieldset>
+                </div>
 
-                {/* Confirm Password */}
-                <fieldset className="fieldset">
-                    <label
-                        htmlFor="confirmPassword"
-                        className="fieldset-legend text-sm font-medium text-gray-950"
-                    >
-                        Confirm Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setSubmitted(false);
-                            setError("");
-                        }}
-                        className="input input-bordered w-full border-gray-200 bg-white focus:border-gray-400 focus:outline-none"
-                        placeholder="Confirm new password"
-                        autoComplete="new-password"
-                        minLength={8}
-                        required
-                    />
-                </fieldset>
-
-                {/* Error Message */}
                 {error && (
-                    <div
-                        role="alert"
-                        className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600"
-                    >
+                    <div className="alert alert-danger mb-4">
                         {error}
                     </div>
                 )}
 
-                {/* Success Message */}
-                {submitted && (
-                    <div
-                        role="status"
-                        className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700"
-                    >
-                        Password changed successfully!
+                {success && (
+                    <div className="alert alert-success mb-4">
+                        {success}
                     </div>
                 )}
 
-                <button
-                    type="submit"
-                    className="btn w-full rounded-lg border-gray-950 bg-gray-950 text-white hover:border-gray-800 hover:bg-gray-800"
-                >
-                    Change Password
-                </button>
-            </form>
+                {!success && (
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label className="block mb-2 font-medium">
+                                New Password
+                            </label>
 
-            <div className="mt-7 flex justify-center">
-                <a
-                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-950 transition hover:text-gray-500"
-                    href={"route(login)"}
-                ></a>
+                            <input
+                                type="password"
+                                className="form-control w-full"
+                                placeholder="Enter new password"
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(e.target.value)
+                                }
+                                minLength={8}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block mb-2 font-medium">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                className="form-control w-full"
+                                placeholder="Confirm new password"
+                                value={confirmPassword}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
+                                minLength={8}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn btn-primary w-full"
+                        >
+                            {loading ? "Resetting..." : "Reset Password"}
+                        </button>
+                    </form>
+                )}
+
+                {success && (
+                    <button
+                        type="button"
+                        onClick={() => router.visit(route("login"))}
+                        className="btn btn-primary w-full"
+                    >
+                        Back to Login
+                    </button>
+                )}
             </div>
         </AuthLayout>
     );
-}
+};
 
-export default NewPassword
-
+export default NewPassword;
