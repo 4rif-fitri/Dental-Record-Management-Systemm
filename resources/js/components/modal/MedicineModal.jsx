@@ -60,8 +60,6 @@ const MedicineModal = ({
         }
     }, [selectedMedicine]);
 
-    // Submit medicine
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 

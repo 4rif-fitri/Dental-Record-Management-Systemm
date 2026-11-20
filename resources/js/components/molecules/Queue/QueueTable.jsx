@@ -104,18 +104,17 @@ const QueueTable = ({
 
 
                                 <td className="flex gap-2">
-
-                                    {queue.status === "waiting" && (
-                                        <button
-                                            onClick={() => onCallQueue(queue.id)}
-                                            className="btn btn-primary font-semibold h-7"
-                                        >
-                                            Call
-                                        </button>
-                                    )}
-
                                     {currentRole === "dentist" && (
                                         <>
+                                            {queue.status === "waiting" && (
+                                                <button
+                                                    onClick={() => onCallQueue(queue.id)}
+                                                    className="btn btn-primary font-semibold h-7"
+                                                >
+                                                    Call
+                                                </button>
+                                            )}
+
                                             <Link
                                                 href={`/dentist-examination/${queue.patient_id}`}
                                                 className="btn btn-primary font-semibold h-7"
@@ -124,7 +123,6 @@ const QueueTable = ({
                                             </Link>
                                         </>
                                     )}
-
                                 </td>
 
                             </tr>

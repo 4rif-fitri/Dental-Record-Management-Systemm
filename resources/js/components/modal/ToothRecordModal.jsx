@@ -12,8 +12,6 @@ const ToothRecordModal = ({
     surfaceCondition
 }) => {
 
-    console.warn(currentTooth)
-
     const [selectedSurface, setSelectedSurface] = useState([]);
     const [selectedCondition, setSelectedCondition] = useState({});
     const [selectedTreatment, setSelectedTreatment] = useState({});
@@ -37,8 +35,6 @@ const ToothRecordModal = ({
             selectedSurfaceIds: selectedSurface,
             finding_description: notes
         };
-
-        console.log(jsonData)
 
         try {
             const response = await api.post(
@@ -240,7 +236,7 @@ const ToothRecordModal = ({
 
                     </div>
 
-                    <button type="submit" className="btn btn-pr">
+                    <button type="submit" className="btn btn-primary w-full mt-2">
                         Save
                     </button>
 

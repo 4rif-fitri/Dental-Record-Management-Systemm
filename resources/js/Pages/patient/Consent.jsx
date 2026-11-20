@@ -13,61 +13,31 @@ const Consent = () => {
     const id = auth?.user?.id;
 
     const [patientDetails, setPatientDetails] = useState({});
-    const [isConfirmed, setIsConfirmed] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    // =====================================
-    // Get Patient Details
-    // =====================================
 
     const getPatientById = async () => {
 
         try {
-
             setLoading(true);
-
-            const response = await api.get(
-                route("getPatientById", { id })
-            );
-
-            console.log(response.data);
-
+            const response = await api.get(route("getPatientById", { id }));
             setPatientDetails(response.data ?? {});
 
         } catch (error) {
-
             console.error(
                 "Error loading patient:",
                 error.response?.data || error.message
             );
 
         } finally {
-
             setLoading(false);
-
         }
-
     };
 
     useEffect(() => {
-
-        if (id) {
-            getPatientById();
-        }
-
+        if (id) getPatientById();
     }, [id]);
 
-    // =====================================
-    // Check Consent Signature
-    // =====================================
-
-    const isSigned = Boolean(
-        patientDetails?.consent_sign_url
-    );
-
-    // =====================================
-    // Render
-    // =====================================
+    const isSigned = Boolean(patientDetails?.consent_sign_url);
 
     return (
 

@@ -7,34 +7,19 @@ import Swal from "sweetalert2";
 
 const Booking = () => {
 
-    // Selected date and time
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
-
-    // Calendar
     const [currentMonth, setCurrentMonth] = useState(new Date());
-
-    // Appointment data
     const [appointments, setAppointments] = useState([]);
-
-    // Loading
     const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Database time slots
     const timeSlots = [
-        "08:00",
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
+        "08:00","09:00","10:00",
+        "11:00","12:00","13:00",
+        "14:00","15:00","16:00",
     ];
 
-    // Current date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -44,7 +29,6 @@ const Booking = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Calendar starts Monday
     const startOffset = (firstDay + 6) % 7;
 
     const weekdays = [
@@ -52,7 +36,6 @@ const Booking = () => {
         "FRI", "SAT", "SUN"
     ];
 
-    // Format date YYYY-MM-DD
     const formatDate = (date) => {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -61,7 +44,6 @@ const Booking = () => {
         return `${y}-${m}-${d}`;
     };
 
-    // Normalize time
     const normalizeTime = (time) => {
         if (!time) return "";
 
@@ -88,7 +70,6 @@ const Booking = () => {
         return `${String(hour).padStart(2, "0")}:${minute}`;
     };
 
-    // Display time
     const formatDisplayTime = (time) => {
         if (!time) return "-";
 
@@ -102,15 +83,12 @@ const Booking = () => {
         return `${displayHour}:${minute} ${period}`;
     };
 
-    // Extract appointments
-    // Actual API response: Array(9)
     const extractAppointments = (response) => {
 
         if (Array.isArray(response.data)) {
             return response.data;
         }
 
-        // Fallback if API returns ApiResponse wrapper
         if (Array.isArray(response.data?.data)) {
             return response.data.data;
         }
@@ -118,7 +96,6 @@ const Booking = () => {
         return [];
     };
 
-    // Fetch appointments by date
     const fetchAppointments = async (date) => {
 
         if (!date) {
