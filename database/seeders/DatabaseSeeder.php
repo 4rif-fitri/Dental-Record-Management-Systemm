@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             ToothSeeder::class,
+            SurfaceConditions::class,
             ConditionSeeder::class,
             ProcedureSeeder::class,
             SurfaceSeeder::class,
@@ -18,8 +19,8 @@ class DatabaseSeeder extends Seeder
             AppointmentSeeder::class,
             AppointmentBookingSeeder::class,
             QueueSeeder::class,
-            ExaminationSeeder::class,
             ExaminationMedicineSeeder::class,
+
         ]);
     }
 }

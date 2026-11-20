@@ -7,34 +7,19 @@ import Swal from "sweetalert2";
 
 const Booking = () => {
 
-    // Selected date and time
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
-
-    // Calendar
     const [currentMonth, setCurrentMonth] = useState(new Date());
-
-    // Appointment data
     const [appointments, setAppointments] = useState([]);
-
-    // Loading
     const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Database time slots
     const timeSlots = [
-        "08:00",
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
+        "08:00","09:00","10:00",
+        "11:00","12:00","13:00",
+        "14:00","15:00","16:00",
     ];
 
-    // Current date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -44,7 +29,6 @@ const Booking = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Calendar starts Monday
     const startOffset = (firstDay + 6) % 7;
 
     const weekdays = [
@@ -52,7 +36,6 @@ const Booking = () => {
         "FRI", "SAT", "SUN"
     ];
 
-    // Format date YYYY-MM-DD
     const formatDate = (date) => {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -61,7 +44,6 @@ const Booking = () => {
         return `${y}-${m}-${d}`;
     };
 
-    // Normalize time
     const normalizeTime = (time) => {
         if (!time) return "";
 
@@ -88,7 +70,6 @@ const Booking = () => {
         return `${String(hour).padStart(2, "0")}:${minute}`;
     };
 
-    // Display time
     const formatDisplayTime = (time) => {
         if (!time) return "-";
 
@@ -102,15 +83,12 @@ const Booking = () => {
         return `${displayHour}:${minute} ${period}`;
     };
 
-    // Extract appointments
-    // Actual API response: Array(9)
     const extractAppointments = (response) => {
 
         if (Array.isArray(response.data)) {
             return response.data;
         }
 
-        // Fallback if API returns ApiResponse wrapper
         if (Array.isArray(response.data?.data)) {
             return response.data.data;
         }
@@ -118,7 +96,6 @@ const Booking = () => {
         return [];
     };
 
-    // Fetch appointments by date
     const fetchAppointments = async (date) => {
 
         if (!date) {
@@ -137,12 +114,6 @@ const Booking = () => {
             );
 
             const data = extractAppointments(response);
-
-            console.log(
-                "Appointments for",
-                date,
-                data
-            );
 
             setAppointments(data);
 
@@ -193,14 +164,7 @@ const Booking = () => {
                 const data = extractAppointments(response);
 
                 if (!ignore) {
-
                     setAppointments(data);
-
-                    console.log(
-                        "Appointments for",
-                        selectedDate,
-                        data
-                    );
                 }
 
             } catch (error) {
@@ -473,7 +437,6 @@ const Booking = () => {
         try {
 
             setIsSubmitting(true);
-
             const response = await api.post(
                 route("createBooking"),
                 {
@@ -482,61 +445,32 @@ const Booking = () => {
                 }
             );
 
-            console.log(
-                "Booking response:",
-                response.data
-            );
-
             await Swal.fire({
-
                 title: "Booking Successful!",
-
                 text: "Your appointment booking has been submitted.",
-
                 icon: "success",
-
                 confirmButtonColor: "#16a34a"
-
             });
 
-            // Reset selected time
             setSelectedTime("");
-
-            // Refresh appointment data
             await fetchAppointments(selectedDate);
 
         } catch (error) {
 
-            console.error(
-                "Create booking error:",
-                error.response?.data ?? error
-            );
-
-            const message =
-                error.response?.data?.message ??
-                "Unable to create appointment booking.";
+            const message = error.response?.data?.message ?? "Unable to create appointment booking.";
 
             await Swal.fire({
-
                 title: "Booking Failed",
-
                 text: message,
-
                 icon: "error",
-
                 confirmButtonColor: "#dc2626"
-
             });
 
-            // Refresh slots after failed booking
             await fetchAppointments(selectedDate);
-
             setSelectedTime("");
 
         } finally {
-
             setIsSubmitting(false);
-
         }
     };
 
@@ -545,56 +479,32 @@ const Booking = () => {
         <MainLayout>
 
             <div className="mx-auto overflow-hidden rounded-2xl border border-gray-200 bg-white text-black shadow-sm">
+                <form onSubmit={handleSubmit} className="p-5 sm:p-8 lg:p-10">
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="p-5 sm:p-8 lg:p-10"
-                >
-
-                    {/* Header */}
                     <div>
-
                         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                             Book Appointment
                         </h2>
-
                         <p className="mt-2 text-sm text-gray-500">
                             Select your preferred appointment date and time.
                         </p>
-
                     </div>
-
-                    {/* Appointment Date & Time */}
                     <section className="pt-8">
-
                         <div className="mb-6">
-
                             <h3 className="text-lg font-bold text-gray-900">
                                 Appointment Date & Time
                                 <span className="ml-1 text-red-500">*</span>
                             </h3>
-
                             <p className="mt-1 text-sm text-gray-500">
                                 Choose an available date and appointment time.
                             </p>
-
                         </div>
-
                         <div className="grid gap-6 lg:grid-cols-2">
-
-                            {/* Calendar */}
                             <div className="rounded-2xl border border-gray-200 p-4 sm:p-5">
-
-                                <label
-                                    htmlFor="appointmentDate"
-                                    className="mb-2 block text-sm font-medium text-gray-700"
-                                >
+                                <label htmlFor="appointmentDate" className="mb-2 block text-sm font-medium text-gray-700">
                                     Selected date
                                 </label>
-
-                                <input
-                                    id="appointmentDate"
-                                    type="date"
+                                <input id="appointmentDate" type="date"
                                     value={selectedDate}
                                     min={formatDate(today)}
                                     onChange={handleDateChange}
@@ -602,18 +512,14 @@ const Booking = () => {
                                     required
                                 />
 
-                                {/* Month navigation */}
                                 <div className="mt-5 flex items-center justify-between">
-
-                                    <button
-                                        type="button"
+                                    <button type="button"
                                         onClick={() => changeMonth(-1)}
                                         disabled={
                                             currentMonth.getFullYear() === today.getFullYear() &&
                                             currentMonth.getMonth() <= today.getMonth()
                                         }
-                                        className="btn btn-sm"
-                                    >
+                                        className="btn btn-sm">
                                         Previous
                                     </button>
 

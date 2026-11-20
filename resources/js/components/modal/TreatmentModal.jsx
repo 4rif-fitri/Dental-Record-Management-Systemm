@@ -122,7 +122,7 @@ const TreatmentModal = ({
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium disabled:opacity-50"
+                            className="btn btn-primary"
                         >
                             {isSaving
                                 ? "Saving..."

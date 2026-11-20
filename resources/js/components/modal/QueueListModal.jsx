@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import QueueTable from '../QueueTable';
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import QueueTable from '../molecules/Queue/QueueTable.jsx';
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
@@ -94,16 +94,10 @@ const QueueListModal = ({ setShowPopup, role }) => {
             <div className="rounded-xl bg-white p-6 shadow-xl">
 
                 <div className="mb-4 flex flex-wrap justify-between">
-
                     <PageTitle title={"Queue List"} />
-
-                    <button
-                        onClick={() => setShowPopup(false)}
-                        className="btn btn-neutral"
-                    >
+                    <button onClick={() => setShowPopup(false)} className="btn btn-neutral">
                         Close
                     </button>
-
                 </div>
 
                 <QueueTable

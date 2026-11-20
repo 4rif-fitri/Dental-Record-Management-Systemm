@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import api from '@/lib/axios';
 import Showinput from "@/components/atom/Showinput.jsx";
 import SelectInput from "@/components/atom/SelectInput.jsx";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 
 const UpdateProfileModal = ({ setShowPopup, userProfile, onUpdated}) => {
     const profile = userProfile?.userProfile;

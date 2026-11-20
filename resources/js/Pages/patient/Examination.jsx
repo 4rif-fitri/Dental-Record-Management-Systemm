@@ -1,0 +1,222 @@
+import React, {useEffect, useState} from "react";
+import MainLayout from "../../layout/mainLayout";
+import DentalChart2D from "@/components/tabs/DentalChart2DTab";
+import DentalChart3D from "@/components/tabs/DentalChart3D";
+import Tretment from "@/components/tabs/TretmentTab";
+import PageTitle from "@/components/atom/PageTitle";
+import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
+import MedicineTab from "@/components/tabs/MedicineTab.jsx";
+import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
+import api from "@/lib/axios.js";
+import {route} from "ziggy-js";
+import {usePage} from "@inertiajs/react";
+
+
+const Examination = () => {
+
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
+    const id = auth?.user?.id;
+
+
+    let linkTabs = [
+        { text: "chart", label: "Dental Chart" },
+        { text: "3d", label: "3D" },
+        { text: "medicine", label: "MedicineModal" },
+    ];
+
+    const [activeTab,setActiveTab] = useState("chart");
+    const [conditions, setConditions] = useState([]);
+    const [toothFinding, setToothFinding] = useState([]);
+    const [tooth, setTooth] = useState([]);
+    const [examinationMedicine, setExaminationMedicine] = useState([])
+    const [currentToothFinding, setCurrentToothFinding] = useState(null);
+    const [showToothProcedure, setShowToothProcedure] = useState(false);
+    const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
+    const [showAddMedicine, setShowAddMedicine] = useState(false);
+    const [selectedMedicine, setSelectedMedicine] = useState(null);
+
+    const [currentTooth, setCurrentTooth] = useState(null);
+
+    const [activeFilter, setActiveFilter] = useState("ALL");
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const laodToothFinding = async () => {
+        try {
+            const response = await api.get(
+                route("getFindingByPatientId", { id })
+            );
+
+            setToothFinding(response.data);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const filteredToothFinding = activeFilter === "ALL"
+        ? toothFinding
+        : toothFinding.filter(
+            item => item.status === activeFilter
+        );
+
+    const getExaminationMedicine = async () => {
+        try {
+            const response = await api.get(route('getExaminationMedicineByPatientId', { id }));
+
+            setExaminationMedicine(response.data ?? []);
+
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+
+
+            const [
+                conditionResponse,
+                toothFindingResponse,
+                toothResponse,
+                examinationMedicineResponse,
+
+            ] = await Promise.all([
+
+                api.get(route('getAllCondition')),
+                api.get(route('getFindingByPatientId', { id })),
+                api.get(route('getAllTooth')),
+                api.get(route('getExaminationMedicineByPatientId', { id })),
+
+            ]);
+
+            setConditions(conditionResponse.data);
+            setToothFinding(toothFindingResponse.data);
+            setTooth(toothResponse.data);
+            setExaminationMedicine(examinationMedicineResponse.data ?? []);
+
+        } catch (error) {
+
+            console.error(
+                "Error fetching examination data:",
+                error.response?.data || error.message
+            );
+
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleToothSelect = (toothNumber) => {
+
+        const selectedTooth = tooth.find(item =>
+            String(item.tooth_number) === String(toothNumber)
+        );
+
+        if (!selectedTooth) {
+            console.log("Tooth not found:", toothNumber);
+            return;
+        }
+
+        setCurrentTooth(selectedTooth);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    return (
+        <MainLayout>
+
+            {isLoading && (
+                <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
+
+                    <div className="w-14 h-14 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+
+                    <h2 className="mt-5 text-lg font-semibold text-gray-800">
+                        Loading Examination
+                    </h2>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                        Please wait while we prepare patient information...
+                    </p>
+
+                </div>
+            )}
+
+            <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
+                <PageTitle title={"Patients Examination"}/>
+
+                <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
+                   <TabsHeader setActiveTab={setActiveTab} linkTabs={linkTabs} activeTab={activeTab} />
+
+                    {(activeTab === "chart" || activeTab === "3d") && (
+                        <div className="flex items-center gap-3 mt-3 border-t pt-3">
+
+                            <label className="font-semibold">
+                                Filter:
+                            </label>
+
+                            <select
+                                className="select select-bordered w-full max-w-xs"
+                                value={activeFilter}
+                                onChange={(e) => setActiveFilter(e.target.value)}
+                            >
+                                <option value="ALL">All Status</option>
+                                <option value="Planning">Planning</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+
+                        </div>
+                    )}
+
+                    <div className="w-full h-auto bg-white rounded mt-2">
+
+                        {activeTab === "chart" &&
+                            <DentalChart2D
+                                setShowToothProcedure={setShowToothProcedure}
+                                setCurrentTooth={setCurrentTooth}
+                                currentTooth={currentTooth}
+                                toothFinding={filteredToothFinding}
+                            />
+                        }
+
+                        {activeTab === "3d" &&
+                            <DentalChart3D
+                                toothFinding={filteredToothFinding}
+                                onSelect={handleToothSelect}
+                            />
+                        }
+
+                        {activeTab === "medicine" &&
+                            <MedicineTab
+                                examinationMedicine={examinationMedicine}
+                                setShowAddMedicine={setShowAddMedicine}
+                                setSelectedMedicine={setSelectedMedicine}
+                                getExaminationMedicine={getExaminationMedicine}
+                            />
+                        }
+
+                    </div>
+
+                    {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }
+
+                </div>
+
+                {activeTab === "chart" || activeTab === "3d" ?
+                    <Tretment
+                        toothFinding={filteredToothFinding}
+                        laodToothFinding={laodToothFinding}
+                        setShowUpdateToothProcedure={setShowUpdateToothProcedure}
+                        setCurrentToothFinding={setCurrentToothFinding}
+                    />
+                    : "" }
+            </div>
+        </MainLayout>
+    );
+};
+
+export default Examination;

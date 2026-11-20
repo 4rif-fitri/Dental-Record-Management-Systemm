@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from "react";
 import MainLayout from "../../layout/mainLayout";
-import PageTitle from "@/components/layout/PageTitle.jsx";
 import ErrorMesage from "@/components/atom/ErrorMesage.jsx";
 import Loading from "@/components/atom/Loading.jsx";
 import AppointmenStatusNone from "@/components/molecules/Appointment/AppointmenStatusNone.jsx";
 import AppointmenStatusBooked from "@/components/molecules/Appointment/AppointmenStatusBooked.jsx";
 import AppointmentNavigation from "@/components/molecules/Appointment/AppointmentNavigation.jsx";
 import AppointmentTableContent from "@/components/molecules/Appointment/AppointmentTableContent.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import Swal from "sweetalert2";
 import api from "@/lib/axios";
 
@@ -55,7 +55,6 @@ const ListAppointment = () => {
                 { params: { date: formatDate(weekStart) } }
             );
 
-            console.log(response)
             setDaysFromApi(response.data.days || []);
 
         } catch (error) {

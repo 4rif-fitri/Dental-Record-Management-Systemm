@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import api from "@/lib/axios.js";
 import Swal from "sweetalert2";
 

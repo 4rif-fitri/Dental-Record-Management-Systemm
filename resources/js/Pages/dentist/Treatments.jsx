@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MainLayout from "@/layout/MainLayout.jsx";
-import PageTitle from "@/components/layout/PageTitle.jsx";
-import api from "@/lib/axios.js";
-import { route } from "ziggy-js";
-import Swal from "sweetalert2";
+import PageTitle from "@/components/atom/PageTitle.jsx";
 import TreatmentModal from "@/components/modal/TreatmentModal.jsx";
 import Notreatmentsfound from "@/components/molecules/Treatment/NoTreamentsFound.jsx";
 import Loadingtreatment from "@/components/molecules/Treatment/LoadingTreatment.jsx";
 import ContentTreatment from "@/components/molecules/Treatment/ContentTreatment.jsx";
+import api from "@/lib/axios.js";
+import { route } from "ziggy-js";
+import Swal from "sweetalert2";
 
 const initialForm = {
     procedure_name: "",
@@ -289,7 +289,7 @@ const Treatments = () => {
 
                 <div className="flex flex-col sm:flex-row justify-between gap-3 mt-5 mb-5">
 
-                    <div className="relative w-full sm:w-80">
+                    <div className="relative w-full">
 
                         <input type="text" placeholder="Search treatment..." value={search}
                             onChange={(e) => setSearch(e.target.value)}

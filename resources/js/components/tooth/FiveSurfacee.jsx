@@ -1,46 +1,171 @@
+
 import React from "react";
 import "./InteractivePolygon.css";
 
-const FiveSurfacee = ({ onSelect, currentTooth, skala }) => {
+const FiveSurfacee = ({onSelect,currentTooth,skala,surfaceCondition,selectedSurface = []}) => {
 
-    const selected = currentTooth?.selected_surfaces || [];
-
-    const areas = [
-        { name: "Buccal", points: "0,0 400,0 195,150 105,150" },
-        { name: "Mesial", points: "0,0 150,170 0,300" },
-        { name: "Distal", points: "300,0 300,300 170,150" },
-        { name: "Lingual", points: "0,300 300,300 195,180 105,180" },
-    ];
+    let areas
+    if(currentTooth.jaw === "upper"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,150 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 1, name: "Palatal", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }else if(currentTooth.jaw === "lower"){
+        areas = [
+            { id: 7, name: "Buccal", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 150,170 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 3, name: "Lingual", points: "0,300 300,300 195,180 105,180" },
+        ];
+    }
 
     return (
-        <div className={`container scale-${skala}`}>
 
-            <svg className="shapes" viewBox="0 0 300 300">
+        <div className="w-full h-full grid grid-cols-3 gap-2 items-center">
+            <span></span>
 
-                {areas.map(area => (
-                    <polygon
-                        key={area.name}
-                        className={`area ${
-                            selected.includes(area.name) ? "active" : ""
-                        }`}
-                        points={area.points}
-                        onClick={() => onSelect(area.name)}
-                    />
-                ))}
+            <div>
+                <h1>Buccal</h1>
+                <select className="select"
+                    value={selectedSurface.find(item => Number(item.surface_id) === 7 )?.surface_condition_id ?? ""}
+                    onChange={(e) => onSelect(7, e.target.value)}>
+                    <option value="">Pick a color</option>
 
-            </svg>
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-            <div className="content top-content"></div>
-            <div className="content left-content"></div>
-            <div className="content right-content"></div>
-            <div className="content bottom-content"></div>
+            <span></span>
 
-            <div
-                className={`center ${
-                    selected.includes("Occlusal") ? "active" : ""
-                }`}
-                onClick={() => onSelect("Occlusal")}
-            />
+            <div>
+                <h1>Mesial</h1>
+                <select
+                    className="select"
+                    value={selectedSurface.find(item => Number(item.surface_id) === 5 )?.surface_condition_id ?? ""}
+                    onChange={(e) => onSelect(5, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
+
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Tooth diagram */}
+            <span className="flex items-center justify-center">
+
+                <div className={`container scale-${skala}`}>
+
+                    <svg className="shapes" viewBox="0 0 300 300">
+
+                        {areas.map((area) => (
+                            <polygon
+                                key={area.id}
+                                className={`area ${selectedSurface.some(item => Number(item.surface_id) === area.id) ? "active" : "" }`}
+                                points={area.points}
+                            />
+                        ))}
+
+                    </svg>
+
+                    <div className="content top-content"></div>
+                    <div className="content left-content"></div>
+                    <div className="content right-content"></div>
+                    <div className="content bottom-content"></div>
+
+                    {/* Occlusal - ID 4 */}
+                    <div className={`center ${selectedSurface.some(item => Number(item.surface_id) === 4) ? "active" : "" }`} />
+
+                </div>
+
+            </span>
+
+            <div>
+                <h1>Distal</h1>
+                <select
+                    className="select"
+                    value={
+                        selectedSurface.find(
+                            item => Number(item.surface_id) === 6
+                        )?.surface_condition_id ?? ""
+                    }
+                    onChange={(e) => onSelect(6, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
+
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <span></span>
+
+            {currentTooth.jaw === "upper" ?
+                <div>
+                    <h1>Palatal</h1>
+                    <select
+                        className="select"
+                        value={selectedSurface.find(item => Number(item.surface_id) === 1 )?.surface_condition_id ?? ""}
+                        onChange={(e) => onSelect(1, e.target.value)}>
+                        <option value="">Pick a color</option>
+
+                        {surfaceCondition.map((item) => (
+                            <option key={item.id} value={item.id}>
+                                {item.condition_code} - {item.condition_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                :
+                <div>
+                    <h1>Lingual</h1>
+                    <select
+                        className="select"
+                        value={selectedSurface.find(item => Number(item.surface_id) === 3 )?.surface_condition_id ?? ""}
+                        onChange={(e) => onSelect(3, e.target.value)}>
+                        <option value="">Pick a color</option>
+
+                        {surfaceCondition.map((item) => (
+                            <option key={item.id} value={item.id}>
+                                {item.condition_code} - {item.condition_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            }
+
+            <div>
+                <h1>Occlusal</h1>
+                <select
+                    className="select"
+                    value={
+                        selectedSurface.find(
+                            item => Number(item.surface_id) === 4
+                        )?.surface_condition_id ?? ""
+                    }
+                    onChange={(e) => onSelect(4, e.target.value)}
+                >
+                    <option value="">Pick a color</option>
+
+                    {surfaceCondition.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.condition_code} - {item.condition_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
         </div>
     );
 };

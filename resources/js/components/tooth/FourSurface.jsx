@@ -1,43 +1,56 @@
+
 import React from 'react';
 import "./InteractivePolygon.css";
 
-const FourSurface = ({onSelect, currentTooth = null}) => {
+const FourSurface = ({onSelect,toothNumber,currentTooth,selectedSurfaces = []}) => {
 
-    const areas = [
-        { name: "Incisal", points: "0,0 300,0 195,150 105,150" },
-        { name: "Mesial", points: "0,0 105,150 0,300" },
-        { name: "Distal", points: "300,0 300,300 195,150" },
-        { name: "Lingual", points: "0,300 300,300 195,150 105,150" },
-    ];
+    let areas
+    let jaww = [1, 2, 5, 6].includes(
+        Math.floor(Number(toothNumber) / 10)
+    ) ? "upper" : "lower";
 
-    const conditionColor =
-        currentTooth?.condition?.color_code || "#ffffff";
+    if(jaww === "upper"){
+        areas = [
+            { id: 2, name: "Labial", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 130,150 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 1, name: "Palatal", points: "0,300 300,300 170,150 130,150" },
+        ];
+    }else if(jaww === "lower"){
+        areas = [
+            { id: 2, name: "Labial", points: "0,0 400,0 195,150 105,150" },
+            { id: 5, name: "Mesial", points: "0,0 130,150 0,300" },
+            { id: 6, name: "Distal", points: "300,0 300,300 170,150" },
+            { id: 3, name: "Lingual", points: "0,300 300,300 170,150 130,150" },
+        ];
+    }
 
-    const latestSurfaces = currentTooth?.surfaces?.map(
-        item => item.surface?.surface_name
-    ) || [];
+    const getSurfaceColor = (surfaceId) => {
+
+        const selected = selectedSurfaces.find(
+            item => Number(item.surface_id) === Number(surfaceId)
+        );
+
+        return selected?.condition?.color_code ?? "#ffffff";
+    };
 
     return (
         <div className="container scale-50 md:scale-[0.85] lg:scale-[0.70]">
 
             <svg className="shapes" viewBox="0 0 300 300">
 
-                {areas.map((area) => {
+                {areas.map((area) => (
 
-                    const isSelected = latestSurfaces.includes(area.name);
+                    <polygon
+                        key={area.id}
+                        points={area.points}
+                        fill={getSurfaceColor(area.id)}
+                        stroke="black"
+                        onClick={() => onSelect?.(area.name)}
+                        style={{ cursor: "pointer" }}
+                    />
 
-                    return (
-                        <polygon
-                            key={area.name}
-                            className={"area"}
-                            points={area.points}
-                            style={{
-                                fill: isSelected ? conditionColor : "white"
-                            }}
-                            onClick={() => onSelect?.(area.name)}
-                        />
-                    );
-                })}
+                ))}
 
             </svg>
 

@@ -44,49 +44,67 @@ class ToothFindingController extends Controller
                 'tooth',
                 'condition',
                 'procedure',
-                'surfaces.surface'
+                'surfaces.surface',
+                'surfaces.surfaceCondition'
             ])
             ->get();
 
         return ApiResponse::success("asd", $toothFinding)->toJsonResponse();
     }
 
+
     public function createFinding(Request $request)
     {
         try {
 
-            $validate = $request->validate([
-                'patient_id' => 'required',
+            $request->validate([
+                'patient_id' => 'required|exists:users,id',
                 'tooth_id' => 'required',
                 'condition_id' => 'required',
                 'procedure_id' => 'required',
-                'status' => 'required',
+                'status' => 'required|string',
+
                 'selectedSurfaceIds' => 'required|array|min:1',
-                'selectedSurfaceIds.*' => 'required|integer|exists:surfaces,id',
+
+                'selectedSurfaceIds.*.surface_id' =>
+                    'required|integer|exists:surfaces,id',
+
+                'selectedSurfaceIds.*.surface_condition_id' =>
+                    'required|integer|exists:surface_conditions,id',
+
+                'finding_description' => 'nullable|string',
             ]);
 
             $toothFinding = DB::transaction(function () use ($request) {
 
-                $toothFinding = new ToothFinding();
-                $toothFinding->patient_id = $request->patient_id;
-                $toothFinding->tooth_id = $request->tooth_id;
-                $toothFinding->condition_id = $request->condition_id;
-                $toothFinding->procedure_id = $request->procedure_id;
-                $toothFinding->finding_description = $request->finding_description ?? "";
-                $toothFinding->status = $request->status;
-                $toothFinding->save();
+                $finding = new ToothFinding();
 
-                foreach ($request->selectedSurfaceIds as $surfaceId) {
-                    $toothSurface = new ToothSurface();
-                    $toothSurface->tooth_findings_id = $toothFinding->id;
-                    $toothSurface->surface_id = $surfaceId;
-                    $toothSurface->save();
+                $finding->patient_id = $request->patient_id;
+                $finding->tooth_id = $request->tooth_id;
+                $finding->condition_id = $request->condition_id;
+                $finding->procedure_id = $request->procedure_id;
+                $finding->finding_description =
+                    $request->finding_description ?? "";
+                $finding->status = $request->status;
+
+                $finding->save();
+
+                foreach ($request->selectedSurfaceIds as $item) {
+
+                    ToothSurface::create([
+                        'tooth_findings_id' => $finding->id,
+                        'surface_id' => $item['surface_id'],
+                        'surface_condition_id' =>
+                            $item['surface_condition_id'],
+                    ]);
+
                 }
 
-                return $toothFinding;
+                return $finding;
             });
 
-            return ApiResponse::success($toothFinding)->toJsonResponse();
+            return ApiResponse::success($toothFinding)
+                ->toJsonResponse();
 
         } catch (ValidationException $error) {
 
@@ -108,46 +126,77 @@ class ToothFindingController extends Controller
         }
     }
 
+
     public function updateFinding(Request $request, $id)
     {
         $validate = $request->validate([
+
             'condition_id' => 'required|exists:condition,id',
+
             'procedure_id' => 'required|exists:procedure,id',
+
             'finding_description' => 'nullable|string',
+
             'selectedSurfaceIds' => 'required|array|min:1',
-            'selectedSurfaceIds.*' => 'required|exists:surfaces,id',
+
+            'selectedSurfaceIds.*.surface_id' =>
+                'required|exists:surfaces,id',
+
+            'selectedSurfaceIds.*.surface_condition_id' =>
+                'required|exists:surface_conditions,id',
+
         ]);
 
         try {
 
             DB::transaction(function () use ($validate, $id) {
 
+                // Find existing tooth finding
                 $toothFinding = ToothFinding::findOrFail($id);
 
+                // Update main tooth finding
                 $toothFinding->update([
+
                     'condition_id' => $validate['condition_id'],
+
                     'procedure_id' => $validate['procedure_id'],
-                    'finding_description' => $validate['finding_description'] ?? null,
+
+                    'finding_description' =>
+                        $validate['finding_description'] ?? '',
+
                 ]);
 
-                ToothSurface::where('tooth_findings_id', $toothFinding->id)->delete();
+                // Delete existing surfaces
+                ToothSurface::where(
+                    'tooth_findings_id',
+                    $toothFinding->id
+                )->delete();
 
-                foreach ($validate['selectedSurfaceIds'] as $surfaceId) {
+                // Insert updated surfaces and conditions
+                foreach ($validate['selectedSurfaceIds'] as $surface) {
 
                     ToothSurface::create([
+
                         'tooth_findings_id' => $toothFinding->id,
-                        'surface_id' => $surfaceId,
+
+                        'surface_id' => $surface['surface_id'],
+
+                        'surface_condition_id' =>
+                            $surface['surface_condition_id'],
+
                     ]);
 
                 }
 
             });
 
+            // Get updated finding
             $toothFinding = ToothFinding::with([
                 'tooth',
                 'condition',
                 'procedure',
-                'surfaces.surface'
+                'surfaces.surface',
+                'surfaces.surfaceCondition'
             ])->findOrFail($id);
 
             return ApiResponse::success(

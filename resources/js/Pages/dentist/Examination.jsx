@@ -1,30 +1,43 @@
 import React, {useEffect, useState} from "react";
 import MainLayout from "../../layout/mainLayout";
 import PatientDetails from "@/components/tabs/PatientDetailsTab";
-import ConsentTab from "@/components/tabs/ConsentTab";
-import DentalChart2D from "@/components/tabs/DentalChart2D";
-import PenandaWarna from "@/components/PenandaWarna";
+import DentalChart2D from "@/components/tabs/DentalChart2DTab";
 import DentalChart3D from "@/components/tabs/DentalChart3D";
-import Tretment from "@/components/tabs/Tretment";
+import Tretment from "@/components/tabs/TretmentTab";
 import Medicine from "@/components/modal/MedicineModal";
-import ToothProcedure from "@/components/modal/ToothRecord";
-import PageTitle from "@/components/layout/PageTitle.jsx";
+import ToothProcedure from "@/components/modal/ToothRecordModal";
+import PageTitle from "@/components/atom/PageTitle";
 import TabsHeader from "@/components/molecules/Examination/TabsHeader.jsx";
 import UpdateToothProcedure from "@/components/modal/UpdateToothRecordModal.jsx";
+import MedicineTab from "@/components/tabs/MedicineTab.jsx";
+import PenandaWarna from "@/components/molecules/Examination/PenandaWarna.jsx";
 import api from "@/lib/axios.js";
 import {route} from "ziggy-js";
-import MedicineTab from "@/components/tabs/MedicineTabb.jsx";
-
-let linkTabs = [
-    { text: "patient", label: "Patient Details" },
-    { text: "chart", label: "Dental Chart" },
-    { text: "3d", label: "3D" },
-    { text: "medicine", label: "MedicineModal" },
-    { text: "patientConsent", label: "Patient Consent" },
-];
+import {usePage} from "@inertiajs/react";
+import LoadingPage from "@/components/atom/LoadingPage.jsx";
 
 const Examination = () => {
-    const [activeTab, setActiveTab] = useState("patient");
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
+
+    let linkTabs
+    if(currentRole === "Dentist"){
+        linkTabs = [
+            { text: "patient", label: "Patient Details" },
+            { text: "chart", label: "Dental Chart" },
+            { text: "3d", label: "3D" },
+            { text: "medicine", label: "MedicineModal" },
+        ];
+
+    }else{
+        linkTabs = [
+            { text: "chart", label: "Dental Chart" },
+            { text: "3d", label: "3D" },
+            { text: "medicine", label: "MedicineModal" },
+        ];
+    }
+
+    const [activeTab, setActiveTab] = useState(currentRole === "Dentist" ? "patient" : "chart");
     const [patientDetails, setPatientDetails] = useState("");
     const [conditions, setConditions] = useState([]);
     const [treatment, setTreatment] = useState([]);
@@ -33,6 +46,7 @@ const Examination = () => {
     const [toothFinding, setToothFinding] = useState([]);
     const [tooth, setTooth] = useState([]);
     const [examinationMedicine, setExaminationMedicine] = useState([])
+    const [surfaceCondition, setSurfaceCondition] = useState([])
 
     const [showToothProcedure, setShowToothProcedure] = useState(false);
     const [showUpdateToothProcedure, setShowUpdateToothProcedure] = useState(false);
@@ -41,6 +55,8 @@ const Examination = () => {
     const [currentTooth, setCurrentTooth] = useState(null);
     const [currentToothFinding, setCurrentToothFinding] = useState(null);
     const [selectedMedicine, setSelectedMedicine] = useState(null);
+
+    const [activeFilter, setActiveFilter] = useState("ALL");
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -58,6 +74,12 @@ const Examination = () => {
             console.log(error);
         }
     }
+
+    const filteredToothFinding = activeFilter === "ALL"
+        ? toothFinding
+        : toothFinding.filter(
+            item => item.status === activeFilter
+        );
 
     const getExaminationMedicine = async () => {
         try {
@@ -91,7 +113,10 @@ const Examination = () => {
                 medicineResponse,
                 toothFindingResponse,
                 toothResponse,
-                examinationMedicineResponse
+                examinationMedicineResponse,
+                surfaceConditionResponse,
+
+
             ] = await Promise.all([
 
                 api.get(route('getPatientById', { id })),
@@ -102,6 +127,7 @@ const Examination = () => {
                 api.get(route('getFindingByPatientId', { id })),
                 api.get(route('getAllTooth')),
                 api.get(route('getExaminationMedicineByPatientId', { id })),
+                api.get(route('getAllSurfaceCondition')),
 
             ]);
 
@@ -113,6 +139,7 @@ const Examination = () => {
             setToothFinding(toothFindingResponse.data);
             setTooth(toothResponse.data);
             setExaminationMedicine(examinationMedicineResponse.data ?? []);
+            setSurfaceCondition(surfaceConditionResponse.data)
 
         } catch (error) {
 
@@ -150,21 +177,7 @@ const Examination = () => {
     return (
         <MainLayout>
 
-            {isLoading && (
-                <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
-
-                    <div className="w-14 h-14 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-
-                    <h2 className="mt-5 text-lg font-semibold text-gray-800">
-                        Loading Examination
-                    </h2>
-
-                    <p className="mt-2 text-sm text-gray-500">
-                        Please wait while we prepare patient information...
-                    </p>
-
-                </div>
-            )}
+            {isLoading && <LoadingPage />}
 
             {showAddMedicine &&
                 <Medicine
@@ -186,6 +199,7 @@ const Examination = () => {
                     surfaces={surfaces}
                     patientDetails={patientDetails}
                     laodToothFinding={laodToothFinding}
+                    surfaceCondition={surfaceCondition}
                 />
             }
 
@@ -197,6 +211,8 @@ const Examination = () => {
                     treatment={treatment}
                     surfaces={surfaces}
                     laodToothFinding={laodToothFinding}
+                    surfaceCondition={surfaceCondition}
+                    currentTooth={currentTooth}
                 />
             }
 
@@ -205,6 +221,27 @@ const Examination = () => {
 
                 <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
                    <TabsHeader setActiveTab={setActiveTab} linkTabs={linkTabs} activeTab={activeTab} />
+
+                    {(activeTab === "chart" || activeTab === "3d") && (
+                        <div className="flex items-center gap-3 mt-3 border-t pt-3">
+
+                            <label className="font-semibold">
+                                Filter:
+                            </label>
+
+                            <select
+                                className="select select-bordered w-full max-w-xs"
+                                value={activeFilter}
+                                onChange={(e) => setActiveFilter(e.target.value)}
+                            >
+                                <option value="ALL">All Status</option>
+                                <option value="Planning">Planning</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+
+                        </div>
+                    )}
 
                     <div className="w-full h-auto bg-white rounded mt-2">
                         {activeTab === "patient" &&
@@ -217,13 +254,14 @@ const Examination = () => {
                             <DentalChart2D
                                 setShowToothProcedure={setShowToothProcedure}
                                 setCurrentTooth={setCurrentTooth}
-                                toothFinding={toothFinding}
+                                currentTooth={currentTooth}
+                                toothFinding={filteredToothFinding}
                             />
                         }
 
                         {activeTab === "3d" &&
                             <DentalChart3D
-                                toothFinding={toothFinding}
+                                toothFinding={filteredToothFinding}
                                 onSelect={handleToothSelect}
                             />
                         }
@@ -237,13 +275,6 @@ const Examination = () => {
                             />
                         }
 
-                        {activeTab === "patientConsent" &&
-                            <ConsentTab
-                                patientDetails={patientDetails}
-                                setPatientDetails={setPatientDetails}
-                            />
-                        }
-
                     </div>
 
                     {activeTab === "chart" || activeTab === "3d" ? <PenandaWarna conditions={conditions} /> : "" }
@@ -252,7 +283,7 @@ const Examination = () => {
 
                 {activeTab === "chart" || activeTab === "3d" ?
                     <Tretment
-                        toothFinding={toothFinding}
+                        toothFinding={filteredToothFinding}
                         laodToothFinding={laodToothFinding}
                         setShowUpdateToothProcedure={setShowUpdateToothProcedure}
                         setCurrentToothFinding={setCurrentToothFinding}

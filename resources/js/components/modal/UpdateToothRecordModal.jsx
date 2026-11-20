@@ -9,7 +9,7 @@ import { route } from "ziggy-js";
 const UpdateToothRecordModal = ({
     setShowUpdateToothProcedure,
     currentToothFinding,conditions, treatment,
-    surfaces, laodToothFinding
+    surfaces, laodToothFinding, surfaceCondition
 }) => {
 
     const [selectedCondition, setSelectedCondition] = useState({});
@@ -84,32 +84,64 @@ const UpdateToothRecordModal = ({
         setNotes(currentToothFinding.finding_description || "");
 
         setSelectedSurfaces(
-            (currentToothFinding.surfaces || []).map(
-                item => item.surface?.surface_name
-            ).filter(Boolean)
+            (currentToothFinding.surfaces || []).map(item => ({
+                surface_id: item.surface_id,
+                surface_name: item.surface?.surface_name,
+                surface_condition_id: item.surface_condition_id,
+                surface_condition: item.surface_condition
+            }))
         );
 
     }, [currentToothFinding, conditions, treatment]);
 
-    const handleSurfaceSelect = (surface) => {
+    const handleSurfaceSelect = (surfaceId, conditionId) => {
 
         setSelectedSurfaces(prev => {
 
-            return prev.includes(surface)
-                ? prev.filter(item => item !== surface)
-                : [...prev, surface];
+            // Remove surface if user selects empty option
+            if (!conditionId) {
+                return prev.filter(
+                    item => Number(item.surface_id) !== Number(surfaceId)
+                );
+            }
+
+            const selectedCondition = surfaceCondition.find(
+                item => Number(item.id) === Number(conditionId)
+            );
+
+            const selectedSurface = surfaces.find(
+                item => Number(item.id) === Number(surfaceId)
+            );
+
+            const newData = {
+                surface_id: Number(surfaceId),
+                surface_name: selectedSurface?.surface_name,
+                surface_condition_id: Number(conditionId),
+                surface_condition: selectedCondition
+            };
+
+            const exists = prev.some(
+                item => Number(item.surface_id) === Number(surfaceId)
+            );
+
+            if (exists) {
+                return prev.map(item =>
+                    Number(item.surface_id) === Number(surfaceId)
+                        ? newData
+                        : item
+                );
+            }
+
+            return [...prev, newData];
 
         });
 
     };
 
-    const selectedSurfaceIds = selectedSurfaces.map(name => {
-
-        return surfaces.find(
-            surface => surface.surface_name === name
-        )?.id;
-
-    }).filter(Boolean);
+    const selectedSurfaceIds = selectedSurfaces.map(item => ({
+        surface_id: item.surface_id,
+        surface_condition_id: item.surface_condition_id
+    }));
 
     const handleCloseModal = () => {
         setShowUpdateToothProcedure(false);
@@ -135,8 +167,12 @@ const UpdateToothRecordModal = ({
             const jsonData = {
                 condition_id: selectedCondition.id,
                 procedure_id: selectedTreatment.id,
-                finding_description: notes,
-                selectedSurfaceIds: selectedSurfaceIds
+                finding_description: notes ?? "",
+
+                selectedSurfaceIds: selectedSurfaces.map(item => ({
+                    surface_id: item.surface_id,
+                    surface_condition_id: item.surface_condition_id
+                }))
             };
 
             const response = await api.put(
@@ -182,11 +218,11 @@ const UpdateToothRecordModal = ({
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 text-black">
 
-            <div className="w-[95vw] lg:w-[75vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
+            <div className="w-[95vw] lg:w-[50vw] max-w-8xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 sm:p-10 shadow-xl">
 
                 <div className="mb-4 flex flex-wrap justify-between items-center">
                     <h2 className="font-bold text-3xl">
-                        Update Tooth Treatment
+                        Update Tooth Record
                     </h2>
                     <button type="button" onClick={handleCloseModal}
                         className="btn bg-black text-white w-24">
@@ -195,23 +231,37 @@ const UpdateToothRecordModal = ({
                 </div>
 
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 mb-8">
+                    <h1 className={"font-semibold"}>Tooth Detail</h1>
+                    <h1 className={"font-semibold"}>Surface Condition</h1>
 
-                    <div className="border-2 border-gray-300 p-2">
-
-                        <div className="relative flex justify-center items-center h-60 bg-gray-100">
-
+                    <div className="p-2 flex gap-2 flex-col w-full">
+                        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+                            <table className="table">
+                                <tbody>
+                                <tr>
+                                    <td>Tooth Name</td>
+                                    <td>{currentToothFinding.tooth.tooth_name}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Number</td>
+                                    <td>{currentToothFinding.tooth.tooth_number}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Type</td>
+                                    <td>{currentToothFinding.tooth.tooth_type}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Jaw</td>
+                                    <td>{currentToothFinding.tooth.jaw}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooth Quadrant</td>
+                                    <td>{currentToothFinding.tooth.quadrant}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div className={"grid grid-cols-2 mt-2 gap-2"}>
-                            <button type="button" className={"btn btn-outline"}>
-                                Surface
-                            </button>
-                            <button type="button" className={"btn btn-outline"}>
-                                Cross Section
-                            </button>
-                        </div>
-
                     </div>
 
 
@@ -222,12 +272,16 @@ const UpdateToothRecordModal = ({
                                 currentTooth={{...tooth, selected_surfaces: selectedSurfaces}}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurfaces}
                             />
                         ) : (
                             <FourSurfacee
                                 currentTooth={{...tooth,selected_surfaces: selectedSurfaces}}
                                 onSelect={handleSurfaceSelect}
                                 skala={"200"}
+                                surfaceCondition={surfaceCondition}
+                                selectedSurface={selectedSurfaces}
                             />
                         )}
 
@@ -238,11 +292,11 @@ const UpdateToothRecordModal = ({
 
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">
-                        <div className={"grid grid-cols-1 md:grid-cols-2 gap-4"}>
+                        <div className={"grid grid-cols-1 md:grid-cols-1 gap-4"}>
                             <div>
-                                <label className="text-2xl font-medium">Condition</label>
+                                <label className="text-2xl font-medium">Tooth Condition</label>
                                 <select name="condition"
-                                    className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    className="w-full select"
                                     value={selectedCondition.id ?? ""}
                                     onChange={(e) => {
                                         const id = e.target.value;
@@ -257,7 +311,7 @@ const UpdateToothRecordModal = ({
                                     </option>
                                     {conditions.map((data) => (
                                         <option key={data.id} value={data.id}>
-                                            {data.condition_name}
+                                            {data.condition_code} - {data.condition_name}
                                         </option>
                                     ))}
 
@@ -267,7 +321,7 @@ const UpdateToothRecordModal = ({
                             <div>
                                 <label className="text-2xl font-medium">Treatment</label>
                                 <select name="treatment"
-                                    className="w-full h-12 border-2 border-gray-300 px-3 bg-white"
+                                    className="w-full select"
                                     value={selectedTreatment.id ?? ""}
                                     onChange={(e) => {
                                         const id = e.target.value;
@@ -306,7 +360,7 @@ const UpdateToothRecordModal = ({
                             type="button"
                             disabled={loading}
                             onClick={handleDelete}
-                            className="w-full mt-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xl disabled:opacity-50"
+                            className="btn btn-error"
                         >
                             Delete
                         </button>
@@ -314,7 +368,7 @@ const UpdateToothRecordModal = ({
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full mt-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xl disabled:opacity-50"
+                            className="btn btn-primary"
                         >
                             {loading ? "Updating..." : "Update"}
                         </button>

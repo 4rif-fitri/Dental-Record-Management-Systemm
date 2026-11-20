@@ -1,9 +1,11 @@
 
 import React, { useState } from 'react';
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Tooth from '../tooth/Tooth';
 import Mouth from '../tooth/Mouth';
+import { useRef, useEffect } from "react";
+import * as THREE from "three";
 
 const toothModels = import.meta.glob("../../assets/*.glb", {
     eager: true,
@@ -11,95 +13,231 @@ const toothModels = import.meta.glob("../../assets/*.glb", {
     import: "default",
 });
 
+const getToothName = (number) => {
+
+    const digit = Number(String(number).slice(-1));
+    const quadrant = Number(String(number)[0]);
+
+    const permanentNames = {
+        1: "Central Incisor",
+        2: "Lateral Incisor",
+        3: "Canine",
+        4: "First Premolar",
+        5: "Second Premolar",
+        6: "First Molar",
+        7: "Second Molar",
+        8: "Third Molar"
+    };
+
+    const primaryNames = {
+        1: "Central Incisor",
+        2: "Lateral Incisor",
+        3: "Canine",
+        4: "First Molar",
+        5: "Second Molar"
+    };
+
+    const positions = {
+        1: "Upper Right",
+        2: "Upper Left",
+        3: "Lower Left",
+        4: "Lower Right",
+        5: "Upper Right",
+        6: "Upper Left",
+        7: "Lower Left",
+        8: "Lower Right"
+    };
+
+    const isPrimary = quadrant >= 5;
+
+    const name = isPrimary
+        ? primaryNames[digit]
+        : permanentNames[digit];
+
+    return `${positions[quadrant]} ${name || "Tooth"}`;
+};
+
+const CameraFocus = ({ controlsRef, focusPoint }) => {
+
+    const { camera } = useThree();
+
+    useEffect(() => {
+
+        const controls = controlsRef.current;
+
+        if (!controls) return;
+
+        // Reset camera apabila tiada selection
+        if (!focusPoint) {
+
+            camera.position.set(0, 0.25, 0.75);
+
+            controls.target.set(0, 0, 0);
+
+            controls.update();
+
+            return;
+        }
+
+        // Get clicked tooth position
+        const target = new THREE.Vector3(
+            focusPoint.x,
+            focusPoint.y,
+            focusPoint.z
+        );
+
+        // Maintain current viewing direction
+        const direction = camera.position
+            .clone()
+            .sub(controls.target)
+            .normalize();
+
+        // Zoom distance
+        const zoomDistance = 0.35;
+
+        // Move camera to clicked tooth
+        camera.position.copy(
+            target.clone().add(
+                direction.multiplyScalar(zoomDistance)
+            )
+        );
+
+        // Center clicked tooth
+        controls.target.copy(target);
+
+        controls.update();
+
+    }, [focusPoint, camera, controlsRef]);
+
+    return null;
+};
+
+// Permanent teeth
 const permanentTeeth = [
+    18, 17, 16, 15, 14, 13, 12, 11,
+    21, 22, 23, 24, 25, 26, 27, 28,
+    48, 47, 46, 45, 44, 43, 42, 41,
+    31, 32, 33, 34, 35, 36, 37, 38
+].map(number => ({
+    number,
+    model: toothModels[`../../assets/${number}.glb`]
+}));
 
-    { number: 18, model: toothModels["../../assets/18.glb"] },
-    { number: 17, model: toothModels["../../assets/17.glb"] },
-    { number: 16, model: toothModels["../../assets/16.glb"] },
-    { number: 15, model: toothModels["../../assets/15.glb"] },
-    { number: 14, model: toothModels["../../assets/14.glb"] },
-    { number: 13, model: toothModels["../../assets/13.glb"] },
-    { number: 12, model: toothModels["../../assets/12.glb"] },
-    { number: 11, model: toothModels["../../assets/11.glb"] },
-
-    { number: 21, model: toothModels["../../assets/21.glb"] },
-    { number: 22, model: toothModels["../../assets/22.glb"] },
-    { number: 23, model: toothModels["../../assets/23.glb"] },
-    { number: 24, model: toothModels["../../assets/24.glb"] },
-    { number: 25, model: toothModels["../../assets/25.glb"] },
-    { number: 26, model: toothModels["../../assets/26.glb"] },
-    { number: 27, model: toothModels["../../assets/27.glb"] },
-    { number: 28, model: toothModels["../../assets/28.glb"] },
-
-    { number: 48, model: toothModels["../../assets/48.glb"] },
-    { number: 47, model: toothModels["../../assets/47.glb"] },
-    { number: 46, model: toothModels["../../assets/46.glb"] },
-    { number: 45, model: toothModels["../../assets/45.glb"] },
-    { number: 44, model: toothModels["../../assets/44.glb"] },
-    { number: 43, model: toothModels["../../assets/43.glb"] },
-    { number: 42, model: toothModels["../../assets/42.glb"] },
-    { number: 41, model: toothModels["../../assets/41.glb"] },
-
-    { number: 31, model: toothModels["../../assets/31.glb"] },
-    { number: 32, model: toothModels["../../assets/32.glb"] },
-    { number: 33, model: toothModels["../../assets/33.glb"] },
-    { number: 34, model: toothModels["../../assets/34.glb"] },
-    { number: 35, model: toothModels["../../assets/35.glb"] },
-    { number: 36, model: toothModels["../../assets/36.glb"] },
-    { number: 37, model: toothModels["../../assets/37.glb"] },
-    { number: 38, model: toothModels["../../assets/38.glb"] },
-
-];
-
+// Primary teeth
 const primaryTeeth = [
+    55, 54, 53, 52, 51,
+    61, 62, 63, 64, 65,
+    85, 84, 83, 82, 81,
+    71, 72, 73, 74, 75
+].map(number => ({
+    number,
+    model: toothModels[`../../assets/${number}.glb`]
+}));
 
-    { number: 55, model: toothModels["../../assets/55.glb"] },
-    { number: 54, model: toothModels["../../assets/54.glb"] },
-    { number: 53, model: toothModels["../../assets/53.glb"] },
-    { number: 52, model: toothModels["../../assets/52.glb"] },
-    { number: 51, model: toothModels["../../assets/51.glb"] },
-
-    { number: 61, model: toothModels["../../assets/61.glb"] },
-    { number: 62, model: toothModels["../../assets/62.glb"] },
-    { number: 63, model: toothModels["../../assets/63.glb"] },
-    { number: 64, model: toothModels["../../assets/64.glb"] },
-    { number: 65, model: toothModels["../../assets/65.glb"] },
-
-    { number: 85, model: toothModels["../../assets/85.glb"] },
-    { number: 84, model: toothModels["../../assets/84.glb"] },
-    { number: 83, model: toothModels["../../assets/83.glb"] },
-    { number: 82, model: toothModels["../../assets/82.glb"] },
-    { number: 81, model: toothModels["../../assets/81.glb"] },
-
-    { number: 71, model: toothModels["../../assets/71.glb"] },
-    { number: 72, model: toothModels["../../assets/72.glb"] },
-    { number: 73, model: toothModels["../../assets/73.glb"] },
-    { number: 74, model: toothModels["../../assets/74.glb"] },
-    { number: 75, model: toothModels["../../assets/75.glb"] },
-
-];
-
-const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
+const DentalChart3D = ({ toothFinding = [] }) => {
 
     const [selectedJaw, setSelectedJaw] = useState("all");
     const [selectedDentition, setSelectedDentition] = useState("permanent");
 
-    const getLatestFinding = (toothNumber) => {
+    const [selectedTooth, setSelectedTooth] = useState(null);
 
-        const findings = toothFinding.filter(item =>
-            String(item.tooth?.tooth_number) === String(toothNumber)
+    const [focusPoint, setFocusPoint] = useState(null);
+    const controlsRef = useRef();
+    const [hoveredTooth, setHoveredTooth] = useState(null);
+    const [clickedToothInfo, setClickedToothInfo] = useState(null);
+    const displayedTooth = hoveredTooth || clickedToothInfo;
+
+    const renderTooth = (tooth) => {
+
+        const findings = toothFinding?.filter(
+            item =>
+                Number(item.tooth?.tooth_number) === Number(tooth.number)
+        ) || [];
+
+        // Latest finding first
+        const sortedFindings = [...findings].sort(
+            (a, b) => {
+
+                const dateCompare =
+                    new Date(b.created_at) - new Date(a.created_at);
+
+                return dateCompare || Number(b.id) - Number(a.id);
+
+            }
         );
 
-        if (findings.length === 0) return null;
+        const latestFinding = sortedFindings[0] || null;
 
-        return [...findings].sort((a, b) => {
+        // Combine surfaces from all findings
+        const surfaceMap = new Map();
 
-            const dateCompare =
-                new Date(b.created_at) - new Date(a.created_at);
+        sortedFindings.forEach(finding => {
 
-            return dateCompare || Number(b.id) - Number(a.id);
+            finding.surfaces?.forEach(surface => {
 
-        })[0];
+                const surfaceId = Number(surface.surface_id);
+
+                if (!surfaceMap.has(surfaceId)) {
+
+                    surfaceMap.set(surfaceId, {
+                        surface_id: surfaceId,
+                        surface_name: surface.surface?.surface_name,
+                        surface_condition_id: surface.surface_condition_id,
+                        surface_condition: surface.surface_condition,
+                        finding_id: finding.id,
+                        condition: finding.condition
+                    });
+
+                }
+
+            });
+
+        });
+
+        const selectedSurfaces = Array.from(surfaceMap.values());
+
+        if (!tooth.model) {
+            console.error(`Model ${tooth.number}.glb tidak dijumpai`);
+            return null;
+        }
+
+        return (
+            <Tooth
+                key={tooth.number}
+                toothNumber={tooth.number}
+                model={tooth.model}
+
+                position={[0, -0.175, 0]}
+                rotation={[0, 0, 0]}
+
+                selectedSurfaces={selectedSurfaces}
+                finding={latestFinding}
+                findings={findings}
+
+                isSelected={selectedTooth === tooth.number}
+                hasSelection={selectedTooth !== null}
+
+                onHover={setHoveredTooth}
+
+                onSelect={(number, point, info) => {
+
+                    if (selectedTooth === number) {
+
+                        setSelectedTooth(null);
+                        setFocusPoint(null);
+                        setClickedToothInfo(null);
+
+                    } else {
+
+                        setSelectedTooth(number);
+                        setFocusPoint(point);
+                        setClickedToothInfo(info);
+
+                    }
+
+                }}
+            />
+        );
 
     };
 
@@ -133,70 +271,89 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
         selectedDentition === "permanent" ||
         selectedDentition === "all";
 
+
     return (
         <>
-            <div className="flex gap-3 justify-around">
+            <div className="h-120 gap-0 bg-[#0f172a] overflow-hidden relative">
+                {displayedTooth && (
+                    <div className="absolute top-3 left-3 z-20 w-72 rounded-xl border border-teal-600 bg-slate-900/95 p-3 shadow-xl pointer-events-none">
+                        <div className="text-teal-400 font-bold text-sm">
+                            FDI #{displayedTooth.toothNumber}
+                        </div>
 
-                <div className="flex gap-3 p-1">
+                        <div className="text-white font-semibold text-base mt-1">
+                            {getToothName(displayedTooth.toothNumber)}
+                        </div>
 
-                    <button onClick={() => setSelectedDentition("primary")}
-                        className={`p-2 rounded border
-                        ${selectedDentition === "primary" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Primary
-                    </button>
+                        <div className="text-slate-400 text-xs mt-1">
+                            {Number(String(displayedTooth.toothNumber)[0]) >= 5
+                                ? "Primary"
+                                : "Permanent"}
+                        </div>
 
-                    <button onClick={() => setSelectedDentition("permanent")}
-                        className={`p-2 rounded border
-                        ${selectedDentition === "permanent" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Permanent
-                    </button>
+                        <div className="flex justify-between text-xs mt-2">
+                            <span className="text-slate-300">
+                                Condition
+                            </span>
+                            <span className="font-semibold"
+                                style={{color: displayedTooth.finding?.condition?.color_code || "#94a3b8" }}>
+                                {displayedTooth.finding?.condition?.condition_name || "No Record"}
+                            </span>
+                        </div>
 
-                </div>
+                        <div className="text-white font-semibold text-sm mt-3">
+                            Surface Conditions
+                        </div>
 
-                <div className="flex gap-3 p-1">
+                        <div className="border-t border-slate-700 mt-2 pt-2 space-y-2">
+                            {displayedTooth.surfaces?.length > 0 ? (
+                                displayedTooth.surfaces.map(surface => (
+                                    <div key={surface.surface_id} className="flex justify-between text-xs">
+                                        <span className="text-slate-300">
+                                            {surface.surface_name}
+                                        </span>
+                                        <span className="font-semibold"
+                                            style={{color: surface.condition?.color_code || "#94a3b8"}}>
+                                            {surface.surface_condition?.condition_name || "Unknown"}
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-slate-400 text-xs">
+                                    No surface records found
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
 
-                    <button onClick={() => setSelectedJaw("upper")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "upper" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Upper
-                    </button>
-
-                    <button onClick={() => setSelectedJaw("lower")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "lower" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        Lower
-                    </button>
-
-                    <button onClick={() => setSelectedJaw("all")}
-                        className={`p-2 rounded border
-                        ${selectedJaw === "all" ? "bg-blue-700 text-white" : "bg-white text-black"}`}>
-                        All
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div className="h-150 gap-0 bg-black overflow-hidden">
-
-                <Canvas
-                    key={selectedDentition}
-                    camera={{ position: [0, 0.25, 0.75] }}
-                >
+                <Canvas key={selectedDentition} camera={{ position: [0, 0.25, 0.75] }}>
 
                     <ambientLight intensity={2} />
 
-                    <OrbitControls />
+                    <OrbitControls
+                        ref={controlsRef}
+                        enableDamping
+                        minDistance={0.2}
+                        maxDistance={2}
+                    />
 
+                    <CameraFocus
+                        controlsRef={controlsRef}
+                        focusPoint={focusPoint}
+                    />
+
+                    {/* MAXILLA */}
                     {selectedJaw !== "lower" && (
                         <>
+
                             {showPermanent && (
                                 <Mouth
                                     toothNumber="maxilla"
                                     model={toothModels["../../assets/ma.glb"]}
                                     position={[0, -0.175, 0]}
                                     rotation={[0, 0, 0]}
-                                    onSelect={onSelect}
+                                    hasSelection={selectedTooth !== null}
                                 />
                             )}
 
@@ -206,22 +363,24 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                                     model={toothModels["../../assets/ma2.glb"]}
                                     position={[0, -0.175, 0]}
                                     rotation={[0, 0, 0]}
-                                    onSelect={onSelect}
+                                    hasSelection={selectedTooth !== null}
                                 />
                             )}
 
                         </>
                     )}
 
+                    {/* MANDIBLE */}
                     {selectedJaw !== "upper" && (
                         <>
+
                             {showPermanent && (
                                 <Mouth
                                     toothNumber="mandible"
                                     model={toothModels["../../assets/mb.glb"]}
                                     position={[0, -0.175, 0]}
                                     rotation={[0, 0, 0]}
-                                    onSelect={onSelect}
+                                    hasSelection={selectedTooth !== null}
                                 />
                             )}
 
@@ -231,42 +390,63 @@ const DentalChart3D = ({ onSelect, toothFinding = [] }) => {
                                     model={toothModels["../../assets/mb2.glb"]}
                                     position={[0, -0.175, 0]}
                                     rotation={[0, 0, 0]}
-                                    onSelect={onSelect}
+                                    hasSelection={selectedTooth !== null}
                                 />
                             )}
 
                         </>
                     )}
 
-                    {filteredTeeth.map((tooth) => {
-
-                        const finding = getLatestFinding(tooth.number);
-
-                        if (!tooth.model) {
-                            console.error(
-                                `Model ${tooth.number}.glb tidak dijumpai`
-                            );
-                            return null;
-                        }
-
-                        return (
-                            <Tooth
-                                key={tooth.number}
-                                toothNumber={tooth.number}
-                                model={tooth.model}
-                                position={[0, -0.175, 0]}
-                                rotation={[0, 0, 0]}
-                                onSelect={onSelect}
-                                finding={finding}
-                                conditionColor={
-                                    finding?.condition?.color_code || null
-                                }
-                            />
-                        );
-
-                    })}
+                    {/* INDIVIDUAL TEETH */}
+                    {filteredTeeth.map(renderTooth)}
 
                 </Canvas>
+
+            </div>
+
+            {/* FILTERS */}
+            <div className="flex flex-wrap gap-4">
+
+                <div className="flex items-center gap-3 p-1">
+
+                    <label className="font-semibold">
+                        Dentition:
+                    </label>
+
+                    <select
+                        className="select select-bordered w-full max-w-xs"
+                        value={selectedDentition}
+                        onChange={(e) => {
+                            setSelectedDentition(e.target.value);
+                            setSelectedTooth(null);
+                        }}
+                    >
+                        <option value="primary">Primary</option>
+                        <option value="permanent">Permanent</option>
+                    </select>
+
+                </div>
+
+                <div className="flex items-center gap-3 p-1">
+
+                    <label className="font-semibold">
+                        Jaw:
+                    </label>
+
+                    <select
+                        className="select select-bordered w-full max-w-xs"
+                        value={selectedJaw}
+                        onChange={(e) => {
+                            setSelectedJaw(e.target.value);
+                            setSelectedTooth(null);
+                        }}
+                    >
+                        <option value="upper">Upper</option>
+                        <option value="lower">Lower</option>
+                        <option value="all">All</option>
+                    </select>
+
+                </div>
 
             </div>
         </>

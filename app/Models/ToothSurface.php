@@ -11,6 +11,7 @@ class ToothSurface extends Model
     protected $fillable = [
         'tooth_findings_id',
         'surface_id',
+        'surface_condition_id',
     ];
 
     public function toothFinding()
@@ -21,5 +22,9 @@ class ToothSurface extends Model
     public function surface()
     {
         return $this->belongsTo(Surface::class, 'surface_id');
+    }
+
+    public function surfaceCondition(){
+        return $this->belongsTo(SurfaceCondition::class, 'surface_condition_id');
     }
 }

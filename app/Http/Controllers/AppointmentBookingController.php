@@ -14,16 +14,13 @@ class AppointmentBookingController extends Controller
     public function getAllBooking(){
         $bookings = AppointmentBooking::all();
 
-        return ApiResponse::success(
-            "",
-            $bookings
-        )->toJsonResponse();
+        return ApiResponse::success("List of all bookings", $bookings)->toJsonResponse();
     }
 
     public function getBookingById($id){
         $booking = AppointmentBooking::where('id', $id)->with("appointment")->first();
 
-        return ApiResponse::success(200, $booking)->toJsonResponse();
+        return ApiResponse::success("Booking Details", $booking)->toJsonResponse();
     }
 
     public function getAppointmentPatient()
@@ -34,26 +31,13 @@ class AppointmentBookingController extends Controller
             ->with("appointment")
             ->get();
 
-        return ApiResponse::success(
-            "",
-            $response
-        )->toJsonResponse();
+        return ApiResponse::success("", $response)->toJsonResponse();
     }
 
     public function createBooking(Request $request)
     {
-        // Get logged-in patient ID from session
         $patientId = session('id');
 
-        if (!$patientId) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Please login before booking an appointment.',
-                'data' => null
-            ], 401);
-        }
-
-        // Validate request
         $validated = $request->validate([
             'appointment_id' => ['required', 'integer', 'exists:appointments,id'],
             'reason' => ['nullable', 'string', 'max:255'],
@@ -61,16 +45,9 @@ class AppointmentBookingController extends Controller
 
         try {
 
-            $result = DB::transaction(function () use (
-                $validated,
-                $patientId
-            ) {
+            $result = DB::transaction(function () use ($validated,$patientId) {
 
-                // Lock appointment record
-                $appointment = Appointment::where(
-                    'id',
-                    $validated['appointment_id']
-                )
+                $appointment = Appointment::where('id',$validated['appointment_id'])
                     ->lockForUpdate()
                     ->first();
 
@@ -132,57 +109,6 @@ class AppointmentBookingController extends Controller
             return response()->json([
                 'status' => 500,
                 'message' => 'Failed to create appointment booking.',
-                'data' => null
-            ], 500);
-        }
-    }
-
-
-    public function rejectBooking($id)
-    {
-        try {
-
-            DB::transaction(function () use ($id) {
-
-                $booking = AppointmentBooking::findOrFail($id);
-
-                $appointment = Appointment::where(
-                    'id',
-                    $booking->appointment_id
-                )
-                    ->lockForUpdate()
-                    ->firstOrFail();
-
-                $booking->update([
-                    'status' => 'rejected'
-                ]);
-
-                // Check sama ada masih ada booking aktif
-                $hasActiveBooking = $appointment->bookings()
-                    ->whereIn('status', [
-                        'pending',
-                        'approved'
-                    ])
-                    ->exists();
-
-                // Jika tiada booking aktif, slot available semula
-                $appointment->update([
-                    'status' => $hasActiveBooking
-                        ? 'booked'
-                        : 'available'
-                ]);
-            });
-
-            return ApiResponse::success(
-                200,
-                null
-            )->toJsonResponse();
-
-        } catch (\Throwable $e) {
-
-            return response()->json([
-                'status' => 500,
-                'message' => $e->getMessage(),
                 'data' => null
             ], 500);
         }
