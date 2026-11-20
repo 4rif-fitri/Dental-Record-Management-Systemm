@@ -11,19 +11,13 @@ class MedicineController extends Controller
     public function getAllMedicine(){
         $medicines = Medicine::all();
 
-        return ApiResponse::success(
-            "List of medicine",
-            $medicines
-        )->toJsonResponse();
+        return ApiResponse::success("List of medicine", $medicines)->toJsonResponse();
     }
 
     public function getMedicineById($id){
         $medicines = Medicine::where('id', $id)->first();
 
-        return ApiResponse::success(
-            "List of medicine",
-            $medicines
-        )->toJsonResponse();
+        return ApiResponse::success("List of medicine",$medicines)->toJsonResponse();
     }
 
     public function createMedicine(Request $request){
@@ -37,10 +31,7 @@ class MedicineController extends Controller
         $medicines->description = $request->description;
         $medicines->save();
 
-        return ApiResponse::success(
-            "List of medicine",
-            $medicines
-        )->toJsonResponse();
+        return ApiResponse::success("List of medicine",$medicines)->toJsonResponse();
     }
 
     public function updateMedicine(Request $request, $id){
@@ -54,17 +45,12 @@ class MedicineController extends Controller
         $medicines->description = $request->description;
         $medicines->save();
 
-        return ApiResponse::success(
-            "Success to update medicine",
-            $medicines
-        )->toJsonResponse();
+        return ApiResponse::success("Success to update medicine",$medicines)->toJsonResponse();
     }
 
     public function deleteMedicine($id){
         $response = Medicine::where('id', $id)->delete();
 
-        return ApiResponse::success(
-            "Successful delete medicine",
-        )->toJsonResponse();
+        return ApiResponse::success("Successful delete medicine",)->toJsonResponse();
     }
 }

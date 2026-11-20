@@ -437,7 +437,6 @@ const Booking = () => {
         try {
 
             setIsSubmitting(true);
-
             const response = await api.post(
                 route("createBooking"),
                 {
@@ -446,61 +445,32 @@ const Booking = () => {
                 }
             );
 
-            console.log(
-                "Booking response:",
-                response.data
-            );
-
             await Swal.fire({
-
                 title: "Booking Successful!",
-
                 text: "Your appointment booking has been submitted.",
-
                 icon: "success",
-
                 confirmButtonColor: "#16a34a"
-
             });
 
-            // Reset selected time
             setSelectedTime("");
-
-            // Refresh appointment data
             await fetchAppointments(selectedDate);
 
         } catch (error) {
 
-            console.error(
-                "Create booking error:",
-                error.response?.data ?? error
-            );
-
-            const message =
-                error.response?.data?.message ??
-                "Unable to create appointment booking.";
+            const message = error.response?.data?.message ?? "Unable to create appointment booking.";
 
             await Swal.fire({
-
                 title: "Booking Failed",
-
                 text: message,
-
                 icon: "error",
-
                 confirmButtonColor: "#dc2626"
-
             });
 
-            // Refresh slots after failed booking
             await fetchAppointments(selectedDate);
-
             setSelectedTime("");
 
         } finally {
-
             setIsSubmitting(false);
-
         }
     };
 
@@ -509,56 +479,32 @@ const Booking = () => {
         <MainLayout>
 
             <div className="mx-auto overflow-hidden rounded-2xl border border-gray-200 bg-white text-black shadow-sm">
+                <form onSubmit={handleSubmit} className="p-5 sm:p-8 lg:p-10">
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="p-5 sm:p-8 lg:p-10"
-                >
-
-                    {/* Header */}
                     <div>
-
                         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                             Book Appointment
                         </h2>
-
                         <p className="mt-2 text-sm text-gray-500">
                             Select your preferred appointment date and time.
                         </p>
-
                     </div>
-
-                    {/* Appointment Date & Time */}
                     <section className="pt-8">
-
                         <div className="mb-6">
-
                             <h3 className="text-lg font-bold text-gray-900">
                                 Appointment Date & Time
                                 <span className="ml-1 text-red-500">*</span>
                             </h3>
-
                             <p className="mt-1 text-sm text-gray-500">
                                 Choose an available date and appointment time.
                             </p>
-
                         </div>
-
                         <div className="grid gap-6 lg:grid-cols-2">
-
-                            {/* Calendar */}
                             <div className="rounded-2xl border border-gray-200 p-4 sm:p-5">
-
-                                <label
-                                    htmlFor="appointmentDate"
-                                    className="mb-2 block text-sm font-medium text-gray-700"
-                                >
+                                <label htmlFor="appointmentDate" className="mb-2 block text-sm font-medium text-gray-700">
                                     Selected date
                                 </label>
-
-                                <input
-                                    id="appointmentDate"
-                                    type="date"
+                                <input id="appointmentDate" type="date"
                                     value={selectedDate}
                                     min={formatDate(today)}
                                     onChange={handleDateChange}
@@ -566,18 +512,14 @@ const Booking = () => {
                                     required
                                 />
 
-                                {/* Month navigation */}
                                 <div className="mt-5 flex items-center justify-between">
-
-                                    <button
-                                        type="button"
+                                    <button type="button"
                                         onClick={() => changeMonth(-1)}
                                         disabled={
                                             currentMonth.getFullYear() === today.getFullYear() &&
                                             currentMonth.getMonth() <= today.getMonth()
                                         }
-                                        className="btn btn-sm"
-                                    >
+                                        className="btn btn-sm">
                                         Previous
                                     </button>
 

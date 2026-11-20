@@ -11,6 +11,52 @@ use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
+    public function index(){
+        if (session('role') === 'patient') {
+            return redirect()->route('patientAppointment');
+        }else if(session('role') === 'dentist'){
+            return redirect()->route('dentistListAppointment');
+        }else if(session('role') === 'clinicStaff'){
+            return redirect()->route('listQueue');
+        }
+    }
+
+    public function pageToothConditions()
+    {
+        return Inertia::render('dentist/ToothConditions');
+    }
+
+    public function userProfile()
+    {
+        return Inertia::render('Profile');
+    }
+
+    public function pageTreatments()
+    {
+        return Inertia::render('dentist/Treatments');
+    }
+
+    public function dentistListPatient()
+    {
+        return Inertia::render('dentist/ListPatient');
+    }
+
+    public function showLoginPage(){
+        return Inertia::render('Auth/Login');
+    }
+
+    public function showRegisterPage(){
+        return Inertia::render('Auth/Register');
+    }
+
+    public function showNewPasswordPage(){
+        return Inertia::render('Auth/NewPassword');
+    }
+
+    public function showForgotPasswordPage(){
+        return Inertia::render('Auth/ForgotPassword');
+    }
+
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -67,14 +113,12 @@ class UserController extends Controller
         )->toJsonResponse();
     }
 
-    public function index(){
-        if (session('role') === 'patient') {
-            return redirect()->route('patientAppointment');
-        }else if(session('role') === 'dentist'){
-            return redirect()->route('dentistListAppointment');
-        }else if(session('role') === 'clinicStaff'){
-            return redirect()->route('listQueue');
-        }
+    public function forgotPassword(Request $request){
+
+    }
+
+    public function resetPassword(Request $request){
+
     }
 
     public function logout(Request $request){
@@ -85,11 +129,6 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
-    }
-
-    public function pageTreatments()
-    {
-        return Inertia::render('dentist/Treatments');
     }
 
     public function getProfileData()
@@ -121,16 +160,6 @@ class UserController extends Controller
 
         return ApiResponse::success('Success', $user)->toJsonResponse();
 
-    }
-
-    public function pageToothConditions()
-    {
-        return Inertia::render('dentist/ToothConditions');
-    }
-
-    public function userProfile()
-    {
-        return Inertia::render('Profile');
     }
 
     public function getAllPatient(){
@@ -166,11 +195,6 @@ class UserController extends Controller
         )->toJsonResponse();
     }
 
-    public function dentistListPatient()
-    {
-        return Inertia::render('dentist/ListPatient');
-    }
-
     public function updateProfile(Request $request)
     {
         $id = session('id');
@@ -204,22 +228,6 @@ class UserController extends Controller
         $user->update($validated);
 
         return ApiResponse::success('Success', $user)->toJsonResponse();
-    }
-
-    public function showLoginPage(){
-        return Inertia::render('Auth/Login');
-    }
-
-    public function showRegisterPage(){
-        return Inertia::render('Auth/Register');
-    }
-
-    public function showNewPasswordPage(){
-        return Inertia::render('Auth/NewPassword');
-    }
-
-    public function showForgotPasswordPage(){
-        return Inertia::render('Auth/ForgotPassword');
     }
 
     public function getPatientById($id)

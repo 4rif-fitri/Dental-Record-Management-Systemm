@@ -35,11 +35,13 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [UserController::class, 'showLoginPage'])->name('login');
     Route::get('/register', [UserController::class, 'showRegisterPage'])->name('register');
-    Route::get('/new-password', [UserController::class, 'showForgotPasswordPage'])->name('newPassword');
     Route::get('/forgot-password', [UserController::class, 'showForgotPasswordPage'])->name('forgotPassword');
+    Route::get('/new-password', [UserController::class, 'showForgotPasswordPage'])->name('newPassword');
 
     Route::post('/login', [UserController::class, 'login'])->name('userLogin');
     Route::post('/register', [UserController::class, 'register'])->name('userregister');
+    Route::post('/forgot-password', [UserController::class, 'forgotPassword'])->name('forgotPassword');
+    Route::post('/new-password', [UserController::class, 'resetPassword'])->name('resetPassword');
 });
 
 /*
@@ -63,13 +65,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/patient-book-appointment', [AppointmentController::class, 'patientBookAppointment'])->name('patientBookAppointment');
         Route::get('/patient-examination', [ExaminationController::class, 'pagePatientExamination'])->name('pagePatientExamination');
         Route::get('/patient-consent', [ExaminationController::class, 'pagePatientConsent'])->name('pagePatientConsent');
-
     });
 
     Route::middleware('role:clinicStaff')->group(function () {
         Route::get('/list-queue', [QueueController::class, 'listQueue'])->name('listQueue');
     });
-
 
     Route::middleware('role:dentist')->group(function () {
         Route::get('/dentist-list-appointment', [AppointmentController::class, 'dentistListAppointment'])->name('dentistListAppointment');
@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
 | Here is where you can register API routes for your application.
 |
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'ajax'])->group(function () {
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [UserController::class, 'getProfileData'])->name('getProfileData');
