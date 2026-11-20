@@ -3,23 +3,15 @@ import { useGLTF } from "@react-three/drei";
 import { useState, useEffect, useMemo } from "react";
 
 export default function Tooth({
-                                  toothNumber,
-                                  model,
-                                  onSelect,
-                                  isSelected = false,
-                                  hasSelection = false,
-                                  position = [0, 0, 0],
-                                  rotation = [0, 0, 0],
-                                  scale = [1, 1, 1],
-                                  selectedSurfaces = [],
-                                  finding = null,
-                                  findings = [],
-                                  onHover,
-                              }) {
+    toothNumber,model,onSelect, isSelected = false,
+    hasSelection = false, position = [0, 0, 0],
+    rotation = [0, 0, 0], scale = [1, 1, 1],
+    selectedSurfaces = [], finding = null,
+    findings = [], onHover,
+}) {
 
     const { scene } = useGLTF(model);
 
-    // Clone scene and materials
     const clonedScene = useMemo(() => {
 
         const cloned = scene.clone(true);
@@ -31,25 +23,16 @@ export default function Tooth({
             if (Array.isArray(child.material)) {
 
                 child.material = child.material.map(material => {
-
                     const clonedMaterial = material.clone();
-
                     clonedMaterial.userData.originalColor =
                         material.color.clone();
-
                     return clonedMaterial;
-
                 });
 
             } else {
-
                 const clonedMaterial = child.material.clone();
-
-                clonedMaterial.userData.originalColor =
-                    child.material.color.clone();
-
+                clonedMaterial.userData.originalColor = child.material.color.clone();
                 child.material = clonedMaterial;
-
             }
 
         });
@@ -58,60 +41,32 @@ export default function Tooth({
 
     }, [scene]);
 
-    // =====================================
-    // Apply surface color and opacity
-    // =====================================
-
     useEffect(() => {
 
         clonedScene.traverse((child) => {
-
             if (!child.isMesh) return;
 
-            const materials = Array.isArray(child.material)
-                ? child.material
-                : [child.material];
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
 
             materials.forEach((material) => {
+                const surfaceName = material.name.split(".")[0].trim();
 
-                // Buccal.001 -> Buccal
-                const surfaceName = material.name
-                    .split(".")[0]
-                    .trim();
-
-                // Find matching surface
                 const surfaceData = selectedSurfaces.find(
-                    item =>
-                        item.surface_name?.toLowerCase() ===
-                        surfaceName.toLowerCase()
+                    item => item.surface_name?.toLowerCase() === surfaceName.toLowerCase()
                 );
 
-                // Apply condition color
                 const color = surfaceData?.condition?.color_code;
 
                 if (color) {
-
                     material.color.set(color);
-
                 } else {
-
-                    material.color.copy(
-                        material.userData.originalColor
-                    );
-
+                    material.color.copy(material.userData.originalColor);
                 }
 
                 // Opacity
                 material.transparent = true;
-
-                material.opacity = !hasSelection
-                    ? 1
-                    : isSelected
-                        ? 1
-                        : 0.3;
-
+                material.opacity = !hasSelection ? 1 : isSelected ? 1 : 0.3;
                 material.depthWrite = material.opacity === 1;
-
                 material.needsUpdate = true;
 
             });
@@ -119,10 +74,6 @@ export default function Tooth({
         });
 
     }, [clonedScene, selectedSurfaces, isSelected, hasSelection]);
-
-    // =====================================
-    // Handle click
-    // =====================================
 
     const getToothInfo = () => ({
         toothNumber,
@@ -132,19 +83,16 @@ export default function Tooth({
 
     const handlePointerOver = (event) => {
         event.stopPropagation();
-
         onHover?.(getToothInfo());
     };
 
     const handlePointerOut = (event) => {
         event.stopPropagation();
-
         onHover?.(null);
     };
 
     const handleClick = (event) => {
         event.stopPropagation();
-
         onSelect?.(
             toothNumber,
             event.point,

@@ -3,16 +3,13 @@ import { useGLTF } from "@react-three/drei";
 import { useMemo, useEffect } from "react";
 
 export default function Mouth({
-                                  model,
-                                  hasSelection = false,
-                                  position = [0, 0, 0],
-                                  rotation = [0, 0, 0],
-                                  scale = [1, 1, 1]
-                              }) {
+    model, hasSelection = false,
+    position = [0, 0, 0], rotation = [0, 0, 0],
+    scale = [1, 1, 1]
+}) {
 
     const { scene } = useGLTF(model);
 
-    // Clone scene and materials
     const clonedScene = useMemo(() => {
 
         const cloned = scene.clone(true);
@@ -22,15 +19,11 @@ export default function Mouth({
             if (!child.isMesh) return;
 
             if (Array.isArray(child.material)) {
-
                 child.material = child.material.map(material =>
                     material.clone()
                 );
-
             } else {
-
                 child.material = child.material.clone();
-
             }
 
         });
@@ -39,7 +32,6 @@ export default function Mouth({
 
     }, [scene]);
 
-    // Apply opacity
     useEffect(() => {
 
         clonedScene.traverse((child) => {
