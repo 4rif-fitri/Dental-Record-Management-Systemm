@@ -1,6 +1,5 @@
 import BoxCondition from "../molecules/Examination/BoxCondition.jsx";
 import api from "@/lib/axios.js";
-import {usePage} from "@inertiajs/react";
 
 const TretmentTab = ({
     toothFinding = [], laodToothFinding,

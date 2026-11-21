@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import { router } from "@inertiajs/react";
-import api from "@/lib/axios.js";
 import AuthLayout from "@/layout/AuthLayout.jsx";
+import api from "@/lib/axios.js";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -16,16 +15,9 @@ const ForgotPassword = () => {
         setError("");
 
         try {
-            await api.post("/api/auth/forgot-password", {
-                email,
-            });
+            await api.post("/api/auth/forgot-password", {email,});
 
-            router.visit(
-                route("password.verify.page"),
-                {
-                    data: { email },
-                }
-            );
+            router.visit(route("password.verify.page"), {data: { email },});
 
         } catch (err) {
             setError(
@@ -40,7 +32,7 @@ const ForgotPassword = () => {
     return (
         <AuthLayout>
             <div className="w-full max-w-md mx-auto">
-                <div className="text-center mb-8">
+                <div className=" mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">
                         Forgot Password?
                     </h1>
@@ -63,9 +55,7 @@ const ForgotPassword = () => {
                             Email Address
                         </label>
 
-                        <input
-                            type="email"
-                            className="form-control w-full"
+                        <input type="email" className="form-control w-full"
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -73,20 +63,13 @@ const ForgotPassword = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn btn-primary w-full"
-                    >
+                    <button type="submit" disabled={loading} className="btn bg-black text-white w-full">
                         {loading ? "Sending PIN..." : "Send PIN"}
                     </button>
                 </form>
 
                 <div className="text-center mt-6">
-                    <a
-                        href={route("login")}
-                        className="text-primary font-medium"
-                    >
+                    <a href={route("login")} className="">
                         Back to Login
                     </a>
                 </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import AuthLayout from "@/layout/AuthLayout.jsx";
@@ -29,19 +28,14 @@ const NewPassword = () => {
         }
 
         try {
-            const response = await api.post(
-                "/api/auth/reset-password",
-                {
-                    email,
-                    pin,
-                    password,
-                    password_confirmation: confirmPassword,
-                }
-            );
+            const response = await api.post("/api/auth/reset-password", {
+                email,
+                pin,
+                password,
+                password_confirmation: confirmPassword,
+            });
 
-            setSuccess(
-                response.message || "Password reset successfully."
-            );
+            setSuccess(response.message || "Password reset successfully.");
 
             setPassword("");
             setConfirmPassword("");
@@ -89,14 +83,10 @@ const NewPassword = () => {
                                 New Password
                             </label>
 
-                            <input
-                                type="password"
-                                className="form-control w-full"
+                            <input type="password" className="form-control w-full"
                                 placeholder="Enter new password"
                                 value={password}
-                                onChange={(e) =>
-                                    setPassword(e.target.value)
-                                }
+                                onChange={(e) => setPassword(e.target.value)}
                                 minLength={8}
                                 required
                             />
@@ -107,35 +97,24 @@ const NewPassword = () => {
                                 Confirm Password
                             </label>
 
-                            <input
-                                type="password"
-                                className="form-control w-full"
+                            <input type="password" className="form-control w-full"
                                 placeholder="Confirm new password"
                                 value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(e.target.value)
-                                }
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 minLength={8}
                                 required
                             />
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="btn btn-primary w-full"
-                        >
+                        <button type="submit" disabled={loading} className="btn btn-primary w-full">
                             {loading ? "Resetting..." : "Reset Password"}
                         </button>
                     </form>
                 )}
 
                 {success && (
-                    <button
-                        type="button"
-                        onClick={() => router.visit(route("login"))}
-                        className="btn btn-primary w-full"
-                    >
+                    <button type="button" onClick={() => router.visit(route("login"))}
+                        className="btn btn-primary w-full">
                         Back to Login
                     </button>
                 )}

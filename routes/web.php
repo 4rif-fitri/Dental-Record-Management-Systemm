@@ -16,9 +16,9 @@ use App\Http\Controllers\AppointmentBookingController;
 use App\Http\Controllers\ExaminationMedicineController;
 use App\Http\Controllers\ToothSurfaceController;
 use App\Http\Controllers\SurfaceConditionController;
-use App\Http\Controllers\MailTestController;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -29,44 +29,21 @@ use Illuminate\Http\Request;
 |
 */
 
-
-// Bruno CSRF
 Route::get('/bruno/csrf', function () {
     return response()->json([
         'csrf_token' => csrf_token()
     ]);
 });
 
-// Guest Routes
 Route::middleware('guest')->group(function () {
 
-    // Login
-    Route::get('/login', [
-        UserController::class,
-        'showLoginPage'
-    ])->name('login');
+    Route::get('/login', [UserController::class,'showLoginPage'])->name('login');
+    Route::post('/login', [UserController::class,'login'])->name('userLogin');
 
-    Route::post('/login', [
-        UserController::class,
-        'login'
-    ])->name('userLogin');
-
-    // Register
-    Route::get('/register', [
-        UserController::class,
-        'showRegisterPage'
-    ])->name('register');
-
-    Route::post('/register', [
-        UserController::class,
-        'register'
-    ])->name('userregister');
+    Route::get('/register', [UserController::class,'showRegisterPage'])->name('register');
+    Route::post('/register', [UserController::class,'register'])->name('userregister');
 
 });
-
-// Password Reset PIN Pages
-
-
 
 Route::get('/forgot-password', function () {
     return Inertia::render('Auth/ForgotPassword');
@@ -85,10 +62,8 @@ Route::get('/new-password', function (Request $request) {
     ]);
 })->name('password.new.page');
 
-Route::get('/login', [
-    UserController::class,
-    'showLoginPage'
-])->name('login');
+Route::get('/login', [UserController::class,'showLoginPage'])->name('login');
+
 /*
 |--------------------------------------------------------------------------
 | Page Routes

@@ -15,9 +15,7 @@ use Illuminate\Validation\Rules\Password;
 
 class PasswordResetPinController extends Controller
 {
-    /**
-     * Generate and send 6-digit PIN.
-     */
+
     public function sendPin(Request $request)
     {
         $request->validate([
@@ -28,7 +26,6 @@ class PasswordResetPinController extends Controller
 
         $user = User::where('email', $email)->first();
 
-        // Generic response to avoid exposing registered emails.
         if (!$user) {
             return response()->json([
                 'status' => 200,
@@ -83,9 +80,6 @@ class PasswordResetPinController extends Controller
         ]);
     }
 
-    /**
-     * Verify PIN.
-     */
     public function verifyPin(Request $request)
     {
         $request->validate([
@@ -133,9 +127,6 @@ class PasswordResetPinController extends Controller
         ]);
     }
 
-    /**
-     * Reset password using email and PIN.
-     */
     public function resetPassword(Request $request)
     {
         $request->validate([

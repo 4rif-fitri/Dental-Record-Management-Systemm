@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import AuthLayout from "@/layout/AuthLayout.jsx";
@@ -24,21 +23,15 @@ const VerifyPin = () => {
                 pin,
             });
 
-            router.visit(
-                route("password.new.page"),
-                {
-                    data: {
-                        email,
-                        pin,
-                    },
-                }
-            );
+            router.visit(route("password.new.page"), {
+                data: {
+                    email,
+                    pin,
+                },
+            });
 
         } catch (err) {
-            setError(
-                err.response?.data?.message ||
-                "Invalid PIN. Please try again."
-            );
+            setError(err.response?.data?.message || "Invalid PIN. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -73,38 +66,23 @@ const VerifyPin = () => {
                             Verification PIN
                         </label>
 
-                        <input
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={6}
-                            className="form-control w-full text-center tracking-[0.5em] text-xl"
-                            placeholder="000000"
-                            value={pin}
+                        <input type="text" inputMode="numeric" required
+                            maxLength={6} className="form-control w-full text-center tracking-[0.5em] text-xl"
+                            placeholder="000000" value={pin}
                             onChange={(e) =>
-                                setPin(
-                                    e.target.value
-                                        .replace(/\D/g, "")
-                                        .slice(0, 6)
-                                )
+                                setPin(e.target.value.replace(/\D/g, "").slice(0, 6))
                             }
-                            required
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading || pin.length !== 6}
-                        className="btn btn-primary w-full"
-                    >
+                    <button type="submit" disabled={loading || pin.length !== 6}
+                        className="btn btn-primary w-full">
                         {loading ? "Verifying..." : "Verify PIN"}
                     </button>
                 </form>
 
                 <div className="text-center mt-6">
-                    <a
-                        href={route("password.forgot.page")}
-                        className="text-primary font-medium"
-                    >
+                    <a href={route("password.forgot.page")} className="text-primary font-medium">
                         Back
                     </a>
                 </div>
