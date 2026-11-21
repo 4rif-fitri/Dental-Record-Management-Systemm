@@ -13,8 +13,4 @@ class Medicine extends Model
         'description',
     ];
 
-    public function examinations()
-    {
-        return $this->hasMany(ExaminationMedicine::class, 'medicine_id');
-    }
 }

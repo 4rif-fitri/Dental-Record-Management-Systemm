@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import MainLayout from "@/layout/MainLayout.jsx";
 import PageTitle from "@/components/atom/PageTitle.jsx";
@@ -10,6 +11,7 @@ import { route } from "ziggy-js";
 import Swal from "sweetalert2";
 
 const initialForm = {
+    procedure_code: "",
     procedure_name: "",
     procedure_description: "",
     procedure_type: "Restorative",
@@ -87,6 +89,7 @@ const Treatments = () => {
         return procedures.filter((item) => {
 
             return (
+                item.procedure_code?.toLowerCase().includes(keyword) ||
                 item.procedure_name?.toLowerCase().includes(keyword) ||
                 item.procedure_description?.toLowerCase().includes(keyword) ||
                 item.procedure_type?.toLowerCase().includes(keyword)
@@ -126,6 +129,7 @@ const Treatments = () => {
         setSelectedProcedure(procedure);
 
         setForm({
+            procedure_code: procedure.procedure_code || "",
             procedure_name: procedure.procedure_name || "",
             procedure_description: procedure.procedure_description || "",
             procedure_type: procedure.procedure_type || "Restorative",
@@ -148,7 +152,7 @@ const Treatments = () => {
     };
 
 
-    // Create / Update
+// Create / Update
     const handleSubmit = async (e) => {
 
         e.preventDefault();
@@ -166,14 +170,6 @@ const Treatments = () => {
                     form
                 );
 
-                await Swal.fire({
-                    icon: "success",
-                    title: "Updated!",
-                    text: "Treatment updated successfully.",
-                    timer: 1500,
-                    showConfirmButton: false,
-                });
-
             } else {
 
                 await api.post(
@@ -181,22 +177,26 @@ const Treatments = () => {
                     form
                 );
 
-                setShowModal(false);
-
-                await Swal.fire({
-                    icon: "success",
-                    title: "Created!",
-                    text: "New treatment created successfully.",
-                    timer: 1500,
-                    showConfirmButton: false,
-                });
-
             }
 
+            // Close modal first
+            setShowModal(false);
             setSelectedProcedure(null);
             setForm(initialForm);
 
+            // Refresh data
             await fetchProcedures();
+
+            // Show popup after modal closes
+            await Swal.fire({
+                icon: "success",
+                title: selectedProcedure ? "Updated!" : "Created!",
+                text: selectedProcedure
+                    ? "Treatment updated successfully."
+                    : "New treatment created successfully.",
+                timer: 1500,
+                showConfirmButton: false,
+            });
 
         } catch (error) {
 
@@ -279,6 +279,7 @@ const Treatments = () => {
 
     };
 
+
     return (
 
         <MainLayout>
@@ -287,21 +288,33 @@ const Treatments = () => {
 
                 <PageTitle title={"Treatments"} />
 
+                {/* SEARCH & ADD */}
                 <div className="flex flex-col sm:flex-row justify-between gap-3 mt-5 mb-5">
 
                     <div className="relative w-full">
 
-                        <input type="text" placeholder="Search treatment..." value={search}
+                        <input
+                            type="text"
+                            placeholder="Search treatment..."
+                            value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                         />
 
                     </div>
-                    <button type="button" onClick={handleCreate} className="btn btn-primary">
+
+                    <button
+                        type="button"
+                        onClick={handleCreate}
+                        className="btn btn-primary"
+                    >
                         Add Treatment
                     </button>
+
                 </div>
 
+
+                {/* TABLE */}
                 <div className="overflow-x-auto border border-gray-200 rounded-lg">
 
                     <table className="w-full text-sm text-left">
@@ -310,6 +323,7 @@ const Treatments = () => {
 
                         <tr>
                             <th className="px-5 py-4">No.</th>
+                            <th className="px-5 py-4">Procedure Code</th>
                             <th className="px-5 py-4">Treatment Name</th>
                             <th className="px-5 py-4">Description</th>
                             <th className="px-5 py-4">Type</th>
@@ -321,16 +335,25 @@ const Treatments = () => {
                         <tbody className="divide-y divide-gray-100">
 
                         {isLoading ? (
+
                             <Loadingtreatment />
+
                         ) : filteredProcedures.length === 0 ? (
+
                             <Notreatmentsfound />
+
                         ) : (
+
                             filteredProcedures.map((procedure, index) => (
+
                                 <ContentTreatment
+                                    key={procedure.id}
                                     index={index}
                                     procedure={procedure}
-                                    handleEdit={handleEdit} handleDelete={handleDelete}
+                                    handleEdit={handleEdit}
+                                    handleDelete={handleDelete}
                                 />
+
                             ))
 
                         )}
@@ -342,7 +365,9 @@ const Treatments = () => {
                 </div>
 
 
+                {/* MODAL */}
                 {showModal && (
+
                     <TreatmentModal
                         selectedProcedure={selectedProcedure}
                         closeModal={closeModal}
@@ -352,6 +377,7 @@ const Treatments = () => {
                         handleSubmit={handleSubmit}
                         form={form}
                     />
+
                 )}
 
             </div>

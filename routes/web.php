@@ -16,6 +16,7 @@ use App\Http\Controllers\AppointmentBookingController;
 use App\Http\Controllers\ExaminationMedicineController;
 use App\Http\Controllers\ToothSurfaceController;
 use App\Http\Controllers\SurfaceConditionController;
+use App\Http\PageController\PageController;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -96,6 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dentist-list-patient', [UserController::class, 'dentistListPatient'])->name('dentistListPatient');
         Route::get('/tooth-conditions', [UserController::class, 'pageToothConditions'])->name('pageToothConditions');
         Route::get('/treatments', [UserController::class, 'pageTreatments'])->name('pageTreatments');
+        Route::get('/pageMedicine', [PageController::class, 'pageMedicine'])->name('pageMedicine');
         Route::get('/dentist-examination/{id}', [ExaminationController::class, 'pageExamination'])->name('dentistExamination');
     });
 });

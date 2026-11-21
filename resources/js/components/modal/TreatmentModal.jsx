@@ -1,17 +1,23 @@
+
 const TreatmentModal = ({
-    selectedProcedure, closeModal, handleChange,
-    procedureTypes, isSaving, handleSubmit, form
-}) => {
+                            selectedProcedure,
+                            closeModal,
+                            handleChange,
+                            procedureTypes,
+                            isSaving,
+                            handleSubmit,
+                            form
+                        }) => {
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
 
             <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden">
 
+                {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
 
                     <div>
-
                         <h2 className="text-lg font-semibold text-gray-800">
                             {selectedProcedure
                                 ? "Update Treatment"
@@ -21,12 +27,12 @@ const TreatmentModal = ({
                         <p className="text-xs text-gray-500 mt-1">
                             Manage dental treatment information.
                         </p>
-
                     </div>
 
                     <button
                         type="button"
                         onClick={closeModal}
+                        disabled={isSaving}
                         className="text-gray-400 hover:text-gray-700 text-2xl"
                     >
                         &times;
@@ -34,15 +40,31 @@ const TreatmentModal = ({
 
                 </div>
 
-
                 {/* Form */}
                 <form onSubmit={handleSubmit}>
 
                     <div className="p-6 space-y-4">
 
+                        {/* Procedure Code */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Procedure Code
+                            </label>
+
+                            <input
+                                type="text"
+                                name="procedure_code"
+                                value={form.procedure_code}
+                                onChange={handleChange}
+                                placeholder="e.g. PROC001"
+                                maxLength={100}
+                                required
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
                         {/* Name */}
                         <div>
-
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                 Treatment Name
                             </label>
@@ -57,12 +79,10 @@ const TreatmentModal = ({
                                 required
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                             />
-
                         </div>
 
                         {/* Type */}
                         <div>
-
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                 Treatment Type
                             </label>
@@ -74,25 +94,16 @@ const TreatmentModal = ({
                                 required
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                             >
-
                                 {procedureTypes.map(type => (
-
-                                    <option
-                                        key={type}
-                                        value={type}
-                                    >
+                                    <option key={type} value={type}>
                                         {type}
                                     </option>
-
                                 ))}
-
                             </select>
-
                         </div>
 
                         {/* Description */}
                         <div>
-
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                 Description
                             </label>
@@ -111,13 +122,21 @@ const TreatmentModal = ({
                             <p className="text-xs text-gray-400 text-right mt-1">
                                 {form.procedure_description.length}/255
                             </p>
-
                         </div>
+
                     </div>
 
+                    {/* Footer */}
                     <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200">
 
-
+                        <button
+                            type="button"
+                            onClick={closeModal}
+                            disabled={isSaving}
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 text-sm"
+                        >
+                            Cancel
+                        </button>
 
                         <button
                             type="submit"
@@ -138,7 +157,7 @@ const TreatmentModal = ({
             </div>
 
         </div>
-    )
-}
+    );
+};
 
-export default TreatmentModal
+export default TreatmentModal;

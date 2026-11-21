@@ -50,20 +50,14 @@ class ExaminationMedicineController extends Controller
             'instructions' => 'required',
         ]);
 
-        $examinationMedicine = new ExaminationMedicine();
-        $examinationMedicine->patient_id = $request->patient_id;
-        $examinationMedicine->medicine_id = $request->medicine_id;
-        $examinationMedicine->dosage = $request->dosage;
-        $examinationMedicine->frequency = $request->frequency;
-        $examinationMedicine->duration = $request->duration;
-        $examinationMedicine->instructions = $request->instructions;
-        $examinationMedicine->quantity = $request->quantity;
-        $examinationMedicine->notes = $request->notes;
-        $examinationMedicine->save();
+        $ExaminationMedicine = ExaminationMedicine::create([
+            ...$validated,
+            'notes' => $request->notes,
+        ]);
 
         return ApiResponse::success(
-            "List of examination medicine",
-            $examinationMedicine
+            "created successfully",
+            $ExaminationMedicine
         )->toJsonResponse();
     }
 
