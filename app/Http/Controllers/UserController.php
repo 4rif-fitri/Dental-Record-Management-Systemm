@@ -93,7 +93,6 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Create patient account
         $user = User::create([
             'name' => $validated['name'],
             'ic_passport' => $validated['ic_passport'],

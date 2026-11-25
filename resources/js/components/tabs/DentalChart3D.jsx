@@ -274,7 +274,7 @@ const DentalChart3D = ({ toothFinding = [] }) => {
 
     return (
         <>
-            <div className="h-120 gap-0 bg-[#0f172a] overflow-hidden relative">
+            <div className="h-160 gap-0 bg-[#0f172a] overflow-hidden relative">
                 {displayedTooth && (
                     <div className="absolute top-3 left-3 z-20 w-72 rounded-xl border border-teal-600 bg-slate-900/95 p-3 shadow-xl pointer-events-none">
                         <div className="text-teal-400 font-bold text-sm">

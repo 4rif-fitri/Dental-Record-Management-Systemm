@@ -20,22 +20,12 @@ const Examination = () => {
     const { auth } = usePage().props;
     const currentRole = auth?.user?.role;
 
-    let linkTabs
-    if(currentRole === "Dentist"){
-        linkTabs = [
+    let linkTabs = [
             { text: "patient", label: "Patient Details" },
             { text: "chart", label: "Dental Chart" },
             { text: "3d", label: "3D" },
             { text: "medicine", label: "MedicineModal" },
         ];
-
-    }else{
-        linkTabs = [
-            { text: "chart", label: "Dental Chart" },
-            { text: "3d", label: "3D" },
-            { text: "medicine", label: "MedicineModal" },
-        ];
-    }
 
     const [activeTab, setActiveTab] = useState(currentRole === "Dentist" ? "patient" : "chart");
     const [patientDetails, setPatientDetails] = useState("");

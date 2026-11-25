@@ -1,13 +1,15 @@
+
 import { useState } from "react";
 import Sidebar from "@/components/atom/Sidebar.jsx";
-import {Header} from "@/components/atom/Header.jsx";
-import {Footer} from "@/components/atom/Footer.jsx";
+import { Header } from "@/components/atom/Header.jsx";
+import { Footer } from "@/components/atom/Footer.jsx";
 
 const MainLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="relative h-screen overflow-hidden bg-white text-white">
+        <div className="relative flex  overflow-hidden bg-white text-gray-900">
+
             <Sidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
@@ -20,12 +22,17 @@ const MainLayout = ({ children }) => {
                 />
             )}
 
-            <div className="flex h-screen min-w-0 flex-col lg:pl-[280px]">
+            <div className="flex min-w-0 flex-1 flex-col lg:pl-[280px]">
+
                 <Header setSidebarOpen={setSidebarOpen} />
 
-                <main className="flex-1 overflow-y-auto p-6">{children}</main>
+                {/* Main Content */}
+                <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-6">
+                    {children}
+                </main>
 
                 <Footer />
+
             </div>
         </div>
     );

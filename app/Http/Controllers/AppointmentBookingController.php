@@ -120,7 +120,7 @@ class AppointmentBookingController extends Controller
             'status' => 'required|in:approved,rejected,cancelled',
         ]);
 
-        $booking = AppointmentBooking::findOrFail($id);
+        $booking = AppointmentBooking::with('appointment')->findOrFail($id);
 
         if (
             $validated['status'] === 'cancelled' &&
@@ -131,12 +131,22 @@ class AppointmentBookingController extends Controller
             )->toJsonResponse();
         }
 
-        $booking->status = $validated['status'];
-        $booking->save();
+        DB::transaction(function () use ($booking, $validated) {
+
+            // Update booking status
+            $booking->status = $validated['status'];
+            $booking->save();
+
+            // Update appointment status
+            $booking->appointment->update([
+                'status' => 'available'
+            ]);
+
+        });
 
         return ApiResponse::success(
             "Booking updated successfully.",
-            $booking
+            $booking->load('appointment')
         )->toJsonResponse();
     }
 

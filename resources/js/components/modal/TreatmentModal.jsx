@@ -48,7 +48,7 @@ const TreatmentModal = ({
                         {/* Procedure Code */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Procedure Code
+                                Treatment Code
                             </label>
 
                             <input

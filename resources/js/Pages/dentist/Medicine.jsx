@@ -12,37 +12,22 @@ const initialForm = {
 };
 
 const Medicine = () => {
-
     const [medicines, setMedicines] = useState([]);
     const [search, setSearch] = useState("");
-
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-
     const [showModal, setShowModal] = useState(false);
     const [selectedMedicine, setSelectedMedicine] = useState(null);
-
     const [form, setForm] = useState(initialForm);
 
-    // Get all medicines
     const fetchMedicines = async () => {
 
         try {
-
             setIsLoading(true);
-
-            const response = await api.get(
-                route("getAllMedicine")
-            );
-
+            const response = await api.get(route("getAllMedicine"));
             setMedicines(response.data ?? []);
 
         } catch (error) {
-
-            console.error(
-                "Load medicines error:",
-                error.response?.data || error.message
-            );
 
             Swal.fire({
                 icon: "error",
@@ -52,9 +37,7 @@ const Medicine = () => {
             });
 
         } finally {
-
             setIsLoading(false);
-
         }
 
     };
@@ -63,27 +46,19 @@ const Medicine = () => {
         fetchMedicines();
     }, []);
 
-
-    // Search
     const filteredMedicines = useMemo(() => {
 
         const keyword = search.toLowerCase();
-
         return medicines.filter((item) => {
-
             return (
                 item.name?.toLowerCase().includes(keyword) ||
                 item.description?.toLowerCase().includes(keyword)
             );
-
         });
 
     }, [medicines, search]);
 
-
-    // Handle input
     const handleChange = (e) => {
-
         const { name, value } = e.target;
 
         setForm(prev => ({
@@ -93,20 +68,13 @@ const Medicine = () => {
 
     };
 
-
-    // Open create modal
     const handleCreate = () => {
-
         setSelectedMedicine(null);
         setForm(initialForm);
         setShowModal(true);
-
     };
 
-
-    // Open update modal
     const handleEdit = (medicine) => {
-
         setSelectedMedicine(medicine);
 
         setForm({
@@ -115,37 +83,24 @@ const Medicine = () => {
         });
 
         setShowModal(true);
-
     };
 
-
-    // Close modal
     const closeModal = () => {
-
         if (isSaving) return;
 
         setShowModal(false);
         setSelectedMedicine(null);
         setForm(initialForm);
-
     };
 
-
-    // Create / Update
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         try {
-
             setIsSaving(true);
 
             if (selectedMedicine) {
-
-                await api.put(
-                    route("updateMedicine", {
-                        id: selectedMedicine.id
-                    }),
+                await api.put(route("updateMedicine", { id: selectedMedicine.id }),
                     form
                 );
 
@@ -158,11 +113,7 @@ const Medicine = () => {
                 });
 
             } else {
-
-                await api.post(
-                    route("createMedicine"),
-                    form
-                );
+                await api.post(route("createMedicine"), form);
 
                 setShowModal(false);
 
@@ -173,13 +124,11 @@ const Medicine = () => {
                     timer: 1500,
                     showConfirmButton: false,
                 });
-
             }
 
             setShowModal(false);
             setSelectedMedicine(null);
             setForm(initialForm);
-
             await fetchMedicines();
 
         } catch (error) {
@@ -201,15 +150,10 @@ const Medicine = () => {
             });
 
         } finally {
-
             setIsSaving(false);
-
         }
-
     };
 
-
-    // Delete
     const handleDelete = async (medicine) => {
 
         const result = await Swal.fire({
@@ -268,7 +212,7 @@ const Medicine = () => {
 
         <MainLayout>
 
-            <div className="w-full min-h-screen rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
+            <div className="w-full rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
 
                 <PageTitle title={"Medicine"} />
 
@@ -317,47 +261,29 @@ const Medicine = () => {
                         ) : (
 
                             filteredMedicines.map((medicine, index) => (
-
                                 <tr key={medicine.id}>
-
                                     <td className="px-5 py-4">
                                         {index + 1}
                                     </td>
-
                                     <td className="px-5 py-4 font-semibold">
                                         {medicine.name}
                                     </td>
-
                                     <td className="px-5 py-4">
                                         {medicine.description}
                                     </td>
-
                                     <td className="px-5 py-4">
-
                                         <div className="flex justify-center gap-2">
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleEdit(medicine)}
-                                                className="px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition"
-                                            >
+                                            <button type="button" onClick={() => handleEdit(medicine)}
+                                                className="px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition">
                                                 Edit
                                             </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDelete(medicine)}
-                                                className="px-3 py-1.5 rounded-md bg-red-50 text-red-600 hover:bg-red-100 text-xs font-medium transition"
-                                            >
+                                            <button type="button" onClick={() => handleDelete(medicine)}
+                                                className="px-3 py-1.5 rounded-md bg-red-50 text-red-600 hover:bg-red-100 text-xs font-medium transition">
                                                 Delete
                                             </button>
-
                                         </div>
-
                                     </td>
-
                                 </tr>
-
                             ))
 
                         )}
@@ -368,106 +294,57 @@ const Medicine = () => {
 
                 </div>
 
-
-                {/* ADD / EDIT MODAL */}
                 {showModal && (
 
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-
                         <div className="bg-white rounded-xl w-full max-w-md p-6">
 
                             <h2 className="text-xl font-bold mb-5">
-
-                                {selectedMedicine
-                                    ? "Edit Medicine"
-                                    : "Add Medicine"
-                                }
-
+                                {selectedMedicine ? "Edit Medicine" : "Add Medicine"}
                             </h2>
 
                             <form onSubmit={handleSubmit}>
-
-                                {/* MEDICINE NAME */}
                                 <div className="mb-4">
-
                                     <label className="block font-medium mb-2">
                                         Medicine Name
                                     </label>
-
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={form.name}
+                                    <input type="text" name="name" value={form.name}
                                         onChange={handleChange}
                                         placeholder="Enter medicine name"
                                         className="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
                                         required
                                     />
-
                                 </div>
 
-
-                                {/* DESCRIPTION */}
                                 <div className="mb-5">
-
                                     <label className="block font-medium mb-2">
                                         Description
                                     </label>
-
-                                    <textarea
-                                        name="description"
-                                        value={form.description}
-                                        onChange={handleChange}
-                                        placeholder="Enter medicine description"
+                                    <textarea name="description" value={form.description}
+                                        onChange={handleChange} placeholder="Enter medicine description"
                                         className="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
-                                        rows="4"
-                                        required
+                                        rows="4" required
                                     />
-
                                 </div>
 
-
-                                {/* BUTTONS */}
                                 <div className="flex justify-end gap-2">
-
-                                    <button
-                                        type="button"
-                                        onClick={closeModal}
-                                        disabled={isSaving}
-                                        className="btn btn-ghost"
-                                    >
+                                    <button type="button" onClick={closeModal}
+                                        disabled={isSaving} className="btn btn-ghost">
                                         Cancel
                                     </button>
-
-                                    <button
-                                        type="submit"
-                                        disabled={isSaving}
-                                        className="btn btn-primary"
-                                    >
-                                        {isSaving
-                                            ? "Saving..."
-                                            : selectedMedicine
-                                                ? "Update"
-                                                : "Save"
-                                        }
+                                    <button type="submit" disabled={isSaving}
+                                        className="btn btn-primary">
+                                        {isSaving ? "Saving..." : selectedMedicine ? "Update" : "Save" }
                                     </button>
-
                                 </div>
 
                             </form>
-
                         </div>
-
                     </div>
-
                 )}
-
             </div>
-
         </MainLayout>
-
     );
-
 };
 
 export default Medicine;

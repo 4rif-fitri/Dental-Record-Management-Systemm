@@ -113,10 +113,8 @@ const ListAppointment = () => {
         };
     });
 
-    // Select appointment detail
     const handleClickDetail = (appointment, day, time) => {
 
-        // CASE 1: None
         if (!appointment) {
 
             setCurrentStatus("None");
@@ -135,7 +133,6 @@ const ListAppointment = () => {
 
         const status = formatStatus(appointment.status);
 
-        // CASE 2: Available / Unavailable
         if (status === "Available" || status === "Unavailable") {
             setCurrentStatus(status);
 
@@ -160,7 +157,6 @@ const ListAppointment = () => {
             setCurrentStatus("Booked");
 
             setSelectedAppointment({
-
                 id: appointment.id,
                 bookingId: booking?.id || null,
 
@@ -170,16 +166,14 @@ const ListAppointment = () => {
                 day: day.name,
                 time: appointment.time_slot,
 
-                // Patient details
                 patientName: patient.name || "-",
                 ic: patient.ic_passport || "-",
                 phone: patient.phone_number || "-",
                 staffId: patient.student_staff_id || "-",
-                category: patient.patient_category || "-",
+                category: patient.role || "-",
                 gender: patient.gender || "-",
                 email: patient.email || "-",
 
-                // Booking details
                 reason: booking?.reason || "-",
                 approval: booking?.status || "None",
 

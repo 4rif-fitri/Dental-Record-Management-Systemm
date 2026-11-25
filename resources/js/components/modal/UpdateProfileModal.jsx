@@ -72,7 +72,6 @@ const UpdateProfileModal = ({ setShowPopup, userProfile, onUpdated}) => {
             Swal.fire({
                 icon: "success",
                 title: "Profile Updated Successfully!",
-                text: "Your profile changes have been saved successfully.",
             });
 
         } catch (error) {

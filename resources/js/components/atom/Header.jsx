@@ -12,7 +12,6 @@ export const Header = ({ setSidebarOpen }) => {
 
         Swal.fire({
             title: "Are you sure you want to log out?",
-            text: "You will need to sign in again to access your account.",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#dc2626",
@@ -27,8 +26,7 @@ export const Header = ({ setSidebarOpen }) => {
                     onSuccess: () => {
 
                         Swal.fire({
-                            title: "Logged Out Successfully",
-                            text: "You have been logged out successfully.",
+                            title: "Success Logout",
                             icon: "success",
                             confirmButtonText: "OK",
                             confirmButtonColor: "#5b2be0"

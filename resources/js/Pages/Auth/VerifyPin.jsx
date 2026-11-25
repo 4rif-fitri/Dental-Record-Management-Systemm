@@ -40,15 +40,13 @@ const VerifyPin = () => {
     return (
         <AuthLayout>
             <div className="w-full max-w-md mx-auto">
-                <div className="text-center mb-8">
+                <div className=" mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">
                         Verify Your PIN
                     </h1>
-
                     <p className="text-gray-500 mt-2">
                         Enter the 6-digit PIN sent to:
                     </p>
-
                     <p className="font-semibold text-gray-800 mt-1">
                         {email}
                     </p>
@@ -67,7 +65,7 @@ const VerifyPin = () => {
                         </label>
 
                         <input type="text" inputMode="numeric" required
-                            maxLength={6} className="form-control w-full text-center tracking-[0.5em] text-xl"
+                            maxLength={6} className="form-control w-full  tracking-[0.5em] text-xl p-2"
                             placeholder="000000" value={pin}
                             onChange={(e) =>
                                 setPin(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -81,8 +79,8 @@ const VerifyPin = () => {
                     </button>
                 </form>
 
-                <div className="text-center mt-6">
-                    <a href={route("password.forgot.page")} className="text-primary font-medium">
+                <div className=" mt-6">
+                    <a href={route("password.forgot.page")} className="btn bg-neutral w-full text-white rounded-xl">
                         Back
                     </a>
                 </div>

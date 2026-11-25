@@ -131,7 +131,7 @@ const MedicineModal = ({
                 {/* Header */}
                 <div className="mb-4 flex flex-wrap justify-between items-center">
 
-                    <PageTitle title={selectedMedicine ? "Update MedicineModal" : "Add MedicineModal"} />
+                    <PageTitle title={selectedMedicine ? "Update Medicine" : "Add Medicine"} />
 
                     <button
                         type="button"
@@ -297,8 +297,8 @@ const MedicineModal = ({
                             {loading
                                 ? "Processing..."
                                 : selectedMedicine
-                                    ? "Update MedicineModal"
-                                    : "Add MedicineModal"
+                                    ? "Update Medicine"
+                                    : "Add Medicine"
                             }
                         </button>
 

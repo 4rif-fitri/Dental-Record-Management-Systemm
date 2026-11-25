@@ -284,7 +284,7 @@ const Treatments = () => {
 
         <MainLayout>
 
-            <div className="w-full min-h-screen rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
+            <div className="w-full rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
 
                 <PageTitle title={"Treatments"} />
 
@@ -323,7 +323,7 @@ const Treatments = () => {
 
                         <tr>
                             <th className="px-5 py-4">No.</th>
-                            <th className="px-5 py-4">Procedure Code</th>
+                            <th className="px-5 py-4">Treatment Code</th>
                             <th className="px-5 py-4">Treatment Name</th>
                             <th className="px-5 py-4">Description</th>
                             <th className="px-5 py-4">Type</th>

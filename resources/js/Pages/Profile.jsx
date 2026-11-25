@@ -4,6 +4,7 @@ import UpdateProfileModal from '../components/modal/UpdateProfileModal.jsx';
 import ProfileDataSection from "@/components/molecules/Profile/DataSection.jsx";
 import { route } from 'ziggy-js';
 import api from '@/lib/axios';
+import Footer from "@/components/atom/Footer.jsx";
 
 const Profile = () => {
     const [userProfile,setUserProfile] = useState([])
@@ -28,19 +29,11 @@ const Profile = () => {
         <MainLayout>
             {showPopup && <UpdateProfileModal setShowPopup={setShowPopup} userProfile={{userProfile}} onUpdated={getProfileData}/>}
 
-            <div className="min-h-screen text-gray-900">
-                <div className="min-h-screen w-full">
+            <div className="text-gray-900">
+                <div className="w-full">
                     <main className="mx-auto w-full px-4 py-6">
 
-                        <div className={"flex justify-end"}>
-                            <button type="button"
-                                    className="btn btn-primary"
-                                    onClick={() => setShowPopup(true)}>
-                                Edit Profile
-                            </button>
-                        </div>
-
-                        <ProfileDataSection userProfile={userProfile} />
+                        <ProfileDataSection userProfile={userProfile} setShowPopup={setShowPopup} />
 
                     </main>
                 </div>

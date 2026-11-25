@@ -54,9 +54,9 @@ const NewPassword = () => {
     return (
         <AuthLayout>
             <div className="w-full max-w-md mx-auto">
-                <div className="text-center mb-8">
+                <div className=" mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">
-                        Create New Password
+                        Reset Password
                     </h1>
 
                     <p className="text-gray-500 mt-2">
@@ -106,7 +106,7 @@ const NewPassword = () => {
                             />
                         </div>
 
-                        <button type="submit" disabled={loading} className="btn btn-primary w-full">
+                        <button type="submit" disabled={loading} className="btn w-full text-white bg-black">
                             {loading ? "Resetting..." : "Reset Password"}
                         </button>
                     </form>

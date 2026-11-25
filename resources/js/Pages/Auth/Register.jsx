@@ -89,149 +89,87 @@ const Register = () => {
         <AuthLayout>
 
             <div className="mb-6">
-
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
                     Create an account
                 </h2>
-
                 <p className="text-sm text-gray-500 mt-2">
                     Register your patient account to get started.
                 </p>
-
             </div>
 
-            <form
-                onSubmit={handleRegister}
-                className="grid gap-4"
-            >
+            <form onSubmit={handleRegister} className="grid gap-4">
 
-                {/* Full Name */}
                 <fieldset className="fieldset">
 
-                    <label
-                        htmlFor="name"
-                        className="fieldset-legend text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="name" className="fieldset-legend text-sm font-medium text-gray-900">
                         Full Name
                     </label>
 
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                    <input type="text" id="name" name="name"
+                        value={formData.name} onChange={handleChange}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Enter your full name"
-                        autoComplete="name"
-                        required
+                        autoComplete="name" required
                     />
 
                 </fieldset>
 
-                {/* IC / Passport Number */}
                 <fieldset className="fieldset">
 
-                    <label
-                        htmlFor="ic_passport"
-                        className="fieldset-legend text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="ic_passport" className="fieldset-legend text-sm font-medium text-gray-900">
                         IC / Passport Number
                     </label>
-
-                    <input
-                        type="text"
-                        id="ic_passport"
-                        name="ic_passport"
-                        value={formData.ic_passport}
-                        onChange={handleChange}
+                    <input type="text" id="ic_passport" name="ic_passport"
+                        value={formData.ic_passport} onChange={handleChange}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Enter your IC / Passport Number"
-                        autoComplete="off"
-                        required
+                        autoComplete="off" required
                     />
 
                 </fieldset>
 
-                {/* Email */}
                 <fieldset className="fieldset">
 
-                    <label
-                        htmlFor="email"
-                        className="fieldset-legend text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="email" className="fieldset-legend text-sm font-medium text-gray-900">
                         Email Address
                     </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                    <input type="email" id="email" name="email"
+                        value={formData.email} onChange={handleChange}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Enter your email address"
-                        autoComplete="email"
-                        required
+                        autoComplete="email" required
                     />
-
                 </fieldset>
 
-                {/* Password */}
                 <fieldset className="fieldset">
-
-                    <label
-                        htmlFor="password"
-                        className="fieldset-legend text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="password" className="fieldset-legend text-sm font-medium text-gray-900">
                         Password
                     </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
+                    <input type="password" id="password" name="password"
+                        value={formData.password} onChange={handleChange}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Create a password"
                         autoComplete="new-password"
-                        minLength={8}
-                        required
+                        minLength={8} required
                     />
-
                     <p className="text-xs text-gray-400 mt-1">
                         Password must contain at least 8 characters.
                     </p>
-
                 </fieldset>
 
-                {/* Confirm Password */}
                 <fieldset className="fieldset">
-
-                    <label
-                        htmlFor="password_confirmation"
-                        className="fieldset-legend text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="password_confirmation" className="fieldset-legend text-sm font-medium text-gray-900">
                         Confirm Password
                     </label>
-
-                    <input
-                        type="password"
-                        id="password_confirmation"
-                        name="password_confirmation"
-                        value={formData.password_confirmation}
-                        onChange={handleChange}
+                    <input type="password" id="password_confirmation" name="password_confirmation"
+                        value={formData.password_confirmation} onChange={handleChange}
                         className="input input-bordered w-full bg-white border-gray-200 focus:outline-none focus:border-gray-400"
                         placeholder="Confirm your password"
                         autoComplete="new-password"
-                        minLength={8}
-                        required
+                        minLength={8} required
                     />
-
                 </fieldset>
 
-                {/* Submit Button */}
                 <button
                     type="submit"
                     disabled={loading}
