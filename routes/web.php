@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function () {
 |
 */
 
+Route::get('/patient/signature-status', [UserController::class, 'checkConsent'])->name('checkConsent');
+
 Route::middleware(['auth', 'ajax'])->group(function () {
 
     Route::prefix('profile')->group(function () {
@@ -128,6 +130,7 @@ Route::middleware(['auth', 'ajax'])->group(function () {
             Route::post('/signature/{id}', [UserController::class, 'saveSignature'])->name('saveSignature');
         });
     });
+
 
     Route::prefix("procedure")->group(function () {
         Route::get('/', [ProcedureController::class, 'getAllProcedure'])->name('getAllProcedure');

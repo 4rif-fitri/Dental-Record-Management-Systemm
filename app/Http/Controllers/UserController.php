@@ -84,6 +84,17 @@ class UserController extends Controller
         return redirect()->route('dashboard');
     }
 
+    public function checkConsent()
+    {
+        $userProfileId = session('id');
+
+        $patient = User::find($userProfileId);
+
+        $isSign = !empty(trim($patient?->consent_sign_url ?? ''));
+
+        return ApiResponse::success("Success",$isSign)->toJsonResponse();
+    }
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -111,14 +122,6 @@ class UserController extends Controller
                 'role' => $user->role,
             ]
         )->toJsonResponse();
-    }
-
-    public function forgotPassword(Request $request){
-
-    }
-
-    public function resetPassword(Request $request){
-
     }
 
     public function logout(Request $request){

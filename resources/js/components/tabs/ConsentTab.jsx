@@ -3,12 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { route } from 'ziggy-js';
 import Swal from 'sweetalert2';
 import api from "@/lib/axios.js";
+import {usePage} from "@inertiajs/react";
 
-const ConsentTab = ({
-                        patientDetails,
-                        setPatientDetails,
-                        isSigned
-                    }) => {
+const ConsentTab = ({patientDetails, setPatientDetails, isSigned}) => {
+    const { auth } = usePage().props;
+    const currentRole = auth?.user?.role;
 
     const canvasRef = useRef(null);
 
@@ -16,13 +15,7 @@ const ConsentTab = ({
     const [hasSignature, setHasSignature] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    // Check existing signature
-    const consentAlreadySigned =
-        isSigned ?? Boolean(patientDetails?.consent_sign_url);
-
-    // =====================================
-    // Initialize Canvas & Load Signature
-    // =====================================
+    const consentAlreadySigned = isSigned ?? Boolean(patientDetails?.consent_sign_url);
 
     useEffect(() => {
 
@@ -83,10 +76,6 @@ const ConsentTab = ({
 
     }, [patientDetails?.consent_sign_url]);
 
-    // =====================================
-    // Get Mouse / Touch Position
-    // =====================================
-
     const getPosition = (event) => {
 
         const canvas = canvasRef.current;
@@ -98,10 +87,6 @@ const ConsentTab = ({
         };
 
     };
-
-    // =====================================
-    // Start Drawing
-    // =====================================
 
     const startDrawing = (event) => {
 
@@ -121,10 +106,6 @@ const ConsentTab = ({
 
     };
 
-    // =====================================
-    // Drawing
-    // =====================================
-
     const draw = (event) => {
 
         if (!isDrawing || consentAlreadySigned) return;
@@ -141,19 +122,11 @@ const ConsentTab = ({
 
     };
 
-    // =====================================
-    // Stop Drawing
-    // =====================================
-
     const stopDrawing = () => {
 
         setIsDrawing(false);
 
     };
-
-    // =====================================
-    // Clear Signature
-    // =====================================
 
     const clearSignature = () => {
 
@@ -175,26 +148,18 @@ const ConsentTab = ({
 
     };
 
-    // =====================================
-    // Save Signature
-    // =====================================
-
     const handleSaveSignature = async () => {
-
         try {
-
             if (consentAlreadySigned) {
-
                 return;
-
             }
 
             if (!patientDetails?.id) {
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Patient not found',
-                    text: 'Please select a patient first.',
+                    title: 'Error',
+                    text: 'Patient not found.',
                 });
 
                 return;
@@ -205,32 +170,22 @@ const ConsentTab = ({
 
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Empty Signature',
-                    text: 'Please provide a signature before saving.',
+                    title: 'Warning',
+                    text: 'Empty Signature',
                 });
-
                 return;
-
             }
 
             setIsSaving(true);
 
             const canvas = canvasRef.current;
 
-            // Convert Canvas to Base64
             const signature = canvas.toDataURL('image/png');
 
-            // Send to Laravel
-            const response = await api.post(
-                route('saveSignature', {
-                    id: patientDetails.id
-                }),
-                {
-                    signature: signature
-                }
+            const response = await api.post(route('saveSignature', {id: patientDetails.id}),
+                { signature: signature }
             );
 
-            // Update Patient Details
             setPatientDetails(prev => ({
                 ...prev,
                 consent_sign_url: response.data.consent_sign_url
@@ -257,9 +212,7 @@ const ConsentTab = ({
             });
 
         } finally {
-
             setIsSaving(false);
-
         }
 
     };
@@ -272,109 +225,64 @@ const ConsentTab = ({
 
         <div className="w-full">
 
-            {/* Consent Statement */}
-
             <div className="border rounded-lg p-4 mb-4">
-
                 <h2 className="font-semibold mb-2">
                     Consent Statement
                 </h2>
-
                 <p className="text-sm text-gray-600 leading-6">
                     I hereby give my consent to undergo the dental
                     examination and treatment explained by the dentist.
                     I acknowledge that the procedures, possible risks
                     and benefits have been explained to me.
                 </p>
-
             </div>
 
-            {/* Patient Signature */}
-
             <div>
-
                 <div className="flex justify-between items-center mb-2">
-
                     <label className="block font-medium">
                         Patient Signature
                     </label>
 
                     {consentAlreadySigned && (
-
                         <span className="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
                             Already Signed
                         </span>
-
                     )}
-
                 </div>
 
-                <div className={`border-2 border-dashed rounded-lg overflow-hidden ${
-                    consentAlreadySigned
-                        ? 'border-green-300'
-                        : 'border-gray-300'
-                }`}>
-
-                    <canvas
-                        ref={canvasRef}
-                        className={`w-full h-52 bg-white ${
-                            consentAlreadySigned
-                                ? 'cursor-default'
-                                : 'cursor-crosshair touch-none'
-                        }`}
-                        style={{
-                            touchAction: 'none'
-                        }}
-                        onPointerDown={
-                            consentAlreadySigned ? undefined : startDrawing
-                        }
-                        onPointerMove={
-                            consentAlreadySigned ? undefined : draw
-                        }
+                <div className={`border-2 border-dashed rounded-lg overflow-hidden
+                    ${consentAlreadySigned ? 'border-green-300' : 'border-gray-300'}`}>
+                    <canvas ref={canvasRef}
+                        className={`w-full h-52 bg-white ${consentAlreadySigned ? 'cursor-default' : 'cursor-crosshair touch-none'}`}
+                        style={{touchAction: 'none'}}
+                        onPointerDown={consentAlreadySigned ? undefined : startDrawing}
+                        onPointerMove={consentAlreadySigned ? undefined : draw}
                         onPointerUp={stopDrawing}
                         onPointerLeave={stopDrawing}
                         onPointerCancel={stopDrawing}
                     />
-
                 </div>
 
-                {/* Save / Clear Buttons */}
-
-                {!consentAlreadySigned && (
-
+                {!consentAlreadySigned && currentRole !== "dentist" && (
                     <div className="flex justify-between items-center mt-4">
-
                         <div className="flex gap-2">
-
-                            <button
-                                type="button"
-                                onClick={clearSignature}
-                                className="px-4 py-2 border rounded-lg hover:bg-gray-100"
-                            >
+                            <button type="button" onClick={clearSignature}
+                                className="px-4 py-2 border rounded-lg hover:bg-gray-100">
                                 Clear
                             </button>
-
-                            <button
-                                type="button"
+                            <button type="button"
                                 onClick={handleSaveSignature}
                                 disabled={isSaving || !hasSignature}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                            >
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
                                 {isSaving ? 'Saving...' : 'Save Signature'}
                             </button>
-
                         </div>
-
                     </div>
-
                 )}
 
             </div>
-
         </div>
-
     );
-
 };
 
 export default ConsentTab;

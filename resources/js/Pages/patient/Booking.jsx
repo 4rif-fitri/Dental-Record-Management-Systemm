@@ -4,6 +4,7 @@ import MainLayout from "../../layout/mainLayout";
 import api from "@/lib/axios.js";
 import { route } from "ziggy-js";
 import Swal from "sweetalert2";
+import {usePage} from "@inertiajs/react";
 
 const Booking = () => {
     const [selectedDate, setSelectedDate] = useState("");
@@ -12,6 +13,11 @@ const Booking = () => {
     const [appointments, setAppointments] = useState([]);
     const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [patientDetails, setPatientDetails] = useState(null);
+    const [consentAlreadySigned, setConsentAlreadySigned] = useState(null);
+
+    const { auth } = usePage().props;
+    const userId = auth?.user?.id;
 
     const timeSlots = [
         "08:00","09:00","10:00",
@@ -128,6 +134,42 @@ const Booking = () => {
     };
 
     useEffect(() => {
+        if (!userId) return;
+
+        let ignore = false;
+
+        const fetchData = async () => {
+            try {
+                const patientResponse = await api.get(
+                    route("getPatientById", { id: userId })
+                );
+
+                if (!ignore) {
+                    setPatientDetails(patientResponse.data);
+                }
+
+                const consentResponse = await api.get(route("checkConsent"));
+                console.log(consentResponse)
+
+                if (!ignore) {
+                    setConsentAlreadySigned(consentResponse.data);
+                }
+
+            } catch (error) {
+                console.error("API Error:", error.response?.status);
+                console.error("API URL:", error.config?.url);
+            }
+        };
+
+        fetchData();
+
+        return () => {
+            ignore = true;
+        };
+
+    }, [userId]);
+
+    useEffect(() => {
         setSelectedTime("");
         setAppointments([]);
 
@@ -136,25 +178,32 @@ const Booking = () => {
         let ignore = false;
 
         const loadAppointments = async () => {
-
             try {
                 setIsLoadingAppointments(true);
-                const response = await api.get(route("getAppointmentsByDate", {
-                    date: selectedDate
-                }));
+
+                const response = await api.get(
+                    route("getAppointmentsByDate", {
+                        date: selectedDate
+                    })
+                );
 
                 const data = extractAppointments(response);
 
-                if (!ignore) setAppointments(data)
+                if (!ignore) {
+                    setAppointments(data);
+                }
 
             } catch (error) {
+                console.error(error);
 
                 if (!ignore) {
                     setAppointments([]);
                 }
 
             } finally {
-                if (!ignore) setIsLoadingAppointments(false);
+                if (!ignore) {
+                    setIsLoadingAppointments(false);
+                }
             }
         };
 
@@ -260,9 +309,7 @@ const Booking = () => {
 
             calendarDays.push(
 
-                <button
-                    key={day}
-                    type="button"
+                <button key={day} type="button"
                     disabled={isPast}
                     onClick={() => {
                         setSelectedDate(dateString);
@@ -271,33 +318,20 @@ const Booking = () => {
                     className={`
                         relative flex h-10 w-full items-center justify-center
                         rounded-lg text-sm transition
-                        ${
-                        isSelected
-                            ? "bg-blue-600 font-semibold text-white"
-                            : isPast
+                        ${isSelected ? "bg-blue-600 font-semibold text-white" : isPast
                                 ? "cursor-not-allowed text-gray-300"
-                                : "text-gray-700 hover:bg-blue-50"
-                    }
-                        ${
-                        isToday && !isSelected
-                            ? "ring-1 ring-blue-400"
-                            : ""
-                    }
-                    `}
-                >
+                                : "text-gray-700 hover:bg-blue-50"}
+                        ${isToday && !isSelected ? "ring-1 ring-blue-400" : "" }`}>
                     {day}
                 </button>
-
             );
-
         }
 
         return calendarDays;
     };
 
-    // Selected date display
-    const formattedSelectedDate = selectedDate
-        ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString(
+    const formattedSelectedDate =
+        selectedDate ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString(
             "en-MY",
             {
                 weekday: "long",
@@ -308,10 +342,18 @@ const Booking = () => {
         )
         : "Please select a date";
 
-    // Submit booking
     const handleSubmit = async (event) => {
-
         event.preventDefault();
+
+        if (!consentAlreadySigned) {
+            Swal.fire({
+                title: "Warning",
+                text: "Please sign the consent form first.",
+                icon: "warning"
+            });
+
+            return;
+        }
 
         if (isSubmitting) return;
 
@@ -326,10 +368,8 @@ const Booking = () => {
             return;
         }
 
-        // Get selected appointment
         const appointment = getSlotAppointment(selectedTime);
 
-        // Recheck availability
         if (!appointment || !isSlotAvailable(selectedTime)) {
 
             await Swal.fire({

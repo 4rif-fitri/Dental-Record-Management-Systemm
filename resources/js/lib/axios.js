@@ -22,7 +22,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Return data sahaja
 api.interceptors.response.use(
     (response) => response.data
 );
