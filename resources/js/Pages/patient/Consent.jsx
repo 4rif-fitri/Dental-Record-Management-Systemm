@@ -62,7 +62,7 @@ const Consent = () => {
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
                                             ✓
-                                        </div>
+                                        </div>1
                                         <div>
                                             <div className="font-semibold text-green-700">
                                                 Patient Consent Already Signed

@@ -4,8 +4,8 @@ import PageTitle from "@/components/atom/PageTitle.jsx";
 
 const DataSection = ({userProfile, setShowPopup}) => {
     return (
-        <div className="mt-4 grid grid-cols-1 items-start gap-5 w-full">
-            <section className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+        <div className="grid grid-cols-1 items-start gap-5 w-full">
+            <section className="rounded-2xl border border-gray-200 bg-white p-2 sm:p-6">
                 <div className="mb-5 flex justify-between">
                     <PageTitle title={"My Profile"} />
 

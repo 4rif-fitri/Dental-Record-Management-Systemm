@@ -31,7 +31,7 @@ const Profile = () => {
 
             <div className="text-gray-900">
                 <div className="w-full">
-                    <main className="mx-auto w-full px-4 py-6">
+                    <main className="mx-auto w-full">
 
                         <ProfileDataSection userProfile={userProfile} setShowPopup={setShowPopup} />
 
