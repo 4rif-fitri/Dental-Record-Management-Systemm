@@ -7,8 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Inertia\Inertia;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+
 class UserController extends Controller
 {
     public function index(){
@@ -83,6 +84,17 @@ class UserController extends Controller
         return redirect()->route('dashboard');
     }
 
+    public function checkConsent()
+    {
+        $userProfileId = session('id');
+
+        $patient = User::find($userProfileId);
+
+        $isSign = !empty(trim($patient?->consent_sign_url ?? ''));
+
+        return ApiResponse::success("Success",$isSign)->toJsonResponse();
+    }
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -92,7 +104,6 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Create patient account
         $user = User::create([
             'name' => $validated['name'],
             'ic_passport' => $validated['ic_passport'],
@@ -111,14 +122,6 @@ class UserController extends Controller
                 'role' => $user->role,
             ]
         )->toJsonResponse();
-    }
-
-    public function forgotPassword(Request $request){
-
-    }
-
-    public function resetPassword(Request $request){
-
     }
 
     public function logout(Request $request){

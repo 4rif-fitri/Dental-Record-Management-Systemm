@@ -34,7 +34,6 @@ const Appointments = () => {
         loadBooking();
     }, []);
 
-    // Status badge
     const getStatusBadge = (status) => {
 
         switch (status?.toLowerCase()) {

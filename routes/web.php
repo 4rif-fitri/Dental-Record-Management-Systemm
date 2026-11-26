@@ -16,6 +16,10 @@ use App\Http\Controllers\AppointmentBookingController;
 use App\Http\Controllers\ExaminationMedicineController;
 use App\Http\Controllers\ToothSurfaceController;
 use App\Http\Controllers\SurfaceConditionController;
+use App\Http\PageController\PageController;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -25,6 +29,7 @@ use App\Http\Controllers\SurfaceConditionController;
 | such as login, registration, password resets, and session management.
 |
 */
+
 Route::get('/bruno/csrf', function () {
     return response()->json([
         'csrf_token' => csrf_token()
@@ -33,16 +38,32 @@ Route::get('/bruno/csrf', function () {
 
 Route::middleware('guest')->group(function () {
 
-    Route::get('/login', [UserController::class, 'showLoginPage'])->name('login');
-    Route::get('/register', [UserController::class, 'showRegisterPage'])->name('register');
-    Route::get('/forgot-password', [UserController::class, 'showForgotPasswordPage'])->name('forgotPassword');
-    Route::get('/new-password', [UserController::class, 'showForgotPasswordPage'])->name('newPassword');
+    Route::get('/login', [UserController::class,'showLoginPage'])->name('login');
+    Route::post('/login', [UserController::class,'login'])->name('userLogin');
 
-    Route::post('/login', [UserController::class, 'login'])->name('userLogin');
-    Route::post('/register', [UserController::class, 'register'])->name('userregister');
-    Route::post('/forgot-password', [UserController::class, 'forgotPassword'])->name('forgotPassword');
-    Route::post('/new-password', [UserController::class, 'resetPassword'])->name('resetPassword');
+    Route::get('/register', [UserController::class,'showRegisterPage'])->name('register');
+    Route::post('/register', [UserController::class,'register'])->name('userregister');
+
 });
+
+Route::get('/forgot-password', function () {
+    return Inertia::render('Auth/ForgotPassword');
+})->name('password.forgot.page');
+
+Route::get('/verify-pin', function (Request $request) {
+    return Inertia::render('Auth/VerifyPin', [
+        'email' => $request->query('email'),
+    ]);
+})->name('password.verify.page');
+
+Route::get('/new-password', function (Request $request) {
+    return Inertia::render('Auth/NewPassword', [
+        'email' => $request->query('email'),
+        'pin' => $request->query('pin'),
+    ]);
+})->name('password.new.page');
+
+Route::get('/login', [UserController::class,'showLoginPage'])->name('login');
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dentist-list-patient', [UserController::class, 'dentistListPatient'])->name('dentistListPatient');
         Route::get('/tooth-conditions', [UserController::class, 'pageToothConditions'])->name('pageToothConditions');
         Route::get('/treatments', [UserController::class, 'pageTreatments'])->name('pageTreatments');
+        Route::get('/pageMedicine', [PageController::class, 'pageMedicine'])->name('pageMedicine');
         Route::get('/dentist-examination/{id}', [ExaminationController::class, 'pageExamination'])->name('dentistExamination');
     });
 });
@@ -88,6 +110,9 @@ Route::middleware('auth')->group(function () {
 | Here is where you can register API routes for your application.
 |
 */
+
+Route::get('/patient/signature-status', [UserController::class, 'checkConsent'])->name('checkConsent');
+
 Route::middleware(['auth', 'ajax'])->group(function () {
 
     Route::prefix('profile')->group(function () {
@@ -105,6 +130,7 @@ Route::middleware(['auth', 'ajax'])->group(function () {
             Route::post('/signature/{id}', [UserController::class, 'saveSignature'])->name('saveSignature');
         });
     });
+
 
     Route::prefix("procedure")->group(function () {
         Route::get('/', [ProcedureController::class, 'getAllProcedure'])->name('getAllProcedure');

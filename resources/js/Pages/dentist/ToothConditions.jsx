@@ -321,7 +321,7 @@ const ToothConditions = () => {
 
         <MainLayout>
 
-            <div className="w-full min-h-screen rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
+            <div className="w-full rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
 
                 <PageTitle title="Tooth Conditions" />
 

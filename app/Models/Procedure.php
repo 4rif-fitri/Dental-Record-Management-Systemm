@@ -9,6 +9,7 @@ class Procedure extends Model
     protected $table = 'procedure';
 
     protected $fillable = [
+        'procedure_code',
         'procedure_name',
         'procedure_description',
         'procedure_type',

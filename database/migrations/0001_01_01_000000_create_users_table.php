@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone_number', 15)->nullable();
             $table->string('role', 15)->default('student');
 //            $table->string('profile_image', 255)->nullable();
-            $table->string('email', 255)->unique()->nullable();
+            $table->string('email', 255)->unique();
             $table->string('password');
             $table->text('consent_sign_url')->nullable();
 

@@ -8,49 +8,71 @@ use Illuminate\Http\Request;
 
 class MedicineController extends Controller
 {
-    public function getAllMedicine(){
+    // READ ALL
+    public function getAllMedicine()
+    {
         $medicines = Medicine::all();
 
-        return ApiResponse::success("List of medicine", $medicines)->toJsonResponse();
+        return ApiResponse::success(
+            "List of medicine",
+            $medicines
+        )->toJsonResponse();
     }
 
-    public function getMedicineById($id){
-        $medicines = Medicine::where('id', $id)->first();
+    // READ BY ID
+    public function getMedicineById($id)
+    {
+        $medicine = Medicine::findOrFail($id);
 
-        return ApiResponse::success("List of medicine",$medicines)->toJsonResponse();
+        return ApiResponse::success(
+            "Medicine details",
+            $medicine
+        )->toJsonResponse();
     }
 
-    public function createMedicine(Request $request){
+    // CREATE
+    public function createMedicine(Request $request)
+    {
         $validated = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
         ]);
 
-        $medicines = new Medicine();
-        $medicines->name = $request->name;
-        $medicines->description = $request->description;
-        $medicines->save();
+        $medicine = Medicine::create($validated);
 
-        return ApiResponse::success("List of medicine",$medicines)->toJsonResponse();
+        return ApiResponse::success(
+            "Successfully created medicine",
+            $medicine
+        )->toJsonResponse();
     }
 
-    public function updateMedicine(Request $request, $id){
+    // UPDATE
+    public function updateMedicine(Request $request, $id)
+    {
         $validated = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
         ]);
 
-        $medicines = Medicine::where('id', $id)->first();
-        $medicines->name = $request->name;
-        $medicines->description = $request->description;
-        $medicines->save();
+        $medicine = Medicine::findOrFail($id);
 
-        return ApiResponse::success("Success to update medicine",$medicines)->toJsonResponse();
+        $medicine->update($validated);
+
+        return ApiResponse::success(
+            "Successfully updated medicine",
+            $medicine
+        )->toJsonResponse();
     }
 
-    public function deleteMedicine($id){
-        $response = Medicine::where('id', $id)->delete();
+    // DELETE
+    public function deleteMedicine($id)
+    {
+        $medicine = Medicine::findOrFail($id);
 
-        return ApiResponse::success("Successful delete medicine",)->toJsonResponse();
+        $medicine->delete();
+
+        return ApiResponse::success(
+            "Successfully deleted medicine"
+        )->toJsonResponse();
     }
 }

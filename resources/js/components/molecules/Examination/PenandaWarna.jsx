@@ -15,7 +15,7 @@ const PenandaWarna = ({conditions}) => {
     }
 
     return (
-        <div className="w-full flex flex-wrap gap-4 justify-center mt-5">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4 mt-5">
               {conditions.map((data, idx) =>
                   <ColorCodeTooth key={idx} label={data.condition_name} className={data.color} />
               )}

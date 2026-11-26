@@ -32,6 +32,7 @@ class ProcedureController extends Controller
     public function createProcedure(Request $request)
     {
         $validated = $request->validate([
+            'procedure_code' => ['required', 'string', 'max:100'],
             'procedure_name' => ['required', 'string', 'max:100'],
             'procedure_description' => ['required', 'string', 'max:255'],
             'procedure_type' => ['required', 'string', 'max:100'],
@@ -48,6 +49,7 @@ class ProcedureController extends Controller
     public function updateProcedure(Request $request, $id)
     {
         $validated = $request->validate([
+            'procedure_code' => ['required', 'string', 'max:100'],
             'procedure_name' => ['required', 'string', 'max:100'],
             'procedure_description' => ['required', 'string', 'max:255'],
             'procedure_type' => ['required', 'string', 'max:100'],

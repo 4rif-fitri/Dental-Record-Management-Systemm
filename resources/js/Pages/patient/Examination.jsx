@@ -22,7 +22,7 @@ const Examination = () => {
     let linkTabs = [
         { text: "chart", label: "Dental Chart" },
         { text: "3d", label: "3D" },
-        { text: "medicine", label: "MedicineModal" },
+        { text: "medicine", label: "Medicine" },
     ];
 
     const [activeTab,setActiveTab] = useState("chart");
@@ -146,10 +146,10 @@ const Examination = () => {
                 </div>
             )}
 
-            <div className="w-full h-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
+            <div className="w-full overflow-auto rounded-xl border border-gray-300 bg-white p-3 sm:p-4 text-black">
                 <PageTitle title={"Patients Examination"}/>
 
-                <div className="mb-2 p-4 flex flex-col gap-2 rounded-lg">
+                <div className="mb-2 p-4 overflow-auto flex flex-col gap-2 rounded-lg">
                    <TabsHeader setActiveTab={setActiveTab} linkTabs={linkTabs} activeTab={activeTab} />
 
                     {(activeTab === "chart" || activeTab === "3d") && (

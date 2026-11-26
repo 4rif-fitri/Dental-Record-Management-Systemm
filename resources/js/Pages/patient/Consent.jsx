@@ -60,9 +60,6 @@ const Consent = () => {
                             {isSigned && (
                                 <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
-                                            ✓
-                                        </div>
                                         <div>
                                             <div className="font-semibold text-green-700">
                                                 Patient Consent Already Signed

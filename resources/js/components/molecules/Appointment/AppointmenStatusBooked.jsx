@@ -1,5 +1,7 @@
 
 const AppointmenStatusBooked = ({ selectedAppointment, handleStatusChange }) => {
+    console.log(selectedAppointment)
+
     if (!selectedAppointment) return null;
 
     return (
@@ -17,7 +19,7 @@ const AppointmenStatusBooked = ({ selectedAppointment, handleStatusChange }) => 
                 ["Ic/Passport", selectedAppointment.ic],
                 ["Phone Number", selectedAppointment.phone],
                 ["Student/Staff ID", selectedAppointment.staffId],
-                ["Patient Category", selectedAppointment.category],
+                ["Patient Category", selectedAppointment.role],
                 ["Gender", selectedAppointment.gender],
                 ["Email Address", selectedAppointment.email],
                 ["Is Approved", selectedAppointment.approval],
